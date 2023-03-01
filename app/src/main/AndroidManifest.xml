@@ -14,7 +14,22 @@
         android:theme="@style/Theme.CugErHuo"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".Activity.MyCenterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.MessageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.XuanShangActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.ErHuoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StartSplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
