@@ -43,20 +43,25 @@ public class StartSplashActivity extends AppCompatActivity {
         /**
          * 启动动画
          * @author 唐小莉
+         * @time 2023/3/2 21:47
          */
         setContentView(R.layout.activity_start_splash);
         //appname=findViewById(R.id.appname);
         lottie=findViewById(R.id.lottie);
 
         //appname.animate().translationY(-1400).setDuration(2700).setStartDelay(0);
-        lottie.animate().translationX(2000).setDuration(2000).setStartDelay(2900);
+        lottie.animate().translationX(0).setDuration(2000).setStartDelay(0);//设置lottie动画的动画效果
 
+
+        /**
+         * 由启动页面跳转至主页，同时等待时间设为9000ms
+         */
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 Intent i=new Intent(getApplicationContext(), ErHuoActivity.class);
                 startActivity(i);
             }
-        },5000);
+        },9000);
     }
 }
