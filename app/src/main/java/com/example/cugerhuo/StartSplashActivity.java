@@ -12,8 +12,11 @@ import com.example.cugerhuo.Activity.ErHuoActivity;
 
 /**
  * APP启动动画类（已经设置为了APP启动类）：
- * 素材：https://lottiefiles.com/133076-welcome?lang=zh_CN
- * 教程：https://www.bilibili.com/video/BV1Gy4y1M7Rw/?spm_id_from=333.337.search-card.all.click&vd_source=813a2a8651fdca0418a5f61fd70ce06b
+ * 素材：
+ * @link https://lottiefiles.com/133076-welcome?lang=zh_CN
+ * 教程：
+ * @link https://www.bilibili.com/video/BV1Gy4y1M7Rw/?spm_id_from=333.337.search-card.all.click&vd_source=813a2a8651fdca0418a5f61fd70ce06b
+ * @author 朱萌
  */
 public class StartSplashActivity extends AppCompatActivity {
     TextView appname;

@@ -4,6 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.cugerhuo.R;
 
+/**
+ * 登录模块：采用当前手机号码一键登录、第三方登录
+ * 第三方登录：
+ * @link https://www.justauth.cn/
+ * @author 朱萌
+ */
 public class LoginActivity extends AppCompatActivity {
 
     @Override
