@@ -29,6 +29,9 @@ android {
 
 dependencies {
 
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -37,4 +40,7 @@ dependencies {
     implementation 'com.airbnb.android:lottie:3.6.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    // 指定编译百度移动统计JAR
+    // compile files('libs/Baidu_Mtj_3.8.0.0.jar')
+    //implementation 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
 }
