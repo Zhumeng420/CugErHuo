@@ -22,6 +22,24 @@ import com.example.cugerhuo.R;
  * zoom_in,zoom_out
  * static_animation
  * @author 朱萌
+ *
+ *----------------------------------------
+ * 液体过渡动画（这个似乎更好看）
+ * 使用github上的开源组件
+ * @link https://www.bilibili.com/video/BV1mb4y197rJ/?spm_id_from=333.999.0.0&vd_source=813a2a8651fdca0418a5f61fd70ce06b
+ * @link https://www.bilibili.com/video/BV11r4y1P76D/?spm_id_from=333.788.recommend_more_video.-1&vd_source=813a2a8651fdca0418a5f61fd70ce06b
+ */
+
+/**
+ * item的加载动画
+ * @link https://www.bilibili.com/video/BV1gT411v7gp/?spm_id_from=333.999.0.0&vd_source=813a2a8651fdca0418a5f61fd70ce06b
+ * @author 朱萌
+ */
+
+/**
+ * 下拉刷新组件
+ * @link https://github.com/scwang90/SmartRefreshLayout
+ * @author
  */
 
 /**
