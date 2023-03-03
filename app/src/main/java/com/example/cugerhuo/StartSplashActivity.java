@@ -33,7 +33,7 @@ public class StartSplashActivity extends AppCompatActivity {
          * @author 朱萌
          * @time 2023/3/2 19：12
          */
-        StatService.setDebugOn(true);// 开启自动埋点统计
+        StatService.setDebugOn(true);
         StatService.autoTrace(this, true, false);
 
         /**
@@ -52,7 +52,7 @@ public class StartSplashActivity extends AppCompatActivity {
          @author 唐小莉
          @time 2023/3/2 21:47
          */
-        lottie.animate().translationX(0).setDuration(2000).setStartDelay(0);//
+        lottie.animate().translationX(0).setDuration(2000).setStartDelay(0);
 
 
         /**
