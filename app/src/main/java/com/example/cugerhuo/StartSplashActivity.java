@@ -49,19 +49,29 @@ public class StartSplashActivity extends AppCompatActivity {
         //appname=findViewById(R.id.appname);
         lottie=findViewById(R.id.lottie);
 
-        //appname.animate().translationY(-1400).setDuration(2700).setStartDelay(0);
-        lottie.animate().translationX(0).setDuration(2000).setStartDelay(0);//设置lottie动画的动画效果
+        //设置lottie动画的动画效果
+        //translationX() 动画X轴偏移量
+        //setDuration() 设置动画运行时间
+        //setStartDelay() 设置动画延迟时间，此时为0，则不进行延迟
+        lottie.animate().translationX(0).setDuration(2000).setStartDelay(0);//
 
 
         /**
-         * 由启动页面跳转至主页，同时等待时间设为9000ms
+         * 由启动页面跳转至主页，同时等待时间设为9000ms，刚好将启动动画演示完
+         * @author 唐小莉
+         * @time 2023/3/3 10:35
          */
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 Intent i=new Intent(getApplicationContext(), ErHuoActivity.class);
                 startActivity(i);
+                //跳转到ErHuoActivity界面，并结束当前界面生命周期
+                //当用户在下一个节目点击返回 则直接退出app 而不是返回当前页面
+                finish();
             }
         },9000);
+
     }
+
 }
