@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -22,7 +23,15 @@ import com.example.cugerhuo.Activity.ErHuoActivity;
 public class StartSplashActivity extends AppCompatActivity {
     /**
      * 动画组件，用于在界面中显示动画
+     * img变量为启动页背景图片
+     * logo变量为该app的logo图片
+     * lottie变量为lottie动画
+     * @author 唐小莉
+     * @time 2023/3/4 14:12
+     * @link https://www.bilibili.com/video/BV14o4y197t5/?spm_id_from=333.999.0.0&vd_source=60999ec892c4a648641fb136253c49c5
      */
+    ImageView img;
+    ImageView logo;
     LottieAnimationView lottie;
 
 
@@ -43,20 +52,30 @@ public class StartSplashActivity extends AppCompatActivity {
          * @time 2023/3/2 21:47
          */
         setContentView(R.layout.activity_start_splash);
+        /**
+         * 依次根据id找到对应控件
+         * @author 唐小莉
+         * @time 2023/3/4 14:12
+         */
+        img=findViewById(R.id.img);
+        logo=findViewById(R.id.logo);
         lottie=findViewById(R.id.lottie);
 
         /**
          * 设置lottie动画的动画效果
-        translationX() 动画X轴偏移量
+        translationX() 动画X轴偏移量,其中img设置上滑效果，故设置translationY(-2200)
+         logo与lottie设置为下滑，则将translationY设置为1600
         setDuration() 设置动画运行时间
-        setStartDelay() 设置动画延迟时间，此时为0，则不进行延迟
+        setStartDelay() 设置动画延迟时间，此时为0，则不进行延迟,设置3s延迟，等lottie动画完成后进行
          @author 唐小莉
          @time 2023/3/2 21:47
          */
-        lottie.animate().translationX(0).setDuration(2000).setStartDelay(0);
+        img.animate().translationY(-2200).setDuration(1000).setStartDelay(3000);
+        logo.animate().translationY(1600).setDuration(1000).setStartDelay(3000);
+        lottie.animate().translationY(1600).setDuration(1000).setStartDelay(3000);
 
         /**
-         * 由启动页面跳转至主页，同时等待时间设为9000ms，刚好将启动动画演示完
+         * 由启动页面跳转至主页，同时等待时间设为4000ms，刚好将启动动画演示完以及页面滑动完成
          * @author 唐小莉
          * @time 2023/3/3 10:35
          */
@@ -71,7 +90,7 @@ public class StartSplashActivity extends AppCompatActivity {
                  */
                 finish();
             }
-        },9000);
+        },4000);
 
     }
 
