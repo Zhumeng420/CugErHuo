@@ -28,9 +28,8 @@ android {
 }
 
 dependencies {
-
-
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
 
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
@@ -44,3 +43,4 @@ dependencies {
     // compile files('libs/Baidu_Mtj_3.8.0.0.jar')
     //implementation 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
 }
+

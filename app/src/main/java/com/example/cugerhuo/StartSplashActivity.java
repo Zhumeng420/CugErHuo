@@ -25,6 +25,7 @@ public class StartSplashActivity extends AppCompatActivity {
      */
     LottieAnimationView lottie;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +54,6 @@ public class StartSplashActivity extends AppCompatActivity {
          @time 2023/3/2 21:47
          */
         lottie.animate().translationX(0).setDuration(2000).setStartDelay(0);
-
 
         /**
          * 由启动页面跳转至主页，同时等待时间设为9000ms，刚好将启动动画演示完
