@@ -1,5 +1,7 @@
 package com.example.cugerhuo;
 
+import static com.example.cugerhuo.loginUtils.Constant.THEME_KEY;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -11,6 +13,8 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
 import com.example.cugerhuo.Activity.ErHuoActivity;
+import com.example.cugerhuo.Activity.LoginActivity;
+import com.example.cugerhuo.login.OneKeyLoginActivity;
 
 /**
  * APP启动动画类（已经设置为了APP启动类）：
@@ -82,10 +86,11 @@ public class StartSplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent i=new Intent(getApplicationContext(), ErHuoActivity.class);
+                Intent i=new Intent(getApplicationContext(), OneKeyLoginActivity.class);
+                i.putExtra(THEME_KEY, 1);
                 startActivity(i);
                 /**
-                 * 跳转到ErHuoActivity界面，并结束当前界面生命周期
+                 * 跳转到OneKeyLoginActivity界面，并结束当前界面生命周期
                  * 当用户在下一个节目点击返回 则直接退出app 而不是返回当前页面
                  */
                 finish();

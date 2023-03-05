@@ -1,0 +1,25 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/display_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:layout_centerHorizontal="true"
+        android:text="欢迎使用阿里巴巴号码认证服务"
+        android:textColor="#ff5000"
+        android:textSize="20dp" />
+
+    <ListView
+        android:id="@+id/lv_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/display_title"
+        android:layout_centerInParent="true" />
+</RelativeLayout>

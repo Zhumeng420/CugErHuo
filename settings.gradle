@@ -5,12 +5,10 @@ pluginManagement {
         mavenCentral()
     }
 }
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
 rootProject.name = "CugErHuo"
 include ':app'
+include ':libs'
+include ':logger-release'
+include ':main-release'
+include ':libs:main-release'
+include ':libs:logger-release'

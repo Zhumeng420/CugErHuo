@@ -1,0 +1,18 @@
+-keep class com.nirvana.tools.** {*;}
+
+-keep class com.nirvana.tools.jsoner.** {*;}
+
+-keep class com.nirvana.tools.requestqueue.** {*;}
+
+
+
+
+
+
+-keep class com.nirvana.tools.jsoner.** {*;}
+
+-keep class com.nirvana.tools.requestqueue.** {*;}
+
+
+
+

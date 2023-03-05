@@ -3,18 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.cugerhuo">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" /> <!-- 切换网络通道 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 开关Wi-Fi状态，解决中国内地机型移动网络权限问题需要 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 网络访问 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 检查Wi-Fi网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 检查网络状态 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> <!-- 本地信息缓存 -->
+
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -77,6 +79,48 @@
         <activity
             android:name=".Activity.LoginActivity"
             android:exported="false" />
+
+
+
+
+
+        <activity android:configChanges="orientation|keyboardHidden|screenSize|uiMode|fontScale" android:name="com.example.cugerhuo.login.OneKeyLoginActivity" android:screenOrientation="sensorPortrait"/>
+        <activity android:configChanges="orientation|keyboardHidden|screenSize|uiMode|fontScale" android:name="com.example.cugerhuo.auth.CustomWebViewActivity" android:screenOrientation="sensorPortrait" android:exported="false">
+            <intent-filter>
+                <action android:name="com.example.cugerhuo.protocolWeb"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:configChanges="orientation|keyboardHidden|screenSize" android:name="com.example.cugerhuo.auth.NumberAuthActivity" android:screenOrientation="sensorPortrait"/>
+
+        <activity android:configChanges="orientation|keyboardHidden|screenSize" android:name="com.example.cugerhuo.loginUtils.MessageActivity" android:screenOrientation="sensorPortrait"/>
+
+        <!--联通电信授权页-->
+        <!--如果不需要使用窗口模式，不要使用authsdk_activity_dialog主题，会出现异常动画-->
+        <!--如果需要使用authsdk_activity_dialog主题，则screenOrientation一定不能指定明确的方向，
+            比如portrait、sensorPortrait，在8.0的系统上不允许窗口模式指定orientation，会发生Crash，需要指定为behind，
+            然后在授权页的前一个页面指定具体的orientation-->
+        <activity
+            android:name="com.mobile.auth.gatewayauth.LoginAuthActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:theme="@style/authsdk_activity_dialog"
+        android:launchMode="singleTop" />
+       <!--二次弹窗界面-->
+        <activity
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false" android:launchMode="singleTop"
+            android:name="com.mobile.auth.gatewayauth.PrivacyDialogActivity"
+            android:screenOrientation="behind"
+            android:theme="@style/authsdk_activity_dialog"/>
+        <!--协议页面webview-->
+        <activity
+            android:name="com.mobile.auth.gatewayauth.activity.AuthWebVeiwActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:screenOrientation="behind" />
         <activity
             android:name=".StartSplashActivity"
             android:exported="true">
@@ -91,6 +135,7 @@
                 <data android:scheme="mtjdcc2cba9be"/>
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

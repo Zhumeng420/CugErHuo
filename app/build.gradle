@@ -1,24 +1,55 @@
 plugins {
     id 'com.android.application'
 }
-
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 android {
     compileSdk 32
 
     defaultConfig {
         applicationId "com.example.cugerhuo"
-        minSdk 30
+        minSdk 29
         targetSdk 32
         versionCode 1
         versionName "1.0"
-
+        vectorDrawables.useSupportLibrary = true
+        buildConfigField "String", "AUTH_SECRET", '"7KHffk2Cn1j17+QVA2zbJfdDteDSUDspB/s+FUoAhyXmQ/wueAQBcpMDOVLrp5lt5BDIGxDrCuTBZk7TcR4CxAQvHnJUPIaCI5dscbBFqHgHVI8Yoy0nYwsFo8Gyd2RZ6MbUAZr3lsnPQsA+UW1MZY9EP94x0TrXmwEJkU5xJgmOJfCSekYWHP5xNc0as/aWkTmNrjFyb5//93cAMwQllH0FFEFF+GEd7XMvm6ap/g4BD8676+z29MbePXPjoY6u3VrNTMkksQHW1EolxJkw+9Sa5pDsdOrQjXBz056J79PpNAFlTvPMZw=="'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+            jniLibs.srcDirs = ['libs']
+            res.srcDirs = ['src/main/res']
+        }
 
+    }
+    signingConfigs {
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('sig-adaptation/debug/debug.keystore')
+            storePassword 'android'
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+
+
+    }
     buildTypes {
         release {
+            debuggable false
+            minifyEnabled true
+            proguardFile file('proguard-rules.pro')
+            zipAlignEnabled false
+            multiDexEnabled true       }
+        debug {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            zipAlignEnabled false
+            multiDexEnabled true
         }
     }
     compileOptions {
@@ -28,17 +59,21 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
 
-
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.android.support:appcompat-v7:23.2.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.airbnb.android:lottie:3.6.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    def isLibsMavenDep = (System.getProperty("isMaven") != null)
+    if (!isLibsMavenDep) {
+        implementation project(':libs:main-release')
+        implementation project(':libs:logger-release')
+
+    }
     // 指定编译百度移动统计JAR
     // compile files('libs/Baidu_Mtj_3.8.0.0.jar')
     //implementation 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'

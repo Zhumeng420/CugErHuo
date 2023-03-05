@@ -1,9 +1,38 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        mavenLocal()
+        google()
+        jcenter()
+        maven {
+            allowInsecureProtocol = true
+            url "http://mvnrepo.alibaba-inc.com/mvn/repository"
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.1'
+    }
+}
+
 plugins {
     id 'com.android.application' version '7.2.2' apply false
     id 'com.android.library' version '7.2.2' apply false
 }
 
+allprojects {
+    repositories {
+        mavenLocal()
+        google()
+        jcenter()
+        maven {
+            allowInsecureProtocol = true
+            url "http://mvnrepo.alibaba-inc.com/mvn/repository"
+        }
+        flatDir {
+            dirs 'libs'
+        }
+    }
+}
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

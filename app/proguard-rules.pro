@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keepattributes Exceptions,InnerClasses,Signature,Deprecated,*Annotation*,EnclosingMethod
+-keep class android.app.ActivityThread {*;}
+-keep class android.os.SystemProperties {*;}
+-dontwarn android.support.v4.app.NotificationCompatGingerbread
+-dontwarn android.support.v4.app.NotificationCompatGingerbread
+-dontwarn android.support.v4.widget.SlidingPaneLayout
+-dontwarn android.support.v4.app.NotificationCompatBase
