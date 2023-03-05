@@ -72,10 +72,11 @@ dependencies {
     if (!isLibsMavenDep) {
         implementation project(':libs:main-release')
         implementation project(':libs:logger-release')
-
     }
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
     // 指定编译百度移动统计JAR
     // compile files('libs/Baidu_Mtj_3.8.0.0.jar')
     //implementation 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
+
 }
 

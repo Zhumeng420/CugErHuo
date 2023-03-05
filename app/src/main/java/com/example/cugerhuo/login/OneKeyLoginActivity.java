@@ -29,10 +29,19 @@ import com.mobile.auth.gatewayauth.ResultCode;
 import com.mobile.auth.gatewayauth.TokenResultListener;
 import com.mobile.auth.gatewayauth.model.TokenRet;
 
+
 /**
  * 进CUG贰货一键的场景
  * @author 施立豪
  * @time 2023/3/5
+ */
+
+/**
+ * 网络工具包okhttp:
+ * @link https://juejin.cn/post/7068162792154464264
+ * 使用该工具向服务端请求对应的手机号码
+ * @author 朱萌
+ * @time 2023/3/5 17:32
  */
 public class OneKeyLoginActivity extends Activity {
     /**
