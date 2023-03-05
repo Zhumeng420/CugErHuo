@@ -1,6 +1,6 @@
-package com.example.cugerhuo.auth;
+package com.example.cugerhuo.FastLogin.auth;
 
-import static com.example.cugerhuo.utils.MockRequest.verifyNumber;
+import static com.example.cugerhuo.FastLogin.utils.MockRequest.verifyNumber;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -15,7 +15,7 @@ import android.widget.EditText;
 import androidx.annotation.Nullable;
 
 import com.example.cugerhuo.R;
-import com.example.cugerhuo.utils.ExecutorManager;
+import com.example.cugerhuo.FastLogin.utils.ExecutorManager;
 import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
 import com.mobile.auth.gatewayauth.PreLoginResultListener;
 import com.mobile.auth.gatewayauth.ResultCode;

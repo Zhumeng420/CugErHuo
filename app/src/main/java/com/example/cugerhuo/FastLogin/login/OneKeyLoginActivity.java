@@ -1,8 +1,6 @@
-package com.example.cugerhuo.login;
+package com.example.cugerhuo.FastLogin.login;
 
-import static com.example.cugerhuo.loginUtils.Constant.THEME_KEY;
-import static com.example.cugerhuo.loginUtils.Constant.THEME_KEY;
-import static com.example.cugerhuo.utils.MockRequest.getPhoneNumber;
+import static com.example.cugerhuo.FastLogin.utils.MockRequest.getPhoneNumber;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -19,11 +17,12 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.example.cugerhuo.loginUtils.BuildConfig;
-import com.example.cugerhuo.loginUtils.MessageActivity;
+import com.example.cugerhuo.FastLogin.config.BaseUIConfig;
+import com.example.cugerhuo.FastLogin.loginUtils.BuildConfig;
+import com.example.cugerhuo.FastLogin.loginUtils.Constant;
+import com.example.cugerhuo.FastLogin.loginUtils.MessageActivity;
 import com.example.cugerhuo.R;
-import com.example.cugerhuo.config.BaseUIConfig;
-import com.example.cugerhuo.utils.ExecutorManager;
+import com.example.cugerhuo.FastLogin.utils.ExecutorManager;
 import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
 import com.mobile.auth.gatewayauth.ResultCode;
 import com.mobile.auth.gatewayauth.TokenResultListener;
@@ -83,7 +82,7 @@ public class OneKeyLoginActivity extends Activity {
         /**
          * 通过intent得到当前显示主题为GIF或视频，设置相应布局和号码认证服务
          */
-        mUIType = getIntent().getIntExtra(THEME_KEY, -1);
+        mUIType = getIntent().getIntExtra(Constant.THEME_KEY, -1);
         setContentView(R.layout.activity_login);
         mTvResult = findViewById(R.id.tv_result);
         sdkInit(BuildConfig.AUTH_SECRET);

@@ -1,6 +1,4 @@
-package com.example.cugerhuo.config;
-
-import static com.example.cugerhuo.loginUtils.AppUtils.dp2px;
+package com.example.cugerhuo.FastLogin.config;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,8 +10,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.cugerhuo.loginUtils.AppUtils;
-import com.example.cugerhuo.loginUtils.Constant;
+import com.example.cugerhuo.FastLogin.loginUtils.AppUtils;
+import com.example.cugerhuo.FastLogin.loginUtils.Constant;
 import com.example.cugerhuo.R;
 import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
 
@@ -66,9 +64,9 @@ public abstract class BaseUIConfig {
      */
     protected View initSwitchView(int marginTop) {
         TextView switchTV = new TextView(mActivity);
-        RelativeLayout.LayoutParams mLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, dp2px(mActivity, 50));
+        RelativeLayout.LayoutParams mLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, AppUtils.dp2px(mActivity, 50));
         //一键登录按钮默认marginTop 270dp
-        mLayoutParams.setMargins(0, dp2px(mContext, marginTop), 0, 0);
+        mLayoutParams.setMargins(0, AppUtils.dp2px(mContext, marginTop), 0, 0);
         mLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
         switchTV.setText(R.string.switch_msg);
         switchTV.setTextColor(Color.BLACK);

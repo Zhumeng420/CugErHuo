@@ -1,4 +1,4 @@
-package com.example.cugerhuo.config;
+package com.example.cugerhuo.FastLogin.config;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,8 +11,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.example.cugerhuo.loginUtils.CacheManage;
-import com.example.cugerhuo.loginUtils.NativeBackgroundAdapter;
+import com.example.cugerhuo.FastLogin.loginUtils.CacheManage;
+import com.example.cugerhuo.FastLogin.loginUtils.NativeBackgroundAdapter;
 import com.example.cugerhuo.R;
 import com.mobile.auth.gatewayauth.AuthRegisterXmlConfig;
 import com.mobile.auth.gatewayauth.AuthUIConfig;
@@ -32,11 +32,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * xml文件方便预览
  * 可以通过addAuthRegisterXmlConfig一次性统一添加授权页的所有自定义view
- * GIF一键登录界面布局与配置
+ * MOVIE 一键登录界面布局与配置
  * @author 施立豪
  */
-public class CustomGifConfig extends BaseUIConfig {
-    private final String TAG = "CustomGifConfig";
+public class CustomMovConfig extends BaseUIConfig {
+    private final String TAG = "CustomMovConfig";
     /**
      * 缓存管理
      */
@@ -49,26 +49,24 @@ public class CustomGifConfig extends BaseUIConfig {
      * 本地背景适配器
      */
     private NativeBackgroundAdapter nativeBackgroundAdapter;
-
     /**
      * 构造函数，初始化缓存管理，线程池，背景适配器
      * @param activity  当前活动
      * @param authHelper    号码认证服务
      */
-    public CustomGifConfig(Activity activity, PhoneNumberAuthHelper authHelper) {
+    public CustomMovConfig(Activity activity, PhoneNumberAuthHelper authHelper) {
         super(activity, authHelper);
         mCacheManage=new CacheManage(activity.getApplication());
         mThreadExecutor=new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
             Runtime.getRuntime().availableProcessors(),
             0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10), new ThreadPoolExecutor.CallerRunsPolicy());
         /**
-         * 设置背景gif文件
+         * 背景视频文件
          */
         nativeBackgroundAdapter =
-            new NativeBackgroundAdapter(mCacheManage, mThreadExecutor, activity, "gifPath"
-                , "background_gif.gif");
+            new NativeBackgroundAdapter(mCacheManage, mThreadExecutor, activity, "videoPath"
+                , "demo2.mp4");
     }
-
     /**
      * 协议授权/条款同意 选项
      */
@@ -162,9 +160,6 @@ public class CustomGifConfig extends BaseUIConfig {
                 .setSwitchAccHidden(true)
                 .setPrivacyState(false)
                 .setCheckboxHidden(true)
-                .setLoadingBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.dialog_page_background))
-                //设置setLoadingImgPath图片会开启旋转动画，设置setLoadingImgDrawable则不会，方便自定义drawable动画
-                .setLoadingImgPath("icon_notification")
                 .setLightColor(true)
                 .setNumFieldOffsetY(unit * 6)
                 .setLogBtnOffsetY(unit * 7)

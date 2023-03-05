@@ -1,4 +1,4 @@
-package com.example.cugerhuo.auth;
+package com.example.cugerhuo.FastLogin.auth;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;

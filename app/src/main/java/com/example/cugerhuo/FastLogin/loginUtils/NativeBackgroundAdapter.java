@@ -1,4 +1,4 @@
-package com.example.cugerhuo.loginUtils;
+package com.example.cugerhuo.FastLogin.loginUtils;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 

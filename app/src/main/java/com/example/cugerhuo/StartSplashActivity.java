@@ -1,6 +1,6 @@
 package com.example.cugerhuo;
 
-import static com.example.cugerhuo.loginUtils.Constant.THEME_KEY;
+import static com.example.cugerhuo.FastLogin.loginUtils.Constant.THEME_KEY;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,13 +8,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
-import com.example.cugerhuo.Activity.ErHuoActivity;
-import com.example.cugerhuo.Activity.LoginActivity;
-import com.example.cugerhuo.login.OneKeyLoginActivity;
+import com.example.cugerhuo.FastLogin.login.OneKeyLoginActivity;
 
 /**
  * APP启动动画类（已经设置为了APP启动类）：

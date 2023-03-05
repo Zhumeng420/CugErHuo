@@ -1,4 +1,4 @@
-package com.example.cugerhuo.utils;
+package com.example.cugerhuo.FastLogin.utils;
 
 
 import java.util.concurrent.ArrayBlockingQueue;

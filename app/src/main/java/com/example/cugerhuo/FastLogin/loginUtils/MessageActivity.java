@@ -1,4 +1,4 @@
-package com.example.cugerhuo.loginUtils;
+package com.example.cugerhuo.FastLogin.loginUtils;
 
 import android.app.Activity;
 import android.content.Intent;

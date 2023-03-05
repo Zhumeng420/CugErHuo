@@ -1,4 +1,4 @@
-package com.example.cugerhuo.loginUtils;
+package com.example.cugerhuo.FastLogin.loginUtils;
 
 /**
  * 一些参数的配置包括授权码
