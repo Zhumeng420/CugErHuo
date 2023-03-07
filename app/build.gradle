@@ -82,8 +82,6 @@ dependencies {
     // compile files('libs/Baidu_Mtj_3.8.0.0.jar')
     //implementation 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
 
-    // 权限请求框架：https://github.com/getActivity/XXPermissions
-    implementation 'com.github.getActivity:XXPermissions:16.8'
 
     //动态TextView框架
     def htextview_version = "0.1.6"
