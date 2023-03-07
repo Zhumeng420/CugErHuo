@@ -77,13 +77,13 @@ public class StartSplashActivity extends AppCompatActivity {
         translationX() 动画X轴偏移量,其中img设置上滑效果，故设置translationY(-2200)
          logo与lottie设置为下滑，则将translationY设置为1600
         setDuration() 设置动画运行时间
-        setStartDelay() 设置动画延迟时间，此时为0，则不进行延迟,设置3s延迟，等lottie动画完成后进行
+        setStartDelay() 设置动画延迟时间，此时为2800ms,等lottie动画完成后进行
          @author 唐小莉
          @time 2023/3/2 21:47
          */
-        img.animate().translationY(-2200).setDuration(1000).setStartDelay(3000);
-        logo.animate().translationY(1600).setDuration(1000).setStartDelay(3000);
-        lottie.animate().translationY(1600).setDuration(1000).setStartDelay(3000);
+        img.animate().translationY(-2200).setDuration(1000).setStartDelay(2800);
+        logo.animate().translationY(1600).setDuration(1000).setStartDelay(2800);
+        lottie.animate().translationY(1600).setDuration(1000).setStartDelay(2800);
 
         /**
          * 由启动页面跳转至主页，同时等待时间设为4000ms，刚好将启动动画演示完以及页面滑动完成
