@@ -1,16 +1,15 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
+        maven{ url 'https://maven.aliyun.com/nexus/content/groups/public/'}
+        maven { url "https://jitpack.io" }
         mavenLocal()
         google()
         jcenter()
-        maven {
-            allowInsecureProtocol = true
-            url "http://mvnrepo.alibaba-inc.com/mvn/repository"
-        }
+
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.1'
+        classpath 'com.android.tools.build:gradle:3.5.4'
     }
 }
 
@@ -21,18 +20,17 @@ plugins {
 
 allprojects {
     repositories {
+        maven{ url 'https://maven.aliyun.com/nexus/content/groups/public/'}
+        maven { url "https://jitpack.io" }
         mavenLocal()
         google()
         jcenter()
-        maven {
-            allowInsecureProtocol = true
-            url "http://mvnrepo.alibaba-inc.com/mvn/repository"
-        }
         flatDir {
             dirs 'libs'
         }
     }
 }
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

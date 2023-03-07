@@ -5,6 +5,7 @@ pluginManagement {
         mavenCentral()
     }
 }
+
 rootProject.name = "CugErHuo"
 include ':app'
 include ':libs'

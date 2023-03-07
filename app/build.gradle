@@ -66,7 +66,7 @@ dependencies {
     implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
 
     implementation 'com.android.support:appcompat-v7:23.2.1'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.airbnb.android:lottie:3.6.1'
@@ -93,5 +93,9 @@ dependencies {
     implementation "com.hanks:htextview-scale:$htextview_version"       // optional
     implementation "com.hanks:htextview-evaporate:$htextview_version"   // optional
     implementation "com.hanks:htextview-fall:$htextview_version"        // optional
+
+    // 权限请求框架：https://github.com/getActivity/XXPermissions
+    implementation 'com.github.getActivity:XXPermissions:16.8' // 权限请求框架：https://github.com/getActivity/XXPermissions
+
 }
 
