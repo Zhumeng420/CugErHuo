@@ -21,6 +21,16 @@ import com.example.cugerhuo.FastLogin.login.OneKeyLoginActivity;
  * @link https://www.bilibili.com/video/BV1Gy4y1M7Rw/?spm_id_from=333.337.search-card.all.click&vd_source=813a2a8651fdca0418a5f61fd70ce06b
  * @author 朱萌
  */
+
+/**
+ * 动态权限获取组件:XXPermissions
+ * @link https://github.com/getActivity/XXPermissions
+ */
+
+/**
+ * 动态TextView组件;
+ * https://github.com/hanks-zyh/HTextView
+ */
 public class StartSplashActivity extends AppCompatActivity {
     /**
      * 动画组件，用于在界面中显示动画

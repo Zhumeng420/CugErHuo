@@ -8,7 +8,11 @@ repositories {
 }
 android {
     compileSdk 32
-
+    // 支持 JDK 1.8
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         applicationId "com.example.cugerhuo"
         minSdk 29
@@ -78,5 +82,18 @@ dependencies {
     // compile files('libs/Baidu_Mtj_3.8.0.0.jar')
     //implementation 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
 
+    // 权限请求框架：https://github.com/getActivity/XXPermissions
+    implementation 'com.github.getActivity:XXPermissions:16.8'
+
+    //动态TextView框架
+    def htextview_version = "0.1.6"
+    implementation "com.hanks:htextview-base:$htextview_version" // base library
+    implementation "com.hanks:htextview-fade:$htextview_version"        // optional
+    implementation "com.hanks:htextview-line:$htextview_version"        // optional
+    implementation "com.hanks:htextview-rainbow:$htextview_version"     // optional
+    implementation "com.hanks:htextview-typer:$htextview_version"       // optional
+    implementation "com.hanks:htextview-scale:$htextview_version"       // optional
+    implementation "com.hanks:htextview-evaporate:$htextview_version"   // optional
+    implementation "com.hanks:htextview-fall:$htextview_version"        // optional
 }
 
