@@ -4,7 +4,15 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * token具体请求（待实现），配置阿里云token服务
@@ -41,13 +49,30 @@ public class MockRequest {
     public static String getPhoneNumber(String token) {
         String result = "";
         try {
+            /**
+             * 使用okhttp调用获取手机号码接口
+             * @author 朱萌
+             * @time 2023/3/13
+             */
+            OkHttpClient okHttpClient = new OkHttpClient();
+            Request request = new Request.Builder().url("http://123.249.120.9:8082/phonenumber/getnumber"
+                    +"&token="+token).get().build();
+            Response response = null;
+            String str=null;
+            try {
+                response = okHttpClient.newCall(request).execute();
+                str = Objects.requireNonNull(response.body()).string();
+                System.out.println(str);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             //模拟网络请求
             Log.i(TAG, "一键登录换号：" + "token: " + token );
-
             Thread.sleep(500);
             JSONObject pJSONObject = new JSONObject();
             pJSONObject.put("account", UUID.randomUUID().toString());
-            pJSONObject.put("phoneNumber", "***********");
+            pJSONObject.put("phoneNumber", str);
             pJSONObject.put("token", token);
             result = pJSONObject.toString();
         } catch (Exception e) {
