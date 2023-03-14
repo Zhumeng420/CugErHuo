@@ -62,10 +62,13 @@ public class CustomMovConfig extends BaseUIConfig {
             0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10), new ThreadPoolExecutor.CallerRunsPolicy());
         /**
          * 背景视频文件
+         * @author 唐小莉
+         * @time 2023/3/14 22:41
          */
+
         nativeBackgroundAdapter =
             new NativeBackgroundAdapter(mCacheManage, mThreadExecutor, activity, "videoPath"
-                , "demo2.mp4");
+                , "bg1.mp4");
     }
     /**
      * 协议授权/条款同意 选项
@@ -146,14 +149,14 @@ public class CustomMovConfig extends BaseUIConfig {
                     @Override
                     public void onViewCreated(View view) {
                         final FrameLayout fly_container = view.findViewById(R.id.fly_container);
-                        nativeBackgroundAdapter.solveView(fly_container, "#3F51B5");
+                        nativeBackgroundAdapter.solveView(fly_container, "#FF8C00");
                     }
                 })
                 .build());
         mAuthHelper.setAuthUIConfig(new AuthUIConfig.Builder()
                 .setAppPrivacyOne("《自定义隐私协议》", "https://test.h5.app.tbmao.com/user")
                 .setAppPrivacyTwo("《百度》", "https://www.baidu.com")
-                .setAppPrivacyColor(Color.GRAY, Color.parseColor("#FFFFFF"))
+                .setAppPrivacyColor(Color.GRAY, Color.parseColor("#000000"))
                 .setNavHidden(true)
                 .setLogoHidden(true)
                 .setSloganHidden(true)
@@ -168,7 +171,7 @@ public class CustomMovConfig extends BaseUIConfig {
                 .setStatusBarUIFlag(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
                 .setWebNavTextSizeDp(20)
                 .setNumberSizeDp(20)
-                .setNumberColor(Color.parseColor("#FFFFFF"))
+                .setNumberColor(Color.parseColor("#000000"))
                 .setAuthPageActIn("in_activity", "out_activity")
                 .setAuthPageActOut("in_activity", "out_activity")
                 .setVendorPrivacyPrefix("《")

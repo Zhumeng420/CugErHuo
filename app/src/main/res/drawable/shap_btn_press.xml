@@ -8,7 +8,7 @@
     <!-- 描边 -->
     <stroke
         android:width="2dp"
-        android:color="#0086d0" /> <!-- 定义描边的宽度和描边的颜色值 -->
+        android:color="#FF9800" /> <!-- 定义描边的宽度和描边的颜色值 -->
 
 
     <!-- 圆角 -->

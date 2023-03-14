@@ -35,7 +35,6 @@ public class NumberAuthActivity extends Activity {
     private String phoneNumber;
     private ProgressDialog mProgressDialog;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

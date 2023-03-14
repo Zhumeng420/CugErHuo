@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.cugerhuo">
+    package="com.example.cugerhuo" >
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -14,8 +14,7 @@
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 网络访问 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 检查Wi-Fi网络状态 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 检查网络状态 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> <!-- 本地信息缓存 -->
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -26,9 +25,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CugErHuo"
-        tools:targetApi="31"
-        android:usesCleartextTraffic="true">
-        <!--*********************百度监控系统集成*******************************-->
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31" >
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/btn" />
+        <!-- *********************百度监控系统集成******************************* -->
         <!-- 您从百度网站获取的APP KEY -->
         <meta-data
             android:name="BaiduMobAd_STAT_ID"
@@ -36,30 +38,24 @@
         <!-- 渠道商编号 -->
         <meta-data
             android:name="BaiduMobAd_CHANNEL"
-            android:value="Baidu Market" />
-        <!-- 是否开启错误日志统计，默认为false -->
+            android:value="Baidu Market" /> <!-- 是否开启错误日志统计，默认为false -->
         <meta-data
             android:name="BaiduMobAd_EXCEPTION_LOG"
-            android:value="true" />
-        <!-- 日志发送策略，可选值：APP_START、ONCE_A_DAY、SET_TIME_INTERVAL，默认为APP_START -->
+            android:value="true" /> <!-- 日志发送策略，可选值：APP_START、ONCE_A_DAY、SET_TIME_INTERVAL，默认为APP_START -->
         <meta-data
             android:name="BaiduMobAd_SEND_STRATEGY"
-            android:value="APP_START" />
-        <!-- 日志发送策略 为SET_TIME_INTERVAL时，需设定时间间隔(取消下行注释)。取值为1-24的整数，默认为1 -->
+            android:value="APP_START" /> <!-- 日志发送策略 为SET_TIME_INTERVAL时，需设定时间间隔(取消下行注释)。取值为1-24的整数，默认为1 -->
         <!-- <meta-data android:name="BaiduMobAd_TIME_INTERVAL" android:value="2" /> -->
         <!-- 日志仅在wifi网络下发送，默认为false -->
         <meta-data
             android:name="BaiduMobAd_ONLY_WIFI"
-            android:value="false" />
-        <!-- 是否获取基站位置信息 ,默认为true -->
+            android:value="false" /> <!-- 是否获取基站位置信息 ,默认为true -->
         <meta-data
             android:name="BaiduMobAd_CELL_LOCATION"
-            android:value="true" />
-        <!-- 是否获取GPS位置信息，默认为true -->
+            android:value="true" /> <!-- 是否获取GPS位置信息，默认为true -->
         <meta-data
             android:name="BaiduMobAd_GPS_LOCATION"
-            android:value="true" />
-        <!-- 是否获取WIFI位置信息，默认为true -->
+            android:value="true" /> <!-- 是否获取WIFI位置信息，默认为true -->
         <meta-data
             android:name="BaiduMobAd_WIFI_LOCATION"
             android:value="true" />
@@ -79,42 +75,48 @@
         <activity
             android:name=".Activity.LoginActivity"
             android:exported="false" />
-
-
-
-
-
-        <activity android:configChanges="orientation|keyboardHidden|screenSize|uiMode|fontScale" android:name="com.example.cugerhuo.FastLogin.login.OneKeyLoginActivity" android:screenOrientation="sensorPortrait"/>
-        <activity android:configChanges="orientation|keyboardHidden|screenSize|uiMode|fontScale" android:name="com.example.cugerhuo.FastLogin.auth.CustomWebViewActivity" android:screenOrientation="sensorPortrait" android:exported="false">
+        <activity
+            android:name=".FastLogin.login.OneKeyLoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|uiMode|fontScale"
+            android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".FastLogin.auth.CustomWebViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|uiMode|fontScale"
+            android:exported="false"
+            android:screenOrientation="sensorPortrait" >
             <intent-filter>
-                <action android:name="com.example.cugerhuo.protocolWeb"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.example.cugerhuo.protocolWeb" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <activity android:configChanges="orientation|keyboardHidden|screenSize" android:name="com.example.cugerhuo.FastLogin.auth.NumberAuthActivity" android:screenOrientation="sensorPortrait"/>
-
-        <activity android:configChanges="orientation|keyboardHidden|screenSize" android:name="com.example.cugerhuo.FastLogin.loginUtils.MessageActivity" android:screenOrientation="sensorPortrait"/>
-
-        <!--联通电信授权页-->
-        <!--如果不需要使用窗口模式，不要使用authsdk_activity_dialog主题，会出现异常动画-->
-        <!--如果需要使用authsdk_activity_dialog主题，则screenOrientation一定不能指定明确的方向，
+        <activity
+            android:name=".FastLogin.auth.NumberAuthActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".FastLogin.loginUtils.MessageActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="sensorPortrait" /> <!-- 联通电信授权页 -->
+        <!-- 如果不需要使用窗口模式，不要使用authsdk_activity_dialog主题，会出现异常动画 -->
+        <!--
+如果需要使用authsdk_activity_dialog主题，则screenOrientation一定不能指定明确的方向，
             比如portrait、sensorPortrait，在8.0的系统上不允许窗口模式指定orientation，会发生Crash，需要指定为behind，
-            然后在授权页的前一个页面指定具体的orientation-->
+            然后在授权页的前一个页面指定具体的orientation
+        -->
         <activity
             android:name="com.mobile.auth.gatewayauth.LoginAuthActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
-            android:theme="@style/authsdk_activity_dialog"
-        android:launchMode="singleTop" />
-       <!--二次弹窗界面-->
+            android:launchMode="singleTop"
+            android:theme="@style/authsdk_activity_dialog" /> <!-- 二次弹窗界面 -->
         <activity
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false" android:launchMode="singleTop"
             android:name="com.mobile.auth.gatewayauth.PrivacyDialogActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:launchMode="singleTop"
             android:screenOrientation="behind"
-            android:theme="@style/authsdk_activity_dialog"/>
-        <!--协议页面webview-->
+            android:theme="@style/authsdk_activity_dialog" /> <!-- 协议页面webview -->
         <activity
             android:name="com.mobile.auth.gatewayauth.activity.AuthWebVeiwActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -123,19 +125,21 @@
             android:screenOrientation="behind" />
         <activity
             android:name=".StartSplashActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="mtjdcc2cba9be"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="mtjdcc2cba9be" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
