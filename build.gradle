@@ -3,6 +3,7 @@ buildscript {
     repositories {
         maven{ url 'https://maven.aliyun.com/nexus/content/groups/public/'}
         maven { url "https://jitpack.io" }
+        maven { url "https://maven.google.com" }
         mavenLocal()
         google()
         jcenter()

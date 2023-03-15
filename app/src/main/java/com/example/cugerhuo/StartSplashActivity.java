@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
+import com.example.cugerhuo.Activity.ErHuoActivity;
 import com.example.cugerhuo.FastLogin.login.OneKeyLoginActivity;
 
 /**
