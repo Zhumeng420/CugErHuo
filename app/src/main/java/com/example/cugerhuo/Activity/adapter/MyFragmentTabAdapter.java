@@ -1,37 +1,78 @@
 package com.example.cugerhuo.Activity.adapter;
 
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.example.cugerhuo.Activity.ErHuoActivity;
+import com.example.cugerhuo.Fragment.ErHuoFragment;
+import com.example.cugerhuo.Fragment.MessageFragment;
+import com.example.cugerhuo.Fragment.MyCenterFragment;
+import com.example.cugerhuo.Fragment.PostFragment;
+import com.example.cugerhuo.Fragment.XuanShangFragment;
+
 import java.util.List;
 
 public class MyFragmentTabAdapter extends FragmentPagerAdapter {
-    private List<Fragment> mFragments;
-    private List<String> mtitle;
+    private final int PAGER_COUNT = 5;
 
-    public MyFragmentTabAdapter(@NonNull FragmentManager fm, List<Fragment> mFragments,List<String> mtitle) {
+    private ErHuoFragment erHuoFragment;
+    private XuanShangFragment xuanShangFragment;
+    private PostFragment postFragment;
+    private MessageFragment messageFragment;
+    private MyCenterFragment myCenterFragment;
+
+
+
+    public MyFragmentTabAdapter(FragmentManager fm) {
         super(fm);
-        this.mFragments=mFragments;
-        this.mtitle=mtitle;
+        erHuoFragment =new ErHuoFragment();
+        xuanShangFragment =new XuanShangFragment();
+        postFragment =new PostFragment();
+        messageFragment=new MessageFragment();
+        myCenterFragment=new MyCenterFragment();
     }
 
-    @NonNull
-    @Override//返回指定fragment
+    @Override
     public Fragment getItem(int position) {
-        return mFragments.get(position);
+        Fragment fragment = null;
+        switch (position) {
+            case 0:
+                fragment = erHuoFragment;
+                break;
+            case 1:
+                fragment = xuanShangFragment;
+                break;
+            case 2:
+                fragment = postFragment;
+                break;
+            case 3:
+                fragment = messageFragment;
+                break;
+            case 4:
+                fragment = myCenterFragment;
+                break;
+        }
+        return fragment;
     }
 
-    @Override //返回fragment数量
+    @Override
     public int getCount() {
-        return mFragments.size();
+        return PAGER_COUNT;
     }
 
-    @Nullable
-    @Override  //获取分页标题
-    public CharSequence getPageTitle(int position) {
-        return mtitle.get(position);
+    @Override
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
+        return super.instantiateItem(container, position);
     }
+
+    @Override
+    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+        super.destroyItem(container, position, object);
+    }
+
 }

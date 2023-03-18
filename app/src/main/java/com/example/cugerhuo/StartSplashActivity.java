@@ -94,7 +94,7 @@ public class StartSplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent i=new Intent(getApplicationContext(), OneKeyLoginActivity.class);
+                Intent i=new Intent(getApplicationContext(), ErHuoActivity.class);
                 i.putExtra(THEME_KEY, 1);
                 startActivity(i);
                 /**

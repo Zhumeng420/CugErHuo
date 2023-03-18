@@ -14,7 +14,7 @@ import com.example.cugerhuo.R;
  * @author 朱萌
  * @time 2023/03/03 13：16
  */
-public class toast {
+public class MyToast {
     /**
      *
      * @param context  传入当前的activity

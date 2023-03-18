@@ -2,28 +2,25 @@ package com.example.cugerhuo.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewParent;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.view.ViewGroup;
 import android.widget.RadioButton;
-import android.widget.TextClock;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.RadioGroup;
 
 import com.example.cugerhuo.Activity.adapter.MyFragmentTabAdapter;
 import com.example.cugerhuo.Fragment.ErHuoFragment;
-import com.example.cugerhuo.Fragment.FragmentTabAdapter;
 import com.example.cugerhuo.Fragment.MessageFragment;
 import com.example.cugerhuo.Fragment.MyCenterFragment;
 import com.example.cugerhuo.Fragment.XuanShangFragment;
-import com.example.cugerhuo.Fragment.postFragment;
+import com.example.cugerhuo.Fragment.PostFragment;
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.tools.MyToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +64,8 @@ import java.util.List;
 /**
  * "贰货“主页
  */
-public class ErHuoActivity extends AppCompatActivity {
+public class ErHuoActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener,
+        ViewPager.OnPageChangeListener{
 
     /**
      * fragment 存放首页的所有侧滑页面
@@ -77,18 +75,6 @@ public class ErHuoActivity extends AppCompatActivity {
     private List<String> mtitle=new ArrayList<>();  //存放底部标题
     private MyFragmentTabAdapter tabAdapter;
 
-//    private ImageView ivTagOne;
-//    private ImageView ivTagTwo;
-//    private ImageView ivTagThree;
-//    private ImageView ivTagFour;
-//    private ImageView ivTagFive;
-//
-//    private TextView tvTagOne;
-//    private TextView tvTagTwo;
-//    private TextView tvTagThree;
-//    private TextView tvTagFour;
-//    private TextView tvTagFive;
-//    private ViewPager viewPager;
 
     private RadioButton rbtn_erhuo;
     private RadioButton rbtn_xuanshang;
@@ -96,28 +82,57 @@ public class ErHuoActivity extends AppCompatActivity {
     private RadioButton rbtn_message;
     private RadioButton rbtn_Mycenter;
 
-    private LinearLayout lin;
+    private RadioGroup radioGroup;
+
+    private ViewPager viewPager;
+
+    private MyToast toast=new MyToast();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_er_huo);
         initFragment();
-        tabAdapter=new MyFragmentTabAdapter(getSupportFragmentManager(),fragments,mtitle);
 
+
+
+       // tabAdapter = new FragmentTabAdapter(this, fragments, R.id.fl_layout);
+        initViews();
+        initFragment();
+        tabAdapter=new MyFragmentTabAdapter (getSupportFragmentManager());
+
+        viewPager.setAdapter(tabAdapter);
+
+        radioGroup.check(R.id.rb_home);
+        viewPager.setCurrentItem(0,true);
+
+        rbtn_erhuo.setOnClickListener(this::onClick);
+        rbtn_xuanshang.setOnClickListener(this::onClick);
+        rbtn_post.setOnClickListener(this::onClick);
+        rbtn_message.setOnClickListener(this::onClick);
+        rbtn_Mycenter.setOnClickListener(this::onClick);
+        viewPager.addOnPageChangeListener(this);
+
+
+    }
+    @Override
+    public void finish() {
+        ViewGroup viewGroup = (ViewGroup) getWindow().getDecorView();
+        viewGroup.removeAllViews();
+        super.finish();
+    }
+
+
+    private void initViews(){
         rbtn_erhuo=findViewById(R.id.rb_home);
         rbtn_xuanshang=findViewById(R.id.rb_xuanshang);
         rbtn_post=findViewById(R.id.rb_post);
         rbtn_message=findViewById(R.id.rb_message);
         rbtn_Mycenter=findViewById(R.id.rb_mycenter);
-       // tabAdapter = new FragmentTabAdapter(this, fragments, R.id.fl_layout);
-        initViews();
+        viewPager=findViewById(R.id.vpager);
+        radioGroup=findViewById(R.id.rg_group);
 
 
-
-    }
-
-    private void initViews(){
         Drawable drawable_erhuo=getResources().getDrawable(R.drawable.erhuo_drawble);
         drawable_erhuo.setBounds(0,0,50,50);
         rbtn_erhuo.setCompoundDrawables(null,drawable_erhuo,null,null);
@@ -138,6 +153,8 @@ public class ErHuoActivity extends AppCompatActivity {
         drawable_mycenter.setBounds(0,0,50,50);
         rbtn_Mycenter.setCompoundDrawables(null,drawable_mycenter,null,null);
 
+
+
     }
 
 
@@ -151,7 +168,7 @@ public class ErHuoActivity extends AppCompatActivity {
     private void initFragment(){
         Fragment ErHuoFragment = new ErHuoFragment();
         Fragment XuanShangFragment=new XuanShangFragment();
-        Fragment postFragment=new postFragment();
+        Fragment postFragment=new PostFragment();
         Fragment messageFragment=new MessageFragment();
         Fragment myCenterFragment= new MyCenterFragment();
 
@@ -160,110 +177,90 @@ public class ErHuoActivity extends AppCompatActivity {
         fragments.add(postFragment);
         fragments.add(messageFragment);
         fragments.add(myCenterFragment);
-
-        mtitle.add("首页");
-        mtitle.add("悬赏");
-        mtitle.add("发布");
-        mtitle.add("消息");
-        mtitle.add("我的");
     }
-//
-//    /**
-//     * 底部导航栏的点击事件
-//     * @param view
-//     * @author 唐小莉
-//     * @time 2023/3/16 20:34
-//     *
-//     */
-//    public void onClicked(View view) {
-//        System.out.println(view.getId());
-//        switch (view.getId()){
-//            case R.id.first_page:
-//                tabAdapter.setCurrentFragment(0);
-//                break;
-//            case R.id.xuanShang_page:
-//                tabAdapter.setCurrentFragment(1);
-//                break;
-//            case R.id.post_page:
-//                tabAdapter.setCurrentFragment(2);
-//                break;
-//            case R.id.message_page:
-//                tabAdapter.setCurrentFragment(3);
-//                break;
-//            case R.id.myCenter_page:
-//                tabAdapter.setCurrentFragment(4);
-//                break;
-//        }
-//        initListener();
-//    }
-
-//    private void initViews() {
-//        ivTagOne = findViewById(R.id.iv_tab_one);
-//        ivTagTwo = findViewById(R.id.iv_tab_two);
-//        ivTagThree = findViewById(R.id.iv_tab_three);
-//        ivTagFour = findViewById(R.id.iv_tab_four);
-//        ivTagFive = findViewById(R.id.iv_tab_five);
-//
-//        tvTagOne = findViewById(R.id.tv_tab_one);
-//        tvTagTwo = findViewById(R.id.tv_tab_two);
-//        tvTagThree = findViewById(R.id.tv_tab_three);
-//        tvTagFour = findViewById(R.id.tv_tab_four);
-//        tvTagFive = findViewById(R.id.tv_tab_five);
-//
-//        lin = findViewById(R.id.lin);
-//        viewPager = findViewById(R.id.viewpager);
-//        viewPager.setAdapter(tabAdapter);
-//
-//
-//
-//    }
 
 
+    /**
+     * 处理点击方法，根据参数的id区别不同的按钮，不同按钮对应不同的viewPager界面
+     * viewPager的setCurrentItem方法中的第二个参数的意义是：
+     *
+     * 　　　　　　　　　　　　当该参数为true时，viewPager换页时是平滑的换页，会有页面移动的效果；
+     *
+     * 　　　　　　　　　　　　该参数为false时，viewPager换页效果没有平滑的移动，页面会直接出现。
+     *
+     * 　　　　　　　　　　　　该方法有一个参数的重载方法，默认有平滑换页效果。　　
+     * @author 唐小莉
+     * @time 2023/3/18 20:16
+     * @param view
+     */
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.rb_home:
+                viewPager.setCurrentItem(0,true);
+                toast.Toast(ErHuoActivity.this,"erhuo",3);
+                break;
+            case R.id.rb_xuanshang:
+                viewPager.setCurrentItem(1,true);
+                toast.Toast(ErHuoActivity.this,"xuanshang",3);
+                break;
+            case R.id.rb_post:
+                viewPager.setCurrentItem(2,true);
+                toast.Toast(ErHuoActivity.this,"post",3);
+                break;
+            case R.id.rb_message:
+                viewPager.setCurrentItem(3,true);
+                toast.Toast(ErHuoActivity.this,"message",3);
+                break;
+            case R.id.rb_mycenter:
+                viewPager.setCurrentItem(4,true);
+                toast.Toast(ErHuoActivity.this,"mycenter",3);
+                break;
+            default:
+                break;
+
+        }
+    }
 
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-//    protected void initListener() {
-//        tabAdapter.setOnTabChangeListener(new FragmentTabAdapter.OnTabChangeListener() {
-//            @Override
-//            public void OnTabChanged(int index) {
-//
-//                tvTagOne.setTextColor(getResources().getColor(R.color.md_grey_700));
-//                tvTagTwo.setTextColor(getResources().getColor(R.color.md_grey_700));
-//                tvTagThree.setTextColor(getResources().getColor(R.color.md_grey_700));
-//                tvTagFour.setTextColor(getResources().getColor(R.color.md_grey_700));
-//                tvTagFive.setTextColor(getResources().getColor(R.color.md_grey_700));
-//
-//                ivTagOne.setImageResource(R.drawable.erhuo1);
-//                ivTagTwo.setImageResource(R.drawable.xuanshang);
-//                ivTagThree.setImageResource(R.drawable.post3);
-//                ivTagFour.setImageResource(R.drawable.message);
-//                ivTagFive.setImageResource(R.drawable.mycenter);
-//
-//                switch (index){
-//                    case 0:
-//                        tvTagOne.setTextColor(getResources().getColor(R.color.black));
-//                        ivTagOne.setImageResource(R.drawable.erhuoselect);
-//                        break;
-//                    case 1:
-//                        tvTagTwo.setTextColor(getResources().getColor(R.color.black));
-//                        ivTagTwo.setImageResource(R.drawable.xuanshangselect);
-//                        break;
-//                    case 2:
-//                        tvTagThree.setTextColor(getResources().getColor(R.color.black));
-//                        ivTagThree.setImageResource(R.drawable.post3);
-//                        break;
-//                    case 3:
-//                        tvTagFour.setTextColor(getResources().getColor(R.color.black));
-//                        ivTagFour.setImageResource(R.drawable.messageselect);
-//                        break;
-//                    case 4:
-//                        tvTagFive.setTextColor(getResources().getColor(R.color.black));
-//                        ivTagFive.setImageResource(R.drawable.mycenterselect);
-//                        break;
-//                }
-//
-//            }
-//        });
-//    }
+    }
 
+    /**
+     * 处理页面变化后，切换不同页面的操作
+     * @param position 根据当前展示的viewPager页面，使radioGroup对应的按钮被选中
+     */
+    public void onPageSelected(int position){
+        switch (position){
+            case 0:
+                radioGroup.check(R.id.rb_home);
+                break;
+            case 1:
+                radioGroup.check(R.id.rb_xuanshang);
+                break;
+            case 2:
+                radioGroup.check(R.id.rb_post);
+                break;
+            case 3:
+                radioGroup.check(R.id.rb_message);
+                break;
+            case 4:
+                radioGroup.check(R.id.rb_mycenter);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, int i) {
+
+    }
 }
