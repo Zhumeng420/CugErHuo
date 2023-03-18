@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.cugerhuo" >
+    package="com.example.cugerhuo">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -26,11 +26,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CugErHuo"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31" >
+        tools:targetApi="31">
+
+
         <meta-data
             android:name="com.google.android.actions"
-            android:resource="@xml/btn" />
-        <!-- *********************百度监控系统集成******************************* -->
+            android:resource="@xml/btn" /> <!-- *********************百度监控系统集成******************************* -->
         <!-- 您从百度网站获取的APP KEY -->
         <meta-data
             android:name="BaiduMobAd_STAT_ID"
@@ -83,7 +84,7 @@
             android:name=".FastLogin.auth.CustomWebViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|uiMode|fontScale"
             android:exported="false"
-            android:screenOrientation="sensorPortrait" >
+            android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="com.example.cugerhuo.protocolWeb" />
 
@@ -125,7 +126,7 @@
             android:screenOrientation="behind" />
         <activity
             android:name=".StartSplashActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

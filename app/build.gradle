@@ -8,7 +8,7 @@ repositories {
 }
 android {
     compileSdk 32
-    // 支持 JDK 1.8
+// 支持 JDK 1.8
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -68,6 +68,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:23.2.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.airbnb.android:lottie:3.6.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'

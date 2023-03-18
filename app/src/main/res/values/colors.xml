@@ -14,4 +14,5 @@
     <color name="md_grey_700">#616161</color>
     <color name="white">#ffffffff</color>
     <color name="navColor">#ff026ED2</color>
+    <color name="gray">#b8b8b8</color>
 </resources>
