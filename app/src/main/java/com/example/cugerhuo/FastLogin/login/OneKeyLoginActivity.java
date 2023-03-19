@@ -8,6 +8,8 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -17,16 +19,20 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.cugerhuo.Activity.ErHuoActivity;
+import com.example.cugerhuo.DataAccess.User.UserOperate;
 import com.example.cugerhuo.FastLogin.config.BaseUIConfig;
 import com.example.cugerhuo.FastLogin.loginUtils.BuildConfig;
 import com.example.cugerhuo.FastLogin.loginUtils.Constant;
 import com.example.cugerhuo.FastLogin.loginUtils.MessageActivity;
-import com.example.cugerhuo.R;
 import com.example.cugerhuo.FastLogin.utils.ExecutorManager;
+import com.example.cugerhuo.R;
 import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
 import com.mobile.auth.gatewayauth.ResultCode;
 import com.mobile.auth.gatewayauth.TokenResultListener;
 import com.mobile.auth.gatewayauth.model.TokenRet;
+
+import java.util.Date;
 
 
 /**
@@ -177,7 +183,6 @@ public class OneKeyLoginActivity extends Activity {
         mPhoneNumberAuthHelper.getReporter().setLoggerEnable(true);
         mPhoneNumberAuthHelper.setAuthSDKInfo(secretInfo);
     }
-
     /**
      * 进入app就需要登录的场景使用
      */
@@ -217,16 +222,101 @@ public class OneKeyLoginActivity extends Activity {
         ExecutorManager.run(new Runnable() {
             @Override
             public void run() {
-                final String result = getPhoneNumber(token);
+
+                /**
+                 * 查询本地存储
+                 */
+                SharedPreferences LoginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
+                //获得Editor 实例
+                SharedPreferences.Editor editor = LoginMessage.edit();
+                //以key-value形式保存数据
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date=new Date();
+
+                /**
+                 * 登录信息过期重新登陆
+                 */
+
+
+                final String phoneNumber = getPhoneNumber(token,OneKeyLoginActivity.this);
+                    System.out.println(phoneNumber);
                 OneKeyLoginActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mTvResult.setText("登陆成功：" + result);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                /**查询布隆过滤器redis
+                                 * 手机号是否存在
+                                 */
+                                boolean IsPhoneExisted= UserOperate.IsPhoneExistBloom(phoneNumber,OneKeyLoginActivity.this);
+                                /**
+                                 * 账号已注册
+                                 */
+                                if(IsPhoneExisted)
+                                {
+                                    /**
+                                     * 手机号是否被封
+                                     */
+                                    boolean IsPhoneBaned=UserOperate.IsPhoneBanedBloom(phoneNumber,OneKeyLoginActivity.this);
+                                    /**
+                                     * 被封处理
+                                     */
+                                    if(IsPhoneBaned){
+                                        System.out.println("账号已被封");
+                                        Log.i("e","账号被封");
+                                        return ;
+                                    }
+                                }
+                                /**
+                                 * 账号没注册-处理
+                                 */
+                                else
+                                {
+                                    /**
+                                     * 先插入mysql
+                                     */
+                                    {
+
+                                        boolean IsInserted;
+
+                                        IsInserted=UserOperate.InsertByPhone(phoneNumber,OneKeyLoginActivity.this);
+                                        if(!IsInserted) System.out.println("插入mysql失败");
+
+                                        /**
+                                         * 再插入redis
+                                         */
+                                        else{Log.i("e","插入mysql成功");
+                                            boolean IsInserted1;
+                                            IsInserted1=UserOperate.InsertPhoneBloom(phoneNumber,OneKeyLoginActivity.this);
+                                            if(!IsInserted1) System.out.println("插入redis失败");
+                                            else{Log.i("e","插入redis成功");}
+                                        }
+                                    }
+
+                                }
+                                /**
+                                 * 本地持久化+跳转到主页
+                                 */
+                                {
+                                    String Time = format.format(date);
+                                    editor.putString("LoginData",Time);
+                                    editor.putString("PhoneNumber",phoneNumber);
+                                    System.out.println("newdate"+Time);
+
+                                    editor.apply();
+                                    Intent intent=new Intent(getApplicationContext(), ErHuoActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        }).start();
+
                         mTvResult.setMovementMethod(ScrollingMovementMethod.getInstance());
                         mPhoneNumberAuthHelper.quitLoginPage();
                     }
                 });
             }
+
         });
     }
 

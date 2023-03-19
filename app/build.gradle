@@ -13,6 +13,11 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
+    packagingOptions
+            {
+                exclude 'META-INF/INDEX.LIST'
+                exclude 'META-INF/io.netty.versions.properties'
+            }
     defaultConfig {
         applicationId "com.example.cugerhuo"
         minSdk 29
@@ -67,9 +72,11 @@ dependencies {
 
     implementation 'com.android.support:appcompat-v7:23.2.1'
     implementation 'com.google.android.material:material:1.8.0'
+    implementation 'redis.clients:jedis:2.8.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     testImplementation 'junit:junit:4.13.2'
+    implementation 'org.redisson:redisson:3.12.3'
     implementation 'com.airbnb.android:lottie:3.6.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'

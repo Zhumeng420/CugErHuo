@@ -2,17 +2,23 @@ package com.example.cugerhuo;
 
 import static com.example.cugerhuo.FastLogin.loginUtils.Constant.THEME_KEY;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
 import com.example.cugerhuo.Activity.ErHuoActivity;
 import com.example.cugerhuo.FastLogin.login.OneKeyLoginActivity;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * APP启动动画类（已经设置为了APP启动类）：
@@ -94,7 +100,57 @@ public class StartSplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent i=new Intent(getApplicationContext(), ErHuoActivity.class);
+                /**
+                 * 查看本地存储是否可用
+                 * @author 施立豪
+                 * @time 2023/3/19
+                 */
+                SharedPreferences LoginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
+                //获得Editor 实例
+                SharedPreferences.Editor editor = LoginMessage.edit();
+                String LastData="";
+                //以key-value形式保存数据
+               LastData= LoginMessage.getString("LoginData","");
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date=new Date();
+                if(LastData!=""){
+                    /**
+                     * 日期转换,求上次与这次登录的时间差
+                     */
+
+                    /**
+                     * 计算时间差，单位天
+                     */
+                    double DayNum=10;
+                    try {
+
+                        DayNum= (date.getTime() - format.parse(LastData).getTime()) / (24 * 60 * 60 * 1000);
+
+                    } catch ( ParseException e) {
+                        e.printStackTrace();
+                    }
+                    /**
+                     * 时间差小于7天，直接进主页，更新日期
+                     */
+                    if(DayNum<=7)
+                    {
+
+                        System.out.println("newdate"+format.format(date));
+                        String Time = format.format(date);
+                        editor.putString("LoginData",Time);
+                        editor.apply();
+                        /**
+                         * 登录信息没过期直接进入主页
+                         */
+                        Intent i=new Intent(getApplicationContext(), ErHuoActivity.class);
+                        startActivity(i);
+                        finish();
+                    return;
+                    }}
+                /**
+                 * 本地存储没用或者过期进入登陆页面
+                 */
+                Intent i=new Intent(getApplicationContext(), OneKeyLoginActivity.class);
                 i.putExtra(THEME_KEY, 1);
                 startActivity(i);
                 /**

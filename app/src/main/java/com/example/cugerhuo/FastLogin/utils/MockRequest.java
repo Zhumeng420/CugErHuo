@@ -1,17 +1,19 @@
 package com.example.cugerhuo.FastLogin.utils;
 
+import android.content.Context;
 import android.util.Log;
 
-import org.json.JSONObject;
+import com.example.cugerhuo.R;
+import com.example.cugerhuo.tools.rsa.RsaClientUtils;
+import com.example.cugerhuo.tools.rsa.RsaClientUtilsImpl;
 
 import java.io.IOException;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -30,6 +32,7 @@ public class MockRequest {
      */
     public static String verifyNumber(String token, String phoneNumber) {
         try {
+            Map<String,String> reflect=MyXMLReader.GetReflect();
             //模拟网络请求
             Log.i(TAG, "进行本机号码校验：" + "token: " + token + ", phoneNumber: " + phoneNumber);
             Thread.sleep(500);
@@ -46,35 +49,54 @@ public class MockRequest {
      * 3、app服务端拿到手机号帮用户完成注册以及登录的逻辑，返回账户信息给app
      * @return 账户信息
      */
-    public static String getPhoneNumber(String token) {
+    public static String getPhoneNumber(String token, Context context) {
         String result = "";
         try {
+
             /**
              * 使用okhttp调用获取手机号码接口
-             * @author 朱萌
+             * @author 朱萌，施立豪
              * @time 2023/3/13
              */
             OkHttpClient okHttpClient = new OkHttpClient();
-            Request request = new Request.Builder().url("http://123.249.120.9:8082/phonenumber/getnumber"
-                    +"&token="+token).get().build();
+            /**
+             * 获取XML文本
+             */
+            String Ip=context.getString(R.string.ip);
+            String Router=context.getString(R.string.GetUserPhone);
+            String Token=context.getString(R.string.Token);
+            String PublicKey=context.getString(R.string.PublicKey);
+            /**
+             * 获取公钥
+             */
+            RsaClientUtils rsaClientUtils = new RsaClientUtilsImpl();
+            rsaClientUtils.generateKey();
+            String publicKey = rsaClientUtils.getPublicKey();
+            /**
+             * 发送请求
+             */
+            Map<String,String> map=new HashMap<>();
+            String url="http://"+Ip+"/"+Router;
+            FormBody.Builder builder = new FormBody.Builder();
+            builder.add(Token,token);
+            builder.add(PublicKey,publicKey);
+            //循环form表单，将表单内容添加到form builder中
+            //构建formBody，将其传入Request请求中
+            FormBody body = builder.build();
+            Request request = new Request.Builder().url(url).post(body).build();
             Response response = null;
             String str=null;
             try {
                 response = okHttpClient.newCall(request).execute();
-                str = Objects.requireNonNull(response.body()).string();
-                System.out.println(str);
+                byte [] a=response.body().bytes();
+                if(str!=""){
+                // 客户端利用私钥将密文解密
+                result = rsaClientUtils.decrypt(a, rsaClientUtils.getPrivateKey());
+                result=result.substring(result.length()-11);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            //模拟网络请求
-            Log.i(TAG, "一键登录换号：" + "token: " + token );
-            Thread.sleep(500);
-            JSONObject pJSONObject = new JSONObject();
-            pJSONObject.put("account", UUID.randomUUID().toString());
-            pJSONObject.put("phoneNumber", str);
-            pJSONObject.put("token", token);
-            result = pJSONObject.toString();
         } catch (Exception e) {
             e.printStackTrace();
         }

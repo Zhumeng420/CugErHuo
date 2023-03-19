@@ -2,5 +2,12 @@
 <resources>
     <string name="ip">123.249.120.9:8082</string>
     <string name="GetUserPhone">phonenumber/getnumber</string>
+    <string name="InsertUserByPhone">user/insertuserbyphone</string>
+    <string name="InsertPhoneToBloom">bloomfilterofphone/insertbyphone</string>
+    <string name="InsertPhoneToBanedBloom">bloomfilterofphone/banphone</string>
+    <string name="IsPhoneExistInBloom">bloomfilterofphone/existphone</string>
+    <string name="IsPhoneBanedInBloom">bloomfilterofphone/isphonebaned</string>
+    <string name="PhoneNumber">phone</string>
     <string name="Token">token</string>
+    <string name="PublicKey">publicKey</string>
 </resources>
