@@ -10,8 +10,6 @@ import org.junit.Test;
 public class ExampleUnitTest {
     @Test
     public void test1(){
-        //System.out.println(RedissonBloomFilterOfPhone.IsPhoneExist("10086"));
-      //  MyXMLReader.GetReflect();
     }
 
 }

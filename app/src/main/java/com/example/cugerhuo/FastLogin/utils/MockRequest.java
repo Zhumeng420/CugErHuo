@@ -32,7 +32,6 @@ public class MockRequest {
      */
     public static String verifyNumber(String token, String phoneNumber) {
         try {
-            Map<String,String> reflect=MyXMLReader.GetReflect();
             //模拟网络请求
             Log.i(TAG, "进行本机号码校验：" + "token: " + token + ", phoneNumber: " + phoneNumber);
             Thread.sleep(500);
