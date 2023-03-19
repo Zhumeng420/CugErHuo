@@ -6,131 +6,62 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     tools:context=".Activity.ErHuoActivity">
-    <FrameLayout
-        android:id="@+id/fl_layout"
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/lin" />
-    <LinearLayout
-        android:id="@+id/lin"
+        android:layout_above="@id/rg_group"/>
+
+    <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal"
+        android:id="@+id/rg_group"
+        android:gravity="center"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true"
         android:elevation="10dp"
-        android:background="#FFFFFF"
-        android:gravity="bottom"
-        android:layout_alignParentBottom="true">
-
-        <LinearLayout
-            android:id="@+id/ll_tab_one"
+        android:orientation="horizontal" >
+        <RadioButton
+            android:id="@+id/rb_home"
+            style="@style/tab_menu_item"
+            android:drawableTop="@drawable/erhuo_drawble"
+            android:text="首页"
+            android:textSize="14sp"
+            />
+        <RadioButton
+            android:id="@+id/rb_xuanshang"
+            style="@style/tab_menu_item"
+            android:drawableTop="@drawable/xuanshang_drawble"
+            android:text="悬赏"
+            android:textSize="14sp"
+            />
+        <RadioButton
+            android:id="@+id/rb_post"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="125dp"
             android:layout_weight="1"
-            android:gravity="bottom|center_horizontal"
-            android:orientation="vertical">
-            <ImageView
-                android:id="@+id/iv_tab_one"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/erhuo1"/>
-            <TextView
-                android:id="@+id/tv_tab_one"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:paddingBottom="2dp"
-                android:textSize="13dp"
-                android:textColor="@color/black"
-                android:text="首页"/>
-        </LinearLayout>
+            android:singleLine="true"
+            android:layout_gravity="center|center_horizontal"
+            android:button="@null"
 
-        <LinearLayout
-            android:id="@+id/ll_tab_two"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="bottom|center_horizontal"
-            android:orientation="vertical">
-            <ImageView
-                android:id="@+id/iv_tab_two"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@drawable/xuanshang"/>
-            <TextView
-                android:id="@+id/tv_tab_two"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textSize="13dp"
-                android:paddingBottom="2dp"
-                android:text="悬赏"/>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/ll_tab_three"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginBottom="-5dp"
+            android:drawableTop="@drawable/post_drawble"
             android:background="@drawable/round_circle_white"
-            android:elevation="10dp">
-            <ImageView
-                android:id="@+id/iv_tab_three"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/post3"/>
-            <TextView
-                android:id="@+id/tv_tab_three"
-                android:layout_width="wrap_content"
-                android:layout_height="10dp"
-                android:layout_marginTop="5dp"
-                android:paddingBottom="2dp"
-                android:text=""/>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/ll_tab_four"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="bottom|center_horizontal"
-            android:orientation="vertical">
-            <ImageView
-                android:id="@+id/iv_tab_four"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@drawable/message"/>
-            <TextView
-                android:id="@+id/tv_tab_four"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:paddingBottom="2dp"
-                android:textSize="13dp"
-                android:text="消息"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_tab_five"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="bottom|center_horizontal"
-            android:orientation="vertical">
-            <ImageView
-                android:id="@+id/iv_tab_five"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@drawable/mycenter"/>
-            <TextView
-                android:id="@+id/tv_tab_five"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textSize="13dp"
-                android:paddingBottom="2dp"
-                android:text="个人"/>
-        </LinearLayout>
-    </LinearLayout>
+            android:textSize="16sp"
+            />
+        <RadioButton
+            android:id="@+id/rb_message"
+            style="@style/tab_menu_item"
+            android:drawableTop="@drawable/message_drawble"
+            android:text="消息"
+            android:textSize="14sp"
+            />
+        <RadioButton
+            android:id="@+id/rb_mycenter"
+            style="@style/tab_menu_item"
+            android:drawableTop="@drawable/mycenter_drawble"
+            android:text="我的"
+            android:textSize="14sp"
+            />
+    </RadioGroup>
 </RelativeLayout>
