@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ip">123.249.120.9:8082</string>
+    <string name="GetUserPhone">phonenumber/getnumber</string>
+    <string name="InsertUserByPhone">user/insertuserbyphone</string>
+    <string name="PhoneNumber">phone</string>
+    <string name="Token">token</string>
+    <string name="PublicKey">publicKey</string>
+</resources>
