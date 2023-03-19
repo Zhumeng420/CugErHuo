@@ -226,6 +226,7 @@ public class OneKeyLoginActivity extends Activity {
         ExecutorManager.run(new Runnable() {
             @Override
             public void run() {
+
                 Tracer tracer = GlobalTracer.get();
                 // 创建spann
                 Span span = tracer.buildSpan("parentSpan").withTag("myTag", "spanFrist").start();

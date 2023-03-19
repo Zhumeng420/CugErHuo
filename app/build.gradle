@@ -17,6 +17,7 @@ android {
             {
                 exclude 'META-INF/INDEX.LIST'
                 exclude 'META-INF/io.netty.versions.properties'
+                exclude 'META-INF/DEPENDENCIES'
             }
     defaultConfig {
         applicationId "com.example.cugerhuo"
