@@ -28,13 +28,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".PostBuyActivity"
+            android:name=".Activity.PostActivity.PostBuyActivity"
             android:exported="false" />
         <activity
-            android:name=".PostSellActivity"
+            android:name=".Activity.PostActivity.PostSellActivity"
             android:exported="false" />
         <activity
-            android:name=".ChoosePostActivity"
+            android:name=".Activity.PostActivity.ChoosePostActivity"
             android:exported="false" />
 
         <meta-data
