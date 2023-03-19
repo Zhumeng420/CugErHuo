@@ -20,6 +20,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import io.opentracing.util.GlobalTracer;
+
 /**
  * APP启动动画类（已经设置为了APP启动类）：
  * 素材：
@@ -63,6 +65,17 @@ public class StartSplashActivity extends AppCompatActivity {
          */
         StatService.setDebugOn(true);
         StatService.autoTrace(this, true, false);
+        /**
+         * 链路追踪初始化
+         */
+        // 将manualDemo替换为您的应用名称。
+        io.jaegertracing.Configuration config = new io.jaegertracing.Configuration("CUG贰货");
+        io.jaegertracing.Configuration.SenderConfiguration sender = new io.jaegertracing.Configuration.SenderConfiguration();
+        // 将 <endpoint> 替换为控制台概览页面上相应客户端和地域的接入点。
+        sender.withEndpoint("http://tracing-analysis-dc-hz.aliyuncs.com/adapt_f6yah647nw@42a790d7a35fc27_f6yah647nw@53df7ad2afe8301/api/traces");
+        config.withSampler(new io.jaegertracing.Configuration.SamplerConfiguration().withType("const").withParam(1));
+        config.withReporter(new io.jaegertracing.Configuration.ReporterConfiguration().withSender(sender).withMaxQueueSize(10000));
+        GlobalTracer.register(config.getTracer());
 
         /**
          * 启动动画
