@@ -256,7 +256,8 @@ public class OneKeyLoginActivity extends Activity {
                                     /**查询布隆过滤器redis
                                      * 手机号是否存在
                                      */
-                                    boolean IsPhoneExisted= UserOperate.IsPhoneExistBloom(phoneNumber,OneKeyLoginActivity.this);
+                                    boolean IsPhoneExisted;
+                                    IsPhoneExisted= UserOperate.IsPhoneExistBloom(phoneNumber,OneKeyLoginActivity.this);
                                     /**
                                      * 账号已注册
                                      */
@@ -265,7 +266,8 @@ public class OneKeyLoginActivity extends Activity {
                                         /**
                                          * 手机号是否被封
                                          */
-                                        boolean IsPhoneBaned=UserOperate.IsPhoneBanedBloom(phoneNumber,OneKeyLoginActivity.this);
+                                        boolean IsPhoneBaned;
+                                        IsPhoneBaned=UserOperate.IsPhoneBanedBloom(phoneNumber,OneKeyLoginActivity.this);
                                         /**
                                          * 被封处理
                                          */
