@@ -227,32 +227,32 @@ public class OneKeyLoginActivity extends Activity {
             @Override
             public void run() {
 
-                Tracer tracer = GlobalTracer.get();
-                // 创建spann
-                Span span = tracer.buildSpan("parentSpan").withTag("myTag", "spanFrist").start();
-                try (Scope ignored = tracer.scopeManager().activate(span,true)) {
-                    tracer.activeSpan().setTag("getResultWithToken", "testTracing");
-                    // 业务逻辑
-                    /**
-                     * 查询本地存储
-                     */
-                    SharedPreferences LoginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
-                    //获得Editor 实例
-                    SharedPreferences.Editor editor = LoginMessage.edit();
-                    //以key-value形式保存数据
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    Date date=new Date();
-                    /**
-                     * 登录信息过期重新登陆
-                     */
-                    final String phoneNumber = getPhoneNumber(token,OneKeyLoginActivity.this);
-                    System.out.println(phoneNumber);
-                    OneKeyLoginActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
+                /**
+                 * 查询本地存储
+                 */
+                SharedPreferences LoginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
+                //获得Editor 实例
+                SharedPreferences.Editor editor = LoginMessage.edit();
+                //以key-value形式保存数据
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date=new Date();
+                /**
+                 * 登录信息过期重新登陆
+                 */
+                final String phoneNumber = getPhoneNumber(token,OneKeyLoginActivity.this);
+                System.out.println(phoneNumber);
+                OneKeyLoginActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Tracer tracer = GlobalTracer.get();
+                                // 创建spann
+                                Span span = tracer.buildSpan("parentSpan").withTag("myTag", "spanFrist").start();
+                                try (Scope ignored = tracer.scopeManager().activate(span,true)) {
+                                    tracer.activeSpan().setTag("getResultWithToken", "testTracing");
+                                    // 业务逻辑
                                     /**查询布隆过滤器redis
                                      * 手机号是否存在
                                      */
@@ -314,19 +314,19 @@ public class OneKeyLoginActivity extends Activity {
                                         Intent intent=new Intent(getApplicationContext(), ErHuoActivity.class);
                                         startActivity(intent);
                                     }
+                                } catch (Exception e) {
+                                    TracingHelper.onError(e, span);
+                                    throw e;
+                                } finally {
+                                    span.finish();
                                 }
-                            }).start();
+                            }
+                        }).start();
 
-                            mTvResult.setMovementMethod(ScrollingMovementMethod.getInstance());
-                            mPhoneNumberAuthHelper.quitLoginPage();
-                        }
-                    });
-                } catch (Exception e) {
-                    TracingHelper.onError(e, span);
-                    throw e;
-                } finally {
-                    span.finish();
-                }
+                        mTvResult.setMovementMethod(ScrollingMovementMethod.getInstance());
+                        mPhoneNumberAuthHelper.quitLoginPage();
+                    }
+                });
             }
         });
     }
