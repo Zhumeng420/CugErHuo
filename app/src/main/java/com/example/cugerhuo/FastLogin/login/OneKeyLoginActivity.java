@@ -249,9 +249,8 @@ public class OneKeyLoginActivity extends Activity {
                             public void run() {
                                 Tracer tracer = GlobalTracer.get();
                                 // 创建spann
-                                Span span = tracer.buildSpan("parentSpan").withTag("myTag", "spanFrist").start();
+                                Span span = tracer.buildSpan("登录流程").withTag("getResultWithToken", "主追踪").start();
                                 try (Scope ignored = tracer.scopeManager().activate(span,true)) {
-                                    tracer.activeSpan().setTag("getResultWithToken", "testTracing");
                                     // 业务逻辑
                                     /**查询布隆过滤器redis
                                      * 手机号是否存在

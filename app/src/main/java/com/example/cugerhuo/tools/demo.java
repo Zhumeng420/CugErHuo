@@ -19,7 +19,7 @@ public class demo {
     void demooo(){
         Tracer tracer = GlobalTracer.get();
         // 创建spann
-        Span span = tracer.buildSpan("parentSpan").withTag("myTag", "spanFrist").start();
+        Span span = tracer.buildSpan("登录流程").withTag("myTag", "spanFrist").start();
         try (Scope ignored = tracer.scopeManager().activate(span,true)) {
             tracer.activeSpan().setTag("getResultWithToken", "testTracing");
             // 业务逻辑写这里
