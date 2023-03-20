@@ -251,12 +251,21 @@ public class OneKeyLoginActivity extends Activity {
                                 // 创建spann
                                 Span span = tracer.buildSpan("登录流程").withTag("getResultWithToken", "主追踪").start();
                                 try (Scope ignored = tracer.scopeManager().activate(span,true)) {
-                                    // 业务逻辑
                                     /**查询布隆过滤器redis
                                      * 手机号是否存在
                                      */
                                     boolean IsPhoneExisted;
-                                    IsPhoneExisted= UserOperate.IsPhoneExistBloom(phoneNumber,OneKeyLoginActivity.this);
+                                    Span span1 = tracer.buildSpan("查询redis流程1").withTag("函数：getResultWithToken", "子追踪").start();
+                                    try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
+
+                                        IsPhoneExisted= UserOperate.IsPhoneExistBloom(phoneNumber,OneKeyLoginActivity.this);
+                                    } catch (Exception e) {
+                                        TracingHelper.onError(e, span);
+                                        throw e;
+                                    } finally {
+                                        span.finish();
+                                    }
+
                                     /**
                                      * 账号已注册
                                      */
@@ -266,7 +275,15 @@ public class OneKeyLoginActivity extends Activity {
                                          * 手机号是否被封
                                          */
                                         boolean IsPhoneBaned;
-                                        IsPhoneBaned=UserOperate.IsPhoneBanedBloom(phoneNumber,OneKeyLoginActivity.this);
+                                        Span span2 = tracer.buildSpan("查询redis流程2").withTag("函数：getResultWithToken", "子追踪").start();
+                                        try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
+                                            IsPhoneBaned=UserOperate.IsPhoneBanedBloom(phoneNumber,OneKeyLoginActivity.this);
+                                        } catch (Exception e) {
+                                            TracingHelper.onError(e, span);
+                                            throw e;
+                                        } finally {
+                                            span.finish();
+                                        }
                                         /**
                                          * 被封处理
                                          */
@@ -287,16 +304,30 @@ public class OneKeyLoginActivity extends Activity {
                                         {
 
                                             boolean IsInserted;
-
-                                            IsInserted=UserOperate.InsertByPhone(phoneNumber,OneKeyLoginActivity.this);
+                                            Span span2 = tracer.buildSpan("查询mysql流程").withTag("函数：getResultWithToken", "子追踪").start();
+                                            try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
+                                                IsInserted=UserOperate.InsertByPhone(phoneNumber,OneKeyLoginActivity.this);
+                                            } catch (Exception e) {
+                                                TracingHelper.onError(e, span);
+                                                throw e;
+                                            } finally {
+                                                span.finish();
+                                            }
                                             if(!IsInserted) System.out.println("插入mysql失败");
-
                                             /**
                                              * 再插入redis
                                              */
                                             else{Log.i("e","插入mysql成功");
                                                 boolean IsInserted1;
-                                                IsInserted1=UserOperate.InsertPhoneBloom(phoneNumber,OneKeyLoginActivity.this);
+                                                Span span3 = tracer.buildSpan("查询redis流程3").withTag("函数：getResultWithToken", "子追踪").start();
+                                                try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
+                                                    IsInserted1=UserOperate.InsertPhoneBloom(phoneNumber,OneKeyLoginActivity.this);
+                                                } catch (Exception e) {
+                                                    TracingHelper.onError(e, span);
+                                                    throw e;
+                                                } finally {
+                                                    span.finish();
+                                                }
                                                 if(!IsInserted1) System.out.println("插入redis失败");
                                                 else{Log.i("e","插入redis成功");}
                                             }
