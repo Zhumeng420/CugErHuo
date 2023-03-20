@@ -5,15 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
-    tools:context=".Activity.ErHuoActivity">
-
-
-    <TextView
-        android:layout_width="40dp"
-        android:layout_height="50dp"
-        android:text="erhuo"
-        android:textSize="15dp"
-        android:gravity="center"/>
+    tools:context=".Activity.PostActivity.PostActivity">
 
 
     <LinearLayout
@@ -37,7 +29,7 @@
                 android:id="@+id/iv_tab_one"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/erhuoselect"/>
+                android:src="@drawable/erhuo1"/>
             <TextView
                 android:id="@+id/tv_tab_one"
                 android:layout_width="wrap_content"
@@ -140,4 +132,5 @@
                 android:text="个人"/>
         </LinearLayout>
     </LinearLayout>
+
 </RelativeLayout>
