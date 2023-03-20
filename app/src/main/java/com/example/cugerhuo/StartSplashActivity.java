@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
 import com.example.cugerhuo.Activity.ErHuoActivity;
+import com.example.cugerhuo.Activity.MyCenterActivity;
 import com.example.cugerhuo.FastLogin.login.OneKeyLoginActivity;
 
 import java.text.ParseException;

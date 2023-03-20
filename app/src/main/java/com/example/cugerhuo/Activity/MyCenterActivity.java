@@ -1,5 +1,8 @@
 package com.example.cugerhuo.Activity;
 
+import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
+import static java.security.AccessController.getContext;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -18,4 +21,7 @@ public class MyCenterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_center);
     }
+
+
+
 }

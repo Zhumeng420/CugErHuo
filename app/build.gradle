@@ -87,9 +87,9 @@ dependencies {
         implementation project(':libs:logger-release')
     }
     implementation("com.squareup.okhttp3:okhttp:4.9.1")
-    // 指定编译百度移动统计JAR
-    // compile files('libs/Baidu_Mtj_3.8.0.0.jar')
-    //implementation 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
+//     指定编译百度移动统计JAR
+//     compile files('libs/Baidu_Mtj_3.8.0.0.jar')
+//    implementation 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
 
 
     //动态TextView框架
@@ -102,6 +102,9 @@ dependencies {
     implementation "com.hanks:htextview-scale:$htextview_version"       // optional
     implementation "com.hanks:htextview-evaporate:$htextview_version"   // optional
     implementation "com.hanks:htextview-fall:$htextview_version"        // optional
+
+    //头像圆角实现
+    implementation "com.makeramen:roundedimageview:2.3.0"
 
     // 权限请求框架：https://github.com/getActivity/XXPermissions
     implementation 'com.github.getActivity:XXPermissions:16.8' // 权限请求框架：https://github.com/getActivity/XXPermissions
