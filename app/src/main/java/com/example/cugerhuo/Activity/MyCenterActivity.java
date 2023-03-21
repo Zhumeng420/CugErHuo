@@ -50,9 +50,6 @@ public class MyCenterActivity extends AppCompatActivity {
         ll_tab_four.setOnClickListener(this::onClickMessage);
         ll_tab_three.setOnClickListener(this::onClickPost);
         ll_tab_two.setOnClickListener(this::onClickXuanShang);
-
-
-
     }
 
     /**
@@ -123,7 +120,6 @@ public class MyCenterActivity extends AppCompatActivity {
         finish();
     }
 
-
     /**
      * 重写finish方法，去掉出场动画
      * @author 唐小莉
@@ -133,5 +129,16 @@ public class MyCenterActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(0, 0);
+    }
+
+    /**
+     * 点击头像/用户名跳转个人信息（修改）界面
+     * @param view
+     * @Author: 李柏睿
+     * @Time: 2023/3/20 18:47
+     */
+    public void onClickModify(View view){
+        Intent intent = new Intent(getApplicationContext(),UserActivity.class);
+        startActivity(intent);
     }
 }

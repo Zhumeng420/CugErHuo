@@ -46,7 +46,8 @@
                     android:layout_marginTop="8dp"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:onClick="onClickModify">
                     <!--圆角，传的图片最好正方形(在后端加图片裁剪功能) -->
                     <com.makeramen.roundedimageview.RoundedImageView
                         android:layout_width="70dp"
