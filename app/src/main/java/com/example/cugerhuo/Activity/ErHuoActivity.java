@@ -11,6 +11,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -94,6 +96,8 @@ public class ErHuoActivity extends AppCompatActivity {
         ll_tab_two.setOnClickListener(this::onClickXuanShang);
         ll_tab_three.setOnClickListener(this::onClickPost);
         ll_tab_five.setOnClickListener(this::onClickMyCenter);
+        iv_tab_three = (ImageView) findViewById(R.id.iv_tab_three);
+        iv_tab_three.setOnClickListener(this::onClickPublish);
 
 
     }
@@ -161,6 +165,24 @@ public class ErHuoActivity extends AppCompatActivity {
         startActivity(i);
         overridePendingTransition(0, 0);
 
+    }
+
+
+    /**
+     * 点击中间加号按钮跳转选择界面+跳转动画
+     * @param view
+     * @Author: 李柏睿
+     * @Time: 2023/3/22 16:38
+     */
+    public void onClickPublish(View view) {
+        final RotateAnimation animation = new RotateAnimation(0.0f, 90.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        animation.setDuration( 500 );
+        iv_tab_three.startAnimation( animation );
+        Intent intent = new Intent(getApplicationContext(),PublishSelectionActivity.class);
+        startActivity(intent);
+        overridePendingTransition(0,0);
     }
 
 }

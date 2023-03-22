@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    tools:context=".Activity.PublishSelectionActivity">
+
+
+
+    <LinearLayout
+        android:id="@+id/ll_tab_three"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-5dp"
+        android:elevation="15dp"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom">
+
+
+        <LinearLayout
+            android:id="@+id/publish_select"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:padding="25dp"
+            android:layout_height="250dp">
+
+
+            <LinearLayout
+                android:id="@+id/publish_select_sell"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="80dp"
+                android:background="@drawable/select_1">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/icon_select_sell"
+                    android:layout_marginLeft="35dp"
+                    app:riv_oval="true" />
+
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:textSize="18sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="拍图自己卖"/>
+                    <TextView
+                        android:text="自己定价•自己卖"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/icon_arrow_black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/publish_select_buy"
+                android:orientation="horizontal"
+                android:layout_marginTop="25dp"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="80dp"
+                android:background="@drawable/select_2">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/icon_select_buy"
+                    android:layout_marginLeft="35dp"
+                    app:riv_oval="true" />
+
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:textSize="18sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="找别人买" />
+                    <TextView
+                        android:text="自己定价•自己买"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/icon_arrow_black" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_tab_three"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:elevation="15dp"
+            android:src="@drawable/post3"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

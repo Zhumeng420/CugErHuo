@@ -38,7 +38,8 @@
                         android:layout_height="25dp"
                         android:layout_marginLeft="0dp"
                         android:id="@+id/my_setting"
-                        android:src="@drawable/icon_setting"></ImageView>
+                        android:src="@drawable/icon_setting"
+                        android:onClick="onClickSetting"></ImageView>
                 </LinearLayout>
 
                 <LinearLayout
@@ -432,14 +433,15 @@
             android:layout_height="80dp"
             android:layout_marginBottom="-5dp"
             android:elevation="15dp"
-            android:background="@drawable/round_circle_white"
-            >
+            android:background="@drawable/round_circle_white">
+
             <ImageView
                 android:id="@+id/iv_tab_three"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:elevation="15dp"
-                android:src="@drawable/post3"/>
+                android:src="@drawable/post3" />
+
             <TextView
                 android:id="@+id/tv_tab_three"
                 android:layout_width="wrap_content"

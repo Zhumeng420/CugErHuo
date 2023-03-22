@@ -6,16 +6,18 @@ import static java.security.AccessController.getContext;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import com.example.cugerhuo.R;
+
 
 /**
  * 指纹验证：
@@ -40,6 +42,8 @@ public class MyCenterActivity extends AppCompatActivity {
     private LinearLayout ll_tab_three;
     private LinearLayout ll_tab_four;
     private LinearLayout ll_tab_five;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +54,8 @@ public class MyCenterActivity extends AppCompatActivity {
         ll_tab_four.setOnClickListener(this::onClickMessage);
         ll_tab_three.setOnClickListener(this::onClickPost);
         ll_tab_two.setOnClickListener(this::onClickXuanShang);
+        iv_tab_three = (ImageView) findViewById(R.id.iv_tab_three);
+        iv_tab_three.setOnClickListener(this::onClickPublish);
     }
 
     /**
@@ -141,4 +147,34 @@ public class MyCenterActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(),UserActivity.class);
         startActivity(intent);
     }
+
+    /**
+     * 点击设置图标跳转设置界面
+     * @param view
+     * @return: void
+     * @Author: 李柏睿
+     * @Time: 2023/3/21 19:38
+     */
+    public void onClickSetting(View view){
+        Intent intent = new Intent(getApplicationContext(),SettingActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * 点击中间加号按钮跳转选择界面+跳转动画
+     * @param view
+     * @Author: 李柏睿
+     * @Time: 2023/3/22 16:38
+     */
+    public void onClickPublish(View view) {
+        final RotateAnimation animation = new RotateAnimation(0.0f, 90.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        animation.setDuration( 500 );
+        iv_tab_three.startAnimation( animation );
+        Intent intent = new Intent(getApplicationContext(),PublishSelectionActivity.class);
+        startActivity(intent);
+        overridePendingTransition(0,0);
+    }
+
 }
