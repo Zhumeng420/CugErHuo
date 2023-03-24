@@ -67,13 +67,30 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
+repositories {
+    google()
+    mavenCentral()
+}
+
 
 dependencies {
     implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
+    // PictureSelector basic (Necessary)
+    implementation 'io.github.lucksiege:pictureselector:v3.10.8'
 
+    // image compress library (Not necessary)
+    implementation 'io.github.lucksiege:compress:v3.10.8'
+
+    // uCrop library (Not necessary)
+    implementation 'io.github.lucksiege:ucrop:v3.10.8'
+
+    // simple camerax library (Not necessary)
+    implementation 'io.github.lucksiege:camerax:v3.10.8'
     implementation 'com.android.support:appcompat-v7:23.2.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'redis.clients:jedis:2.8.2'
+    implementation "com.github.bumptech.glide:glide:4.13.2"
+
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     testImplementation 'junit:junit:4.13.2'

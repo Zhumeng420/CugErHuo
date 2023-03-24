@@ -1,14 +1,9 @@
 package com.example.cugerhuo.Activity;
 
-import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
-import static java.security.AccessController.getContext;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -16,7 +11,12 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.cugerhuo.R;
+import com.makeramen.roundedimageview.RoundedImageView;
+
+import java.io.File;
 
 
 /**
@@ -31,6 +31,7 @@ public class MyCenterActivity extends AppCompatActivity {
      * @author: 唐小莉
      * @time 2023/3/20 16:36
      */
+    private RoundedImageView user_image;
     private ImageView iv_tab_one;
     private ImageView iv_tab_two;
     private ImageView iv_tab_three;
@@ -49,7 +50,13 @@ public class MyCenterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_center);
         initView();
-
+        user_image=findViewById(R.id.user_img);
+        SharedPreferences imagePath=getSharedPreferences("ImagePath", Context.MODE_PRIVATE);
+        String imagpath=imagePath.getString("imagepath","");
+        if(!imagpath.equals(""))
+        {
+            user_image.setImageURI(Uri.fromFile(new File(imagpath)));
+        }
         ll_tab_one.setOnClickListener(this::onClickErhuo);
         ll_tab_four.setOnClickListener(this::onClickMessage);
         ll_tab_three.setOnClickListener(this::onClickPost);
