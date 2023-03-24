@@ -152,7 +152,8 @@ public class MyCenterActivity extends AppCompatActivity {
      */
     public void onClickModify(View view){
         Intent intent = new Intent(getApplicationContext(),UserActivity.class);
-        startActivity(intent);
+
+        startActivityForResult(intent,0x0001);
     }
 
     /**
@@ -183,5 +184,17 @@ public class MyCenterActivity extends AppCompatActivity {
         startActivity(intent);
         overridePendingTransition(0,0);
     }
-
+    @Override
+    public  void onActivityResult(int requestCode,int resultCode,Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==0x0001)
+        {
+            SharedPreferences imagePath=getSharedPreferences("ImagePath", Context.MODE_PRIVATE);
+            String imagpath=imagePath.getString("imagepath","");
+            if(!imagpath.equals(""))
+            {
+                user_image.setImageURI(Uri.fromFile(new File(imagpath)));
+            }
+        }
+    }
 }
