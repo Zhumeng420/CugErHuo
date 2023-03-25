@@ -179,8 +179,7 @@
             android:screenOrientation="behind" />
         <activity
             android:name=".StartSplashActivity"
-            android:exported="true"
-            android:configChanges="orientation|screenSize">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
