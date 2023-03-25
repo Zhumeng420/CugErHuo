@@ -58,6 +58,8 @@ public class StartSplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         //
 //        Intent i1=new Intent(getApplicationContext(), ErHuoActivity.class);
 //        startActivity(i1);
@@ -82,6 +84,7 @@ public class StartSplashActivity extends AppCompatActivity {
                 sender.withEndpoint("http://tracing-analysis-dc-hz.aliyuncs.com/adapt_f6yah647nw@42a790d7a35fc27_f6yah647nw@53df7ad2afe8301/api/traces");
                 config.withSampler(new io.jaegertracing.Configuration.SamplerConfiguration().withType("const").withParam(1));
                 config.withReporter(new io.jaegertracing.Configuration.ReporterConfiguration().withSender(sender).withMaxQueueSize(10000));
+                if(!GlobalTracer.isRegistered())
                 GlobalTracer.register(config.getTracer());
             }
         }).start();
@@ -92,6 +95,7 @@ public class StartSplashActivity extends AppCompatActivity {
          * @author 唐小莉
          * @time 2023/3/2 21:47
          */
+
         setContentView(R.layout.activity_start_splash);
         /**
          * 依次根据id找到对应控件
@@ -123,7 +127,6 @@ public class StartSplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-
                 /**
                  * 查看本地存储是否可用
                  * @author 施立豪
