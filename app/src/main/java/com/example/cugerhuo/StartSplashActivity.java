@@ -52,6 +52,7 @@ public class StartSplashActivity extends AppCompatActivity {
      */
     ImageView img;
     ImageView logo;
+    Thread tracerThread;
     LottieAnimationView lottie;
 
 
@@ -76,6 +77,7 @@ public class StartSplashActivity extends AppCompatActivity {
          */
         // 将manualDemo替换为您的应用名称。
         new Thread(new Runnable() {
+
             @Override
             public void run() {
                 io.jaegertracing.Configuration config = new io.jaegertracing.Configuration("CUG贰货");
@@ -84,8 +86,9 @@ public class StartSplashActivity extends AppCompatActivity {
                 sender.withEndpoint("http://tracing-analysis-dc-hz.aliyuncs.com/adapt_f6yah647nw@42a790d7a35fc27_f6yah647nw@53df7ad2afe8301/api/traces");
                 config.withSampler(new io.jaegertracing.Configuration.SamplerConfiguration().withType("const").withParam(1));
                 config.withReporter(new io.jaegertracing.Configuration.ReporterConfiguration().withSender(sender).withMaxQueueSize(10000));
-                if(!GlobalTracer.isRegistered())
+                if(GlobalTracer.isRegistered())
                 GlobalTracer.register(config.getTracer());
+                return;
             }
         }).start();
 
@@ -171,7 +174,10 @@ public class StartSplashActivity extends AppCompatActivity {
                          */
                         Intent i=new Intent(getApplicationContext(), ErHuoActivity.class);
                         startActivity(i);
+                        overridePendingTransition(0,0);
                         finish();
+
+
                     return;
                     }}
                 /**
@@ -180,14 +186,17 @@ public class StartSplashActivity extends AppCompatActivity {
                 Intent i=new Intent(getApplicationContext(), OneKeyLoginActivity.class);
                 i.putExtra(THEME_KEY, 1);
                 startActivity(i);
+                overridePendingTransition(0,0);
                 /**
                  * 跳转到OneKeyLoginActivity界面，并结束当前界面生命周期
                  * 当用户在下一个节目点击返回 则直接退出app 而不是返回当前页面
                  */
                 finish();
+
             }
         },4000);
 
     }
+
 
 }
