@@ -6,6 +6,7 @@ import com.example.cugerhuo.R;
 
 import java.io.IOException;
 
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -57,20 +58,24 @@ public class UserOperate {
      * @author 施立豪
      * @time 2023/3/19
      */
-    public static boolean InsertByPhone(String phone,Context context)
+    public static boolean InsertByPhone(String phone,String username,Context context)
     {
         OkHttpClient okHttpClient = new OkHttpClient();
         
         /**
          * 获取XML文本
          */
+
         String Ip=context.getString(R.string.ip);
         String Router=context.getString(R.string.InsertUserByPhone);
         String PhoneNumber=context.getString(R.string.PhoneNumber);
+        String Username=context.getString(R.string.Username);
+
+
         /**
          * 发送请求
          */
-        String url="http://"+Ip+"/"+Router+"?"+PhoneNumber+"="+phone;
+        String url="http://"+Ip+"/"+Router+"?"+PhoneNumber+"="+phone+"&"+Username+"="+username;
         //循环form表单，将表单内容添加到form builder中
         //构建formBody，将其传入Request请求中
         Request request = new Request.Builder().url(url).get().build();
@@ -149,6 +154,86 @@ public class UserOperate {
         } catch (IOException e) {
             e.printStackTrace();
         }return IsInserted;
+    }
+    /**
+     * 调用服务端通过手机号查询用户id
+     * @param phone 手机号
+     * @param context 获取映射文件
+     * @return 是否成功
+     * @author 施立豪
+     * @time 2023/3/26
+     */
+    public static int GetId(String phone,Context context)
+    {
+        OkHttpClient okHttpClient = new OkHttpClient();
+
+        /**
+         * 获取XML文本
+         */
+        String Ip=context.getString(R.string.ip);
+        String Router=context.getString(R.string.GetIdByPhone);
+        String PhoneNumber=context.getString(R.string.PhoneNumber);
+        /**
+         * 发送请求
+         */
+        String url="http://"+Ip+"/"+Router+"?"+PhoneNumber+"="+phone;
+        //循环form表单，将表单内容添加到form builder中
+        //构建formBody，将其传入Request请求中
+        Request request = new Request.Builder().url(url).get().build();
+        Response response = null;
+        int result
+                =-1;
+        try {
+            response = okHttpClient.newCall(request).execute();
+            result= Integer.parseInt(response.body().string());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }return result;
+    }
+
+    /**
+     * 插入id和用户名到图数据库
+     * @param username 用户名
+     * @param id 用户id
+     * @param context 获取映射文件
+     * @return 是否成功
+     * @author 施立豪
+     * @time 2023/3/26
+     */
+    public static boolean InsertUserToTu(String username,int id,Context context)
+    {
+        OkHttpClient okHttpClient = new OkHttpClient();
+
+        /**
+         * 获取XML文本
+         */
+        String Ip=context.getString(R.string.Tuip);
+        String Router=context.getString(R.string.InsertUserToTu);
+        String name=context.getString(R.string.Name);
+        String uid=context.getString(R.string.UserId);
+
+        /**
+         * 发送请求
+         */
+        String url="http://"+Ip+"/"+Router;
+        //循环form表单，将表单内容添加到form builder中
+        //构建formBody，将其传入Request请求中
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add(uid, String.valueOf(id));
+        builder.add(name,username);
+        //循环form表单，将表单内容添加到form builder中
+        //构建formBody，将其传入Request请求中
+        FormBody body = builder.build();
+        Request request = new Request.Builder().url(url).post(body).build();
+        Response response = null;
+        int result
+                =-1;
+        try {
+            response = okHttpClient.newCall(request).execute();
+            result= response.code();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }return result==200;
     }
 
 }

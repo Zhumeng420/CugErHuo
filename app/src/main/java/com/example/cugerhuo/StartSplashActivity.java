@@ -130,6 +130,7 @@ public class StartSplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 /**
                  * 查看本地存储是否可用
                  * @author 施立豪

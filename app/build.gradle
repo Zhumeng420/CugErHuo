@@ -93,6 +93,7 @@ dependencies {
 
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation files('libs\\open_sdk_3.5.14.3_rc26220c_lite.jar')
     testImplementation 'junit:junit:4.13.2'
     implementation 'org.redisson:redisson:3.12.3'
     implementation 'com.airbnb.android:lottie:3.6.1'
@@ -119,6 +120,8 @@ dependencies {
     implementation "com.hanks:htextview-scale:$htextview_version"       // optional
     implementation "com.hanks:htextview-evaporate:$htextview_version"   // optional
     implementation "com.hanks:htextview-fall:$htextview_version"        // optional
+    //gson-QQ登录
+    implementation 'com.google.code.gson:gson:2.8.5'
 
     //头像圆角实现
     implementation "com.makeramen:roundedimageview:2.3.0"

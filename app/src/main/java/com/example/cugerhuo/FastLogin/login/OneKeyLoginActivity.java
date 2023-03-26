@@ -27,6 +27,7 @@ import com.example.cugerhuo.FastLogin.loginUtils.Constant;
 import com.example.cugerhuo.FastLogin.loginUtils.MessageActivity;
 import com.example.cugerhuo.FastLogin.utils.ExecutorManager;
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.tools.NameUtil;
 import com.example.cugerhuo.tools.TracingHelper;
 import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
 import com.mobile.auth.gatewayauth.ResultCode;
@@ -89,6 +90,11 @@ public class OneKeyLoginActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /**
+         * qq登录初始化
+         */
+
         /**
          * 通过intent得到当前显示主题为GIF或视频，设置相应布局和号码认证服务
          */
@@ -110,7 +116,6 @@ public class OneKeyLoginActivity extends Activity {
                 /**创建普通字符型ClipData
                  *
                  */
-
                 ClipData mClipData = ClipData.newPlainText("Label", mTvResult.getText());
                 /**
                  * 将ClipData内容放到系统剪贴板里。
@@ -160,6 +165,7 @@ public class OneKeyLoginActivity extends Activity {
              */
             @Override
             public void onTokenFailed(String s) {
+
                 Log.e(TAG, "获取token失败：" + s);
                 hideLoadingDialog();
                 mPhoneNumberAuthHelper.hideLoginLoading();
@@ -236,6 +242,7 @@ public class OneKeyLoginActivity extends Activity {
                 //以key-value形式保存数据
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date=new Date();
+
                 /**
                  * 登录信息过期重新登陆
                  */
@@ -276,13 +283,13 @@ public class OneKeyLoginActivity extends Activity {
                                          */
                                         boolean IsPhoneBaned;
                                         Span span2 = tracer.buildSpan("查询redis流程2").withTag("函数：getResultWithToken", "子追踪").start();
-                                        try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
+                                        try (Scope ignored1 = tracer.scopeManager().activate(span2,true)) {
                                             IsPhoneBaned=UserOperate.IsPhoneBanedBloom(phoneNumber,OneKeyLoginActivity.this);
                                         } catch (Exception e) {
-                                            TracingHelper.onError(e, span);
+                                            TracingHelper.onError(e, span2);
                                             throw e;
                                         } finally {
-                                            span.finish();
+                                            span2.finish();
                                         }
                                         /**
                                          * 被封处理
@@ -304,14 +311,56 @@ public class OneKeyLoginActivity extends Activity {
                                         {
 
                                             boolean IsInserted;
+                                            String username= NameUtil.getNickName();
                                             Span span2 = tracer.buildSpan("查询mysql流程").withTag("函数：getResultWithToken", "子追踪").start();
                                             try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
-                                                IsInserted=UserOperate.InsertByPhone(phoneNumber,OneKeyLoginActivity.this);
+
+                                                IsInserted=UserOperate.InsertByPhone(phoneNumber,username,OneKeyLoginActivity.this);
+
                                             } catch (Exception e) {
                                                 TracingHelper.onError(e, span);
                                                 throw e;
                                             } finally {
                                                 span.finish();
+                                            }
+
+                                            if(IsInserted)
+                                            {
+                                                new Thread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        /**
+                                                         * 查询用户mysql id
+                                                         */
+                                                        int result=-1;
+                                                        Span span2 = tracer.buildSpan("查询mysql流程").withTag("函数：getResultWithToken", "子追踪").start();
+                                                        try (Scope ignored1 = tracer.scopeManager().activate(span2,true)) {
+                                                            result=UserOperate.GetId(phoneNumber,OneKeyLoginActivity.this);
+                                                        } catch (Exception e) {
+                                                            TracingHelper.onError(e, span2);
+                                                            throw e;
+                                                        } finally {
+                                                            span2.finish();
+                                                        }
+                                                        if(result!=-1){
+                                                        /**
+                                                         * 插入图数据库
+                                                         */
+                                                        boolean Isinserted;
+                                                        Span span3 = tracer.buildSpan("插入用户至图数据库").withTag("函数：getResultWithToken", "子追踪").start();
+                                                        try (Scope ignored1 = tracer.scopeManager().activate(span3,true)) {
+                                                                Isinserted=UserOperate.InsertUserToTu(username,result,OneKeyLoginActivity.this);
+                                                        } catch (Exception e) {
+                                                            TracingHelper.onError(e, span3);
+                                                            throw e;
+                                                        }finally {
+                                                            span3.finish();
+                                                        }}else
+                                                        {
+                                                            System.out.println("mysql的id查询失败！");
+                                                        }
+                                                    }
+                                                }).start();
                                             }
                                             if(!IsInserted) System.out.println("插入mysql失败");
                                             /**
