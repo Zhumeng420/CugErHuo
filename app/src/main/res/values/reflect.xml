@@ -11,6 +11,10 @@
     <string name="IsPhoneExistInBloom">bloomfilterofphone/existphone</string>
     <string name="IsPhoneBanedInBloom">bloomfilterofphone/isphonebaned</string>
     <string name="GetIdByPhone">user/getidbyphone</string>
+    <string name="FocusNum">focus/myfocusnum</string>
+    <string name="FansNum">focus/myfansnum</string>
+
+
     <string name="PhoneNumber">phone</string>
     <string name="Username">username</string>
     <string name="Name">name</string>

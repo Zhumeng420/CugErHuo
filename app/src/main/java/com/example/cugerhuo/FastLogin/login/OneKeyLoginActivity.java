@@ -331,6 +331,7 @@ public class OneKeyLoginActivity extends Activity {
                                                     public void run() {
                                                         /**
                                                          * 查询用户mysql id
+                                                         * @time 2023/3/26
                                                          */
                                                         int result=-1;
                                                         Span span2 = tracer.buildSpan("查询mysql流程").withTag("函数：getResultWithToken", "子追踪").start();
@@ -345,6 +346,7 @@ public class OneKeyLoginActivity extends Activity {
                                                         if(result!=-1){
                                                         /**
                                                          * 插入图数据库
+                                                         * @time 2023/3/26
                                                          */
                                                         boolean Isinserted;
                                                         Span span3 = tracer.buildSpan("插入用户至图数据库").withTag("函数：getResultWithToken", "子追踪").start();

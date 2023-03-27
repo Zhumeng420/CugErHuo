@@ -236,4 +236,83 @@ public class UserOperate {
         }return result==200;
     }
 
+    /**
+     * 获取用户关注数
+     * @param id 用户id
+     * @param context 获取映射文件
+     * @return 数量
+     * @author 施立豪
+     * @time 2023/3/27
+     */
+    public static int  GetFocusNum(int id,Context context)
+    {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        /**
+         * 获取XML文本
+         */
+        String Ip=context.getString(R.string.Tuip);
+        String Router=context.getString(R.string.FocusNum);
+        String uid=context.getString(R.string.UserId);
+
+        /**
+         * 发送请求
+         */
+        String url="http://"+Ip+"/"+Router;
+        //循环form表单，将表单内容添加到form builder中
+        //构建formBody，将其传入Request请求中
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add(uid, String.valueOf(id));
+        //循环form表单，将表单内容添加到form builder中
+        //构建formBody，将其传入Request请求中
+        FormBody body = builder.build();
+        Request request = new Request.Builder().url(url).post(body).build();
+        Response response = null;
+        int result=-1;
+        try {
+            response = okHttpClient.newCall(request).execute();
+            result= Integer.parseInt(response.body().string());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }return result;
+    }
+
+    /**
+     * 获取用户粉丝
+     * @param id 用户id
+     * @param context 获取映射文件
+     * @return 数量
+     * @author 施立豪
+     * @time 2023/3/27
+     */
+    public static int  GetFansNum(int id,Context context)
+    {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        /**
+         * 获取XML文本
+         */
+        String Ip=context.getString(R.string.Tuip);
+        String Router=context.getString(R.string.FansNum);
+        String uid=context.getString(R.string.UserId);
+        /**
+         * 发送请求
+         */
+        String url="http://"+Ip+"/"+Router;
+        //循环form表单，将表单内容添加到form builder中
+        //构建formBody，将其传入Request请求中
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add(uid, String.valueOf(id));
+        //循环form表单，将表单内容添加到form builder中
+        //构建formBody，将其传入Request请求中
+        FormBody body = builder.build();
+        Request request = new Request.Builder().url(url).post(body).build();
+        Response response = null;
+        int result=-1;
+        try {
+            response = okHttpClient.newCall(request).execute();
+            result= Integer.parseInt(response.body().string());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }return result;
+    }
+
 }

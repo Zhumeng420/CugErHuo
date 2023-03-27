@@ -5,14 +5,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.cugerhuo.DataAccess.User.UserOperate;
 import com.example.cugerhuo.R;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -37,24 +41,23 @@ public class MyCenterActivity extends AppCompatActivity {
     private ImageView iv_tab_three;
     private ImageView iv_tab_four;
     private ImageView iv_tab_five;
-
+    private TextView user_focus;
+    private TextView user_fans;
+    private mHandler mhandler = new mHandler();
     private LinearLayout ll_tab_one;
     private LinearLayout ll_tab_two;
     private LinearLayout ll_tab_three;
     private LinearLayout ll_tab_four;
     private LinearLayout ll_tab_five;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_center);
         initView();
-        user_image=findViewById(R.id.user_img);
-        SharedPreferences imagePath=getSharedPreferences("ImagePath", Context.MODE_PRIVATE);
-        String imagpath=imagePath.getString("imagepath","");
-        if(!imagpath.equals(""))
-        {
+        user_image = findViewById(R.id.user_img);
+        SharedPreferences imagePath = getSharedPreferences("ImagePath", Context.MODE_PRIVATE);
+        String imagpath = imagePath.getString("imagepath", "");
+        if (!imagpath.equals("")) {
             user_image.setImageURI(Uri.fromFile(new File(imagpath)));
         }
         ll_tab_one.setOnClickListener(this::onClickErhuo);
@@ -63,8 +66,103 @@ public class MyCenterActivity extends AppCompatActivity {
         ll_tab_two.setOnClickListener(this::onClickXuanShang);
         iv_tab_three = (ImageView) findViewById(R.id.iv_tab_three);
         iv_tab_three.setOnClickListener(this::onClickPublish);
-    }
+        /**
+         * 获取关注数量
+         * @author 施立豪
+         * @time 2023/3/26
+         */
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message msg = Message.obtain();
+                msg.arg1 = 1;
+                int focusNum=0;
+                /**
+                 * 查询本地存储
+                 * @author 施立豪
+                 * @time 2023/3/27
+                 */
+                SharedPreferences LoginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
+                //获得Editor 实例
+                SharedPreferences.Editor editor = LoginMessage.edit();
+                String id=LoginMessage.getString("Id","");
+                int Id=0;
+                /**
+                 * 如果当前本地没有存储id，先查询id并持久化
+                 */
+                if(id.equals(""))
+                {
 
+                    Id=UserOperate.GetId(LoginMessage.getString("PhoneNumber",""),MyCenterActivity.this);
+                    editor.putString("Id", String.valueOf(Id));
+                    editor.apply();
+
+                }
+                /**
+                 * 本地有id，则查询id
+                 */
+                else{
+                    Id=Integer.parseInt(id);
+
+            }
+                /**
+                 * 获取关注数量
+                 */
+                focusNum=UserOperate.GetFocusNum(Id,MyCenterActivity.this);
+                msg.arg2=focusNum;
+                //4、发送消息
+                mhandler.sendMessage(msg);
+            }
+            // 5、开启线程
+        }).start();
+        /**
+         * 获取粉丝数量
+         * @author 施立豪
+         * @time 2023/3/26
+         */
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                Message msg = Message.obtain();
+                msg.arg1 = 2;
+                int fansNum=0;
+                /**
+                 * 查询本地存储
+                 * @author 施立豪
+                 * @time 2023/3/27
+                 */
+                SharedPreferences LoginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
+                //获得Editor 实例
+                SharedPreferences.Editor editor = LoginMessage.edit();
+                String id=LoginMessage.getString("Id","");
+                int Id=0;
+                /**
+                 * 如果当前本地没有存储id，先查询id并持久化
+                 */
+                if(id.equals(""))
+                {
+
+                    Id=UserOperate.GetId(LoginMessage.getString("PhoneNumber",""),MyCenterActivity.this);
+                    editor.putString("Id", String.valueOf(Id));
+                    editor.apply();
+
+                }
+                /**
+                 * 本地有id，则查询id
+                 */
+                else{
+                    Id=Integer.parseInt(id);
+
+                }
+                fansNum=UserOperate.GetFansNum(Id,MyCenterActivity.this);
+                msg.arg2=fansNum;
+                //4、发送消息
+                mhandler.sendMessage(msg);
+            }
+            // 5、开启线程
+        }).start();
+    }
     /**
      * 初始化各个控件，找到对应的组件
      * @author 唐小莉
@@ -76,6 +174,8 @@ public class MyCenterActivity extends AppCompatActivity {
         ll_tab_three=findViewById(R.id.ll_tab_three);
         ll_tab_four=findViewById(R.id.ll_tab_four);
         ll_tab_five=findViewById(R.id.ll_tab_five);
+        user_fans=findViewById(R.id.user_fan);
+        user_focus=findViewById(R.id.user_concern);
     }
 
     /**
@@ -87,7 +187,6 @@ public class MyCenterActivity extends AppCompatActivity {
      */
     public void onClickErhuo(View view){
         Intent i = null;
-
         i=new Intent(getApplicationContext(), ErHuoActivity.class);
         startActivity(i);
         overridePendingTransition(0, 0);
@@ -197,4 +296,36 @@ public class MyCenterActivity extends AppCompatActivity {
             }
         }
     }
+    /**
+     * 消息发送接收，异步更新UI
+     * @author 施立豪
+     * @time 2023/3/26
+     */
+    private class mHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.arg1){
+                /**
+                 * 更新关注数
+                 */
+                case 1:
+                    System.out.println("关注数"+msg.arg2);
+                    user_focus.setText(String.valueOf(msg.arg2));
+                    break;
+                /**
+                 * 更新粉丝数
+                 * @time 2023/3/27
+                 */
+                case 2:
+                    System.out.println(String.valueOf(msg.arg2));
+
+                    user_fans.setText(String.valueOf(msg.arg2));
+                    break;
+
+            }
+        }
+    }
+
+
 }
