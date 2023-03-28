@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.util.TypedValue;
 import android.view.Surface;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -33,6 +35,7 @@ public abstract class BaseUIConfig {
      */
     public int mScreenWidthDp;
     public int mScreenHeightDp;
+
     /**
      * 布局类型初始化，选择GIF或者MOVIE
      * @param type      类型变量 0：gif ，1：movie
@@ -45,6 +48,11 @@ public abstract class BaseUIConfig {
             case Constant.CUSTOM_GIF:
                 return new CustomGifConfig(activity, authHelper);
             case Constant.CUSTOM_MOV:
+                Button mbutton;
+                mbutton=new Button(activity.getApplicationContext());
+                mbutton.setLayoutParams(new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT));
                 return new CustomMovConfig(activity, authHelper);
             default:
                 return null;

@@ -62,7 +62,7 @@ public class StartSplashActivity extends AppCompatActivity {
 
 
         //
-//        Intent i1=new Intent(getApplicationContext(), ErHuoActivity.class);
+//        Intent i1=new Intent(getApplicationContext(), QqLoginActivity.class);
 //        startActivity(i1);
 //        finish();
         /**
@@ -92,7 +92,6 @@ public class StartSplashActivity extends AppCompatActivity {
             }
         }).start();
 
-
         /**
          * 启动动画
          * @author 唐小莉
@@ -121,7 +120,6 @@ public class StartSplashActivity extends AppCompatActivity {
         img.animate().translationY(-2200).setDuration(1000).setStartDelay(2800);
         logo.animate().translationY(1600).setDuration(1000).setStartDelay(2800);
         lottie.animate().translationY(1600).setDuration(1000).setStartDelay(2800);
-
         /**
          * 由启动页面跳转至主页，同时等待时间设为4000ms，刚好将启动动画演示完以及页面滑动完成
          * @author 唐小莉
@@ -134,41 +132,56 @@ public class StartSplashActivity extends AppCompatActivity {
                 /**
                  * 查看本地存储是否可用
                  * @author 施立豪
-                 * @time 2023/3/19
+                 * @time 2023/3/19 2023/3/28 更新qq登录
+                 */
+                /**
+                 * 登录信息，存储了手机号，手机号登陆日期；qqopen id(唯一)，qq号登陆日期
                  */
                 SharedPreferences LoginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
                 //获得Editor 实例
                 SharedPreferences.Editor editor = LoginMessage.edit();
-                String LastData="";
+                String LastData=""; //手机号登陆日期
+                String QqLastData=""; //qq登录日期
                 //以key-value形式保存数据
+
                LastData= LoginMessage.getString("LoginData","");
+
+               QqLastData= LoginMessage.getString("QqLoginData","");
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                //当前日期
                 Date date=new Date();
                 if(LastData!=""){
                     /**
                      * 日期转换,求上次与这次登录的时间差
                      */
-
                     /**
                      * 计算时间差，单位天
                      */
-                    double DayNum=10;
+                    double DayNum=10;   //手机
+
+                    double QqDayNum=10;//qq
                     try {
-
                         DayNum= (date.getTime() - format.parse(LastData).getTime()) / (24 * 60 * 60 * 1000);
-
+                        QqDayNum= (date.getTime() - format.parse(QqLastData).getTime()) / (24 * 60 * 60 * 1000);
                     } catch ( ParseException e) {
                         e.printStackTrace();
                     }
                     /**
                      * 时间差小于7天，直接进主页，更新日期
                      */
-                    if(DayNum<=7)
+                    if(DayNum<=7||QqDayNum<=7)
                     {
-
                         System.out.println("newdate"+format.format(date));
                         String Time = format.format(date);
-                        editor.putString("LoginData",Time);
+                        if(QqDayNum>=DayNum)
+                        {
+                            editor.putString("LoginData",Time);
+                        }
+                        else
+                        {
+                            editor.putString("QqLoginData",Time);
+                        }
+                        //异步写入
                         editor.apply();
                         /**
                          * 登录信息没过期直接进入主页
@@ -177,8 +190,6 @@ public class StartSplashActivity extends AppCompatActivity {
                         startActivity(i);
                         overridePendingTransition(0,0);
                         finish();
-
-
                     return;
                     }}
                 /**

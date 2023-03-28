@@ -54,7 +54,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
         <activity
-            android:name=".Activity.login11"
+            android:name=".Activity.QqLoginActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -63,16 +63,14 @@
         <!-- QQ互联第三方登录 -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
-            android:exported="true"
+            android:noHistory="true"
             android:launchMode="singleTask"
-            android:noHistory="true">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="tencent102042111" />
+                <data android:scheme="tencent102046332" />
             </intent-filter>
         </activity>
         <activity
@@ -80,6 +78,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="behind"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <activity
             android:name=".Activity.PublishSelectionActivity"
             android:exported="false">

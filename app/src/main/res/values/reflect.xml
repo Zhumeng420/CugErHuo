@@ -4,17 +4,23 @@
     <string name="Tuip">123.249.11.83:8085</string>
     <string name="InsertUserToTu">user/adduser</string>
 
+    <string name="InsertQqToBloom">bloomfilterofphone/insertbyqq</string>
     <string name="GetUserPhone">phonenumber/getnumber</string>
     <string name="InsertUserByPhone">user/insertuserbyphone</string>
+    <string name="InsertUserByQq">user/insertuserbyqqe</string>
     <string name="InsertPhoneToBloom">bloomfilterofphone/insertbyphone</string>
     <string name="InsertPhoneToBanedBloom">bloomfilterofphone/banphone</string>
     <string name="IsPhoneExistInBloom">bloomfilterofphone/existphone</string>
+    <string name="IsQqExistInBloom">bloomfilterofphone/existqq</string>
     <string name="IsPhoneBanedInBloom">bloomfilterofphone/isphonebaned</string>
+    <string name="IsQqBanedInBloom">bloomfilterofphone/isqqbaned</string>
     <string name="GetIdByPhone">user/getidbyphone</string>
+    <string name="GetIdByQq">user/getidbyqq</string>
+
     <string name="FocusNum">focus/myfocusnum</string>
     <string name="FansNum">focus/myfansnum</string>
 
-
+    <string name="Qq">qq</string>
     <string name="PhoneNumber">phone</string>
     <string name="Username">username</string>
     <string name="Name">name</string>

@@ -2,6 +2,7 @@ package com.example.cugerhuo.FastLogin.config;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
@@ -9,8 +10,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.example.cugerhuo.Activity.QqLoginActivity;
+import com.example.cugerhuo.FastLogin.loginUtils.AppUtils;
 import com.example.cugerhuo.FastLogin.loginUtils.CacheManage;
 import com.example.cugerhuo.FastLogin.loginUtils.NativeBackgroundAdapter;
 import com.example.cugerhuo.R;
@@ -37,6 +41,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class CustomMovConfig extends BaseUIConfig {
     private final String TAG = "CustomMovConfig";
+    private Context mcontext;
     /**
      * 缓存管理
      */
@@ -58,8 +63,8 @@ public class CustomMovConfig extends BaseUIConfig {
         super(activity, authHelper);
         mCacheManage=new CacheManage(activity.getApplication());
         mThreadExecutor=new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
-            Runtime.getRuntime().availableProcessors(),
-            0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10), new ThreadPoolExecutor.CallerRunsPolicy());
+                Runtime.getRuntime().availableProcessors(),
+                0, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10), new ThreadPoolExecutor.CallerRunsPolicy());
         /**
          * 背景视频文件
          * @author 唐小莉
@@ -67,8 +72,8 @@ public class CustomMovConfig extends BaseUIConfig {
          */
 
         nativeBackgroundAdapter =
-            new NativeBackgroundAdapter(mCacheManage, mThreadExecutor, activity, "videoPath"
-                , "bg1.mp4");
+                new NativeBackgroundAdapter(mCacheManage, mThreadExecutor, activity, "videoPath"
+                        , "bg1.mp4");
     }
     /**
      * 协议授权/条款同意 选项
@@ -153,6 +158,45 @@ public class CustomMovConfig extends BaseUIConfig {
                     }
                 })
                 .build());
+        /**
+         * 添加第三方登录控件
+         * @author 施立豪
+         * @time 2023/3/27
+         */
+        mAuthHelper.addAuthRegisterXmlConfig(new AuthRegisterXmlConfig.Builder()
+                .setLayout(R.layout.custom_land_dialog, new AbstractPnsViewDelegate() {
+                    @Override
+                    public void onViewCreated(View view) {
+                        findViewById(R.id.tv_title).setVisibility(View.GONE);
+                        findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mAuthHelper.quitLoginPage();
+                            }
+                        });
+                        int iconTopMargin = AppUtils.dp2px(getContext(),  mScreenHeightDp-100);
+                        View iconContainer = findViewById(R.id.container_icon);
+                        RelativeLayout.LayoutParams iconLayout = (RelativeLayout.LayoutParams) iconContainer.getLayoutParams();
+                        iconLayout.topMargin = iconTopMargin;
+                        iconLayout.width = AppUtils.dp2px(getContext(),  180);
+                        findViewById(R.id.qq).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                /**
+                                 * 跳转到qq登录
+                                 * @author 施立豪
+                                 * @time 2023/3/27
+                                 */
+                                System.out.println("qq登录");
+                                Intent intent=new Intent();
+                                intent.setClass(mContext, QqLoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                mContext.startActivity(intent);
+                            }
+                        });
+                    }
+                })
+                .build());
         mAuthHelper.setAuthUIConfig(new AuthUIConfig.Builder()
                 .setAppPrivacyOne("《自定义隐私协议》", "https://test.h5.app.tbmao.com/user")
                 .setAppPrivacyTwo("《百度》", "https://www.baidu.com")
@@ -162,7 +206,7 @@ public class CustomMovConfig extends BaseUIConfig {
                 .setSloganHidden(true)
                 .setSwitchAccHidden(true)
                 .setPrivacyState(false)
-                .setCheckboxHidden(true)
+                .setCheckboxHidden(false)
                 .setLightColor(true)
                 .setNumFieldOffsetY(unit * 6)
                 .setLogBtnOffsetY(unit * 7)

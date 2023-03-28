@@ -1,35 +1,17 @@
 package com.example.cugerhuo.Activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
-import com.example.cugerhuo.Activity.adapter.MyFragmentTabAdapter;
-import com.example.cugerhuo.FastLogin.login.OneKeyLoginActivity;
-import com.example.cugerhuo.Fragment.ErHuoFragment;
-import com.example.cugerhuo.Fragment.MessageFragment;
-import com.example.cugerhuo.Fragment.MyCenterFragment;
-import com.example.cugerhuo.Fragment.XuanShangFragment;
-import com.example.cugerhuo.Fragment.PostFragment;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.tools.MyToast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 底部带悬浮球导航栏：

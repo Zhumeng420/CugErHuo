@@ -15,6 +15,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -24,7 +25,6 @@ import com.example.cugerhuo.DataAccess.User.UserOperate;
 import com.example.cugerhuo.FastLogin.config.BaseUIConfig;
 import com.example.cugerhuo.FastLogin.loginUtils.BuildConfig;
 import com.example.cugerhuo.FastLogin.loginUtils.Constant;
-import com.example.cugerhuo.FastLogin.loginUtils.MessageActivity;
 import com.example.cugerhuo.FastLogin.utils.ExecutorManager;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.tools.NameUtil;
@@ -66,6 +66,7 @@ public class OneKeyLoginActivity extends Activity {
      * 获取号码认证服务示例，此实例为单例，获取多次为同一对象
      */
     private PhoneNumberAuthHelper mPhoneNumberAuthHelper;
+    private ImageView qqlogin;
     /**
      * 监听器--Token返回结果
      */
@@ -125,6 +126,7 @@ public class OneKeyLoginActivity extends Activity {
                 Toast.makeText(OneKeyLoginActivity.this,"登录token已复制",Toast.LENGTH_SHORT).show();
                 return false;
             }
+
         });
     }
 
@@ -176,11 +178,10 @@ public class OneKeyLoginActivity extends Activity {
                         /**
                          * 必须登录 否则直接退出app的场景
                          */
-                        finish();
                     } else {
-                        Toast.makeText(getApplicationContext(), "一键登录失败切换到其他登录方式", Toast.LENGTH_SHORT).show();
-                        Intent pIntent = new Intent(OneKeyLoginActivity.this, MessageActivity.class);
-                        startActivityForResult(pIntent, 1002);
+//                        Toast.makeText(getApplicationContext(), "一键登录失败切换到其他登录方式", Toast.LENGTH_SHORT).show();
+//                        Intent pIntent = new Intent(OneKeyLoginActivity.this, MessageActivity.class);
+//                        startActivityForResult(pIntent, 1002);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -242,7 +243,6 @@ public class OneKeyLoginActivity extends Activity {
                 //以key-value形式保存数据
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date=new Date();
-
                 /**
                  * 登录信息过期重新登陆
                  */
@@ -254,6 +254,7 @@ public class OneKeyLoginActivity extends Activity {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
+                                //单例模式
                                 Tracer tracer = GlobalTracer.get();
                                 // 创建spann
                                 Span span = tracer.buildSpan("登录流程").withTag("getResultWithToken", "主追踪").start();
@@ -264,7 +265,6 @@ public class OneKeyLoginActivity extends Activity {
                                     boolean IsPhoneExisted;
                                     Span span1 = tracer.buildSpan("查询redis流程1").withTag("函数：getResultWithToken", "子追踪").start();
                                     try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
-
                                         IsPhoneExisted= UserOperate.IsPhoneExistBloom(phoneNumber,OneKeyLoginActivity.this);
                                     } catch (Exception e) {
                                         TracingHelper.onError(e, span);
@@ -272,7 +272,6 @@ public class OneKeyLoginActivity extends Activity {
                                     } finally {
                                         span.finish();
                                     }
-
                                     /**
                                      * 账号已注册
                                      */

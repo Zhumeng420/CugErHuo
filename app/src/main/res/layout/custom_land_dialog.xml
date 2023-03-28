@@ -7,30 +7,48 @@
     <RelativeLayout
         android:id="@+id/container_icon"
         android:layout_width="200dp"
-        android:layout_height="51dp"
+        android:layout_height="61dp"
         android:orientation="horizontal"
-        android:layout_marginRight="30dp"
+        android:layout_marginRight="40dp"
         android:layout_alignParentRight="true"
         >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginRight="30dp"
+            android:layout_alignParentRight="true"
+            >
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:textSize="10dp"
+            android:text="----其他登录方式----"
+            />
+
+        <RelativeLayout
+            android:layout_width="200dp"
+            android:layout_height="51dp"
+            android:orientation="horizontal"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentRight="true"
+            >
         <ImageView
+            android:id="@+id/qq"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/taobao"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            />
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/alipay"
-            android:layout_centerInParent="true"
-            />
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/sina"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            />
+            android:src="@drawable/qqicon" />
+
+            <ImageView
+                android:id="@+id/wechat"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/weixin" /></RelativeLayout>
+    </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>
