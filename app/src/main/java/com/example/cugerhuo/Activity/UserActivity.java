@@ -55,7 +55,11 @@ import top.zibin.luban.CompressionPredicate;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnNewCompressListener;
 import top.zibin.luban.OnRenameListener;
-
+/**
+ * 个人中心
+ * @Author: 李柏睿
+ * @Time: 2023/3/20 15:40
+ */
 public class UserActivity extends AppCompatActivity {
     private RoundedImageView user_image;
     private SharedPreferences imagePath;

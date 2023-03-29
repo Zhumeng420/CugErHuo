@@ -13,7 +13,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.cugerhuo.R;
-
+/**
+ * 发布选择
+ * @Author: 李柏睿
+ * @Time: 2023/3/22 15:40
+ */
 public class PublishSelectionActivity extends AppCompatActivity {
 
     private ImageView iv_tab_three;

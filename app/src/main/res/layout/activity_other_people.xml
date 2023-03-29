@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.OtherPeopleActivity">
+
+
+    <com.example.cugerhuo.views.MyScrollView
+        android:id="@+id/scrollView_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_scrollview_title"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:orientation="vertical"
+                android:background="@drawable/other_back">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="55dp"
+                    android:layout_marginLeft="15dp"
+                    android:orientation="horizontal">
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/other_user_img"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:src="@drawable/default_avatar_2"
+                        app:riv_oval="true" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/username"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="用户名"
+                            android:textColor="#FFFFFF"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/id"
+                            android:layout_marginTop="5dp"
+                            android:textSize="12sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#dbdbdb"
+                            android:text=" id账号:" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/introduction"
+                        android:layout_marginTop="5dp"
+                        android:textSize="14sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#e6e6e6"
+                        android:text="自我介绍hhhh" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/all_bott"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="100dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                        android:layout_width="40dp"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/user_concern"
+                                android:textStyle="bold"
+                                android:textSize="18sp"
+                                android:textColor="#FFFFFF"
+                                android:text="0"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="关注"
+                                android:textAlignment="center"
+                                android:textColor="#D5E6E6E6" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="40dp"
+                            android:orientation="vertical"
+                            android:layout_marginLeft="15dp"
+                            android:gravity="center_horizontal"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/user_fans"
+                                android:textStyle="bold"
+                                android:textSize="18sp"
+                                android:textColor="#FFFFFF"
+                                android:text="0"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="粉丝"
+                                android:textAlignment="center"
+                                android:textColor="#D5E6E6E6" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginRight="15dp"
+                        android:layout_gravity="right">
+
+                        <Button
+                            android:id="@+id/is_followed_1"
+                            android:layout_width="70dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/not_followed"
+                            android:text="关注"
+                            android:textColor="#FFFFFF"
+                            tools:ignore="TouchTargetSizeCheck"></Button>
+
+                        <LinearLayout
+                            android:layout_width="40dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginLeft="10dp"
+                            android:gravity="center"
+                            android:background="@drawable/followed">
+                            <ImageView
+                                android:id="@+id/is_followed_2"
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/icon_chat"></ImageView>
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/move"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tabIndicatorAnimationDuration="400"
+                app:tabIndicatorColor="@color/orange"
+                app:tabIndicatorFullWidth="false"
+                app:tabSelectedTextColor="@color/orange"
+                app:tabTextColor="@color/md_grey_700"
+                tools:ignore="SpeakableTextPresentCheck" />
+<!--            androidx.viewpager.widget.ViewPager-->
+            <com.example.cugerhuo.views.MyViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toBottomOf="@id/move"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </LinearLayout>
+    </com.example.cugerhuo.views.MyScrollView>
+
+    <LinearLayout
+        android:id="@+id/test"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/scrollView_scrollview">
+
+        <ImageView
+            android:id="@+id/other_return_1"
+            android:rotation="180"
+            android:layout_marginLeft="5dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/icon_arrow_white" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="5dp"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:textSize="16dp"
+            android:textColor="#000000" />
+
+<!--        <ImageView-->
+<!--            android:id="@+id/other_search_1"-->
+<!--            android:layout_width="25dp"-->
+<!--            android:layout_height="25dp"-->
+<!--            android:layout_marginRight="5dp"-->
+<!--            android:gravity="right"-->
+<!--            android:src="@drawable/icon_search_white" />-->
+
+        <ImageView
+            android:id="@+id/other_more_1"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="5dp"
+            android:gravity="right"
+            android:src="@drawable/icon_more" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_scrollview_small_title"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="#fa993e"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/scrollView_scrollview">
+
+        <ImageView
+            android:id="@+id/other_return_2"
+            android:rotation="180"
+            android:layout_marginLeft="5dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/icon_arrow_white" />
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/user_img_pop"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="60dp"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            android:src="@drawable/default_avatar_2"
+            app:riv_oval="true" />
+
+        <Button
+            android:id="@+id/is_followed_pop"
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/not_followed"
+            android:text="关注"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF"
+            android:visibility="invisible"
+            tools:ignore="TouchTargetSizeCheck"></Button>
+
+        <ImageView
+            android:id="@+id/other_more_2"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="5dp"
+            android:gravity="right"
+            android:src="@drawable/icon_more" />
+    </LinearLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/stop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="45dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        app:tabIndicatorColor="@color/orange"
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorAnimationDuration="400"
+        app:tabSelectedTextColor="@color/orange"
+        app:tabTextColor="@color/md_grey_700"/>
+</RelativeLayout>

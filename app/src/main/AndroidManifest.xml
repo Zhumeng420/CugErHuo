@@ -44,6 +44,14 @@
         android:theme="@style/Theme.CugErHuo"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".Activity.OtherPeopleActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.cugerhuo.fileprovider"
@@ -53,14 +61,14 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <activity
             android:name=".Activity.QqLoginActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-        </activity>
-        <!-- QQ互联第三方登录 -->
+        </activity> <!-- QQ互联第三方登录 -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:noHistory="true"

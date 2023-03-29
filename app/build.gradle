@@ -125,6 +125,8 @@ dependencies {
 
     //头像圆角实现
     implementation "com.makeramen:roundedimageview:2.3.0"
+    implementation 'com.google.android.material:material:1.0.0'
+
 
     // 权限请求框架：https://github.com/getActivity/XXPermissions
     implementation 'com.github.getActivity:XXPermissions:16.8' // 权限请求框架：https://github.com/getActivity/XXPermissions
