@@ -54,9 +54,9 @@ public class QqLoginActivity extends AppCompatActivity {
         listener=new BaseUiListener();
         setContentView(R.layout.qq_login);
         LoginButton=findViewById(R.id.lbu);
-// Tencent类是SDK的主要实现类，开发者可通过Tencent类访问腾讯开放的OpenAPI。
-// 其中APP_ID是分配给第三方应用的appid，类型为String。
-// 其中Authorities为 Manifest文件中注册FileProvider时设置的authorities属性值
+    // Tencent类是SDK的主要实现类，开发者可通过Tencent类访问腾讯开放的OpenAPI。
+    // 其中APP_ID是分配给第三方应用的appid，类型为String。
+    // 其中Authorities为 Manifest文件中注册FileProvider时设置的authorities属性值
         mTencent = Tencent.createInstance("102046332", this.getApplicationContext(),"com.example.cugerhuo.fileprovider");
         /**
          * 获取授权

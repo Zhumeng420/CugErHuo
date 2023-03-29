@@ -167,18 +167,14 @@ public class CustomMovConfig extends BaseUIConfig {
                 .setLayout(R.layout.custom_land_dialog, new AbstractPnsViewDelegate() {
                     @Override
                     public void onViewCreated(View view) {
-                        findViewById(R.id.tv_title).setVisibility(View.GONE);
-                        findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mAuthHelper.quitLoginPage();
-                            }
-                        });
+
                         int iconTopMargin = AppUtils.dp2px(getContext(),  mScreenHeightDp-100);
                         View iconContainer = findViewById(R.id.container_icon);
                         RelativeLayout.LayoutParams iconLayout = (RelativeLayout.LayoutParams) iconContainer.getLayoutParams();
+                        //设置子界面的高
                         iconLayout.topMargin = iconTopMargin;
-                        iconLayout.width = AppUtils.dp2px(getContext(),  180);
+                        //设置子界面的宽
+                        iconLayout.width = AppUtils.dp2px(getContext(),  mScreenWidthDp/2);
                         findViewById(R.id.qq).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
