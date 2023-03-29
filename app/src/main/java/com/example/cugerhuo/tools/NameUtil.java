@@ -693,7 +693,7 @@ public class NameUtil {
      *
      * @return 昵称
      */
-    private static String getTwoSurname() {
+    public static String getTwoSurname() {
         int headNameIndex = getRandom().nextInt(surnameArray.length);
         int foodNameIndex = getRandom().nextInt(foodNameArray.length);
         return surnameArray[headNameIndex] + foodNameArray[foodNameIndex];

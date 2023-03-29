@@ -161,7 +161,7 @@ public class QqLoginActivity extends AppCompatActivity {
                             {
 
                                 boolean IsInserted;
-                                String username= NameUtil.getNickName();
+                                String username= NameUtil.getTwoSurname();
                                 Span span2 = tracer.buildSpan("查询mysql流程").withTag("函数：doComplete", "子追踪").start();
                                 try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
                                     IsInserted=UserOperate.InsertByQq(openid,username,QqLoginActivity.this);
