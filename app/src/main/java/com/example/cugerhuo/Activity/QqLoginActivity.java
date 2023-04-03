@@ -53,7 +53,7 @@ public class QqLoginActivity extends AppCompatActivity {
     // Tencent类是SDK的主要实现类，开发者可通过Tencent类访问腾讯开放的OpenAPI。
     // 其中APP_ID是分配给第三方应用的appid，类型为String。
     // 其中Authorities为 Manifest文件中注册FileProvider时设置的authorities属性值
-        mTencent = Tencent.createInstance("102046332", this.getApplicationContext(),"com.example.cugerhuo.fileprovider");
+        mTencent = Tencent.createInstance("102046332", this.getApplicationContext());
         /**
          * 获取授权
          */
@@ -71,7 +71,7 @@ public class QqLoginActivity extends AppCompatActivity {
      */
     public void login()
     {
-        mTencent = Tencent.createInstance("102046332", this.getApplicationContext(),"com.example.cugerhuo.fileprovider");
+        mTencent = Tencent.createInstance("102046332", this.getApplicationContext());
         Tencent.setIsPermissionGranted(true);
 
         if (!mTencent.isSessionValid())
