@@ -6,14 +6,12 @@ import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.cugerhuo.DataAccess.User.UserOperate;
-import com.example.cugerhuo.R;
 import com.example.cugerhuo.tools.NameUtil;
 import com.example.cugerhuo.tools.TracingHelper;
 import com.tencent.tauth.IUiListener;
@@ -52,8 +50,6 @@ public class QqLoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         listener=new BaseUiListener();
-        setContentView(R.layout.qq_login);
-        LoginButton=findViewById(R.id.lbu);
     // Tencent类是SDK的主要实现类，开发者可通过Tencent类访问腾讯开放的OpenAPI。
     // 其中APP_ID是分配给第三方应用的appid，类型为String。
     // 其中Authorities为 Manifest文件中注册FileProvider时设置的authorities属性值
@@ -65,14 +61,15 @@ public class QqLoginActivity extends AppCompatActivity {
         /**
          * 设置监听器
          */
-        LoginButton.setOnClickListener(this::login);
+        login();
+        //LoginButton.setOnClickListener(this::login);
     }
     /**
      * 调用登录接口
-     * @param view 当前页面
+     * @param当前页面
      * @time 2023/3/27
      */
-    public void login(View view)
+    public void login()
     {
         mTencent = Tencent.createInstance("102046332", this.getApplicationContext(),"com.example.cugerhuo.fileprovider");
         Tencent.setIsPermissionGranted(true);
@@ -113,10 +110,10 @@ public class QqLoginActivity extends AppCompatActivity {
                         /**查询布隆过滤器redis
                          * 手机号是否存在
                          */
-                        boolean IsPhoneExisted;
+                        boolean IsQqExisted;
                         Span span1 = tracer.buildSpan("查询redis流程1").withTag("函数：doComplete", "子追踪").start();
                         try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
-                            IsPhoneExisted= UserOperate.IsPhoneExistBloom(openid, QqLoginActivity.this);
+                            IsQqExisted= UserOperate.IsQqExistBloom(openid, QqLoginActivity.this);
                         } catch (Exception e) {
                             TracingHelper.onError(e, span);
                             throw e;
@@ -126,15 +123,15 @@ public class QqLoginActivity extends AppCompatActivity {
                         /**
                          * 账号已注册
                          */
-                        if(IsPhoneExisted)
+                        if(IsQqExisted)
                         {
                             /**
                              * qq是否被封
                              */
-                            boolean IsPhoneBaned;
+                            boolean IsQqBaned;
                             Span span2 = tracer.buildSpan("查询redis流程2").withTag("函数：doComplete", "子追踪").start();
                             try (Scope ignored1 = tracer.scopeManager().activate(span2,true)) {
-                                IsPhoneBaned=UserOperate.IsPhoneBanedBloom(openid,QqLoginActivity.this);
+                                IsQqBaned=UserOperate.IsQqBanedBloom(openid,QqLoginActivity.this);
                             } catch (Exception e) {
                                 TracingHelper.onError(e, span2);
                                 throw e;
@@ -144,7 +141,7 @@ public class QqLoginActivity extends AppCompatActivity {
                             /**
                              * 被封处理
                              */
-                            if(IsPhoneBaned){
+                            if(IsQqBaned){
                                 System.out.println("账号已被封");
                                 Log.i("e","账号被封");
                                 return ;
