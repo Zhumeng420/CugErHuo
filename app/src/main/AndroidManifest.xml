@@ -31,7 +31,10 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 检查Wi-Fi网络状态 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 检查网络状态 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <queries>
+        <package android:name="com.tencent.mobileqq"/>
+        <package android:name="com.tencent.tim"/>
+    </queries>
 
     <application
         android:allowBackup="true"
