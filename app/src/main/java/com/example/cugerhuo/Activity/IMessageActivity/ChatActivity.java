@@ -79,33 +79,7 @@ private
             NIMClient.getService(MsgServiceObserve.class)
                     .observeReceiveMessage(incomingMessageObserver, true);
 
-            /**
-             * 以下是往一个账号发送消息的示例
-             */
-            // 该帐号为示例
-            String account = "test2";
-            // 以单聊类型为例
-            SessionTypeEnum sessionType = SessionTypeEnum.P2P;
-            String text = "hello world";
-            // 创建一个文本消息
-            IMMessage textMessage = MessageBuilder.createTextMessage(account, sessionType, text);
-            // 发送给对方
-            NIMClient.getService(MsgService.class).sendMessage(textMessage, false).setCallback(new RequestCallback<Void>() {
-                @Override
-                public void onSuccess(Void param) {
-                    MyToast.Toast(ChatActivity.this,"消息发送成功",3);
-                }
 
-                @Override
-                public void onFailed(int code) {
-                    MyToast.Toast(ChatActivity.this,"消息发送失败",1);
-                }
-
-                @Override
-                public void onException(Throwable exception) {
-
-                }
-            });
 
         }
 
@@ -126,7 +100,34 @@ private
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.send:{
+                //MyToast.Toast(ChatActivity.this,"你妈的",3);
+                /**
+                 * 以下是往一个账号发送消息的示例
+                 */
+                // 该帐号为示例
+                String account = "test2";
+                // 以单聊类型为例
+                SessionTypeEnum sessionType = SessionTypeEnum.P2P;
+                String text = "hello world";
+                // 创建一个文本消息
+                IMMessage textMessage = MessageBuilder.createTextMessage(account, sessionType, text);
+                // 发送给对方
+                NIMClient.getService(MsgService.class).sendMessage(textMessage, false).setCallback(new RequestCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void param) {
+                        MyToast.Toast(ChatActivity.this,"消息发送成功",3);
+                    }
 
+                    @Override
+                    public void onFailed(int code) {
+                        MyToast.Toast(ChatActivity.this,"消息发送失败",1);
+                    }
+
+                    @Override
+                    public void onException(Throwable exception) {
+                        MyToast.Toast(ChatActivity.this,"消息发送异常",1);
+                    }
+                });
             }
         }
     }
