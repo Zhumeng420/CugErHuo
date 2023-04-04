@@ -461,4 +461,7 @@ public class OneKeyLoginActivity extends Activity {
         super.onResume();
         mUIConfig.onResume();
     }
+
+
+
 }

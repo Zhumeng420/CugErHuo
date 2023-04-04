@@ -28,6 +28,10 @@ android {
         vectorDrawables.useSupportLibrary = true
         buildConfigField "String", "AUTH_SECRET", '"7KHffk2Cn1j17+QVA2zbJfdDteDSUDspB/s+FUoAhyXmQ/wueAQBcpMDOVLrp5lt5BDIGxDrCuTBZk7TcR4CxAQvHnJUPIaCI5dscbBFqHgHVI8Yoy0nYwsFo8Gyd2RZ6MbUAZr3lsnPQsA+UW1MZY9EP94x0TrXmwEJkU5xJgmOJfCSekYWHP5xNc0as/aWkTmNrjFyb5//93cAMwQllH0FFEFF+GEd7XMvm6ap/g4BD8676+z29MbePXPjoY6u3VrNTMkksQHW1EolxJkw+9Sa5pDsdOrQjXBz056J79PpNAFlTvPMZw=="'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            //设置支持的SO库架构
+            abiFilters "armeabi-v7a", "x86","arm64-v8a","x86_64"
+        }
     }
     sourceSets {
         main {
@@ -133,5 +137,6 @@ dependencies {
 
     //阿里云链路追踪
     implementation 'io.jaegertracing:jaeger-client:0.31.0'
+
 }
 

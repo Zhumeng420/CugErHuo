@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.cugerhuo.Activity.IMessageActivity.MessageActivity;
 import com.example.cugerhuo.DataAccess.User.UserOperate;
 import com.example.cugerhuo.R;
 import com.makeramen.roundedimageview.RoundedImageView;

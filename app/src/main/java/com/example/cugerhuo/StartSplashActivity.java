@@ -14,7 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
 import com.example.cugerhuo.Activity.ErHuoActivity;
+import com.example.cugerhuo.Activity.IMessageActivity.ChatActivity;
 import com.example.cugerhuo.FastLogin.login.OneKeyLoginActivity;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.Observer;
+import com.netease.nimlib.sdk.lifecycle.SdkLifecycleObserver;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -75,7 +79,6 @@ public class StartSplashActivity extends AppCompatActivity {
         /**
          * 链路追踪初始化
          */
-        // 将manualDemo替换为您的应用名称。
         new Thread(new Runnable() {
 
             @Override
@@ -97,7 +100,6 @@ public class StartSplashActivity extends AppCompatActivity {
          * @author 唐小莉
          * @time 2023/3/2 21:47
          */
-
         setContentView(R.layout.activity_start_splash);
         /**
          * 依次根据id找到对应控件
@@ -120,93 +122,103 @@ public class StartSplashActivity extends AppCompatActivity {
         img.animate().translationY(-2200).setDuration(1000).setStartDelay(2800);
         logo.animate().translationY(1600).setDuration(1000).setStartDelay(2800);
         lottie.animate().translationY(1600).setDuration(1000).setStartDelay(2800);
+        //-----------------------/
+        /**
+         * 测试云信用的
+         * @author 朱萌
+         * @time 2023/4/4
+         */
+        Intent i=new Intent(getApplicationContext(), ChatActivity.class);
+        startActivity(i);
+        //-------------------------/
+
         /**
          * 由启动页面跳转至主页，同时等待时间设为4000ms，刚好将启动动画演示完以及页面滑动完成
          * @author 唐小莉
          * @time 2023/3/3 10:35
          */
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                /**
-                 * 查看本地存储是否可用
-                 * @author 施立豪
-                 * @time 2023/3/19 2023/3/28 更新qq登录
-                 */
-                /**
-                 * 登录信息，存储了手机号，手机号登陆日期；qqopen id(唯一)，qq号登陆日期
-                 */
-                SharedPreferences LoginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
-                //获得Editor 实例
-                SharedPreferences.Editor editor = LoginMessage.edit();
-                String LastData=""; //手机号登陆日期
-                String QqLastData=""; //qq登录日期
-                //以key-value形式保存数据
-
-               LastData= LoginMessage.getString("LoginData","");
-
-               QqLastData= LoginMessage.getString("QqLoginData","");
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                //当前日期
-                Date date=new Date();
-                if(LastData!=""){
-                    /**
-                     * 日期转换,求上次与这次登录的时间差
-                     */
-                    /**
-                     * 计算时间差，单位天
-                     */
-                    double DayNum=10;   //手机
-
-                    double QqDayNum=10;//qq
-                    try {
-                        DayNum= (date.getTime() - format.parse(LastData).getTime()) / (24 * 60 * 60 * 1000);
-                        QqDayNum= (date.getTime() - format.parse(QqLastData).getTime()) / (24 * 60 * 60 * 1000);
-                    } catch ( ParseException e) {
-                        e.printStackTrace();
-                    }
-                    /**
-                     * 时间差小于7天，直接进主页，更新日期
-                     */
-                    if(DayNum<=7||QqDayNum<=7)
-                    {
-                        System.out.println("newdate"+format.format(date));
-                        String Time = format.format(date);
-                        if(QqDayNum>=DayNum)
-                        {
-                            editor.putString("LoginData",Time);
-                        }
-                        else
-                        {
-                            editor.putString("QqLoginData",Time);
-                        }
-                        //异步写入
-                        editor.apply();
-                        /**
-                         * 登录信息没过期直接进入主页
-                         */
-                        Intent i=new Intent(getApplicationContext(), ErHuoActivity.class);
-                        startActivity(i);
-                        overridePendingTransition(0,0);
-                        finish();
-                    return;
-                    }}
-                /**
-                 * 本地存储没用或者过期进入登陆页面
-                 */
-                Intent i=new Intent(getApplicationContext(), OneKeyLoginActivity.class);
-                i.putExtra(THEME_KEY, 1);
-                startActivity(i);
-                overridePendingTransition(0,0);
-                /**
-                 * 跳转到OneKeyLoginActivity界面，并结束当前界面生命周期
-                 * 当用户在下一个节目点击返回 则直接退出app 而不是返回当前页面
-                 */
-                finish();
-
-            }
-        },4000);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                /**
+//                 * 查看本地存储是否可用
+//                 * @author 施立豪
+//                 * @time 2023/3/19 2023/3/28 更新qq登录
+//                 */
+//                /**
+//                 * 登录信息，存储了手机号，手机号登陆日期；qqopen id(唯一)，qq号登陆日期
+//                 */
+//                SharedPreferences LoginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
+//                //获得Editor 实例
+//                SharedPreferences.Editor editor = LoginMessage.edit();
+//                String LastData=""; //手机号登陆日期
+//                String QqLastData=""; //qq登录日期
+//                //以key-value形式保存数据
+//
+//               LastData= LoginMessage.getString("LoginData","");
+//
+//               QqLastData= LoginMessage.getString("QqLoginData","");
+//                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                //当前日期
+//                Date date=new Date();
+//                if(LastData!=""){
+//                    /**
+//                     * 日期转换,求上次与这次登录的时间差
+//                     */
+//                    /**
+//                     * 计算时间差，单位天
+//                     */
+//                    double DayNum=10;   //手机
+//
+//                    double QqDayNum=10;//qq
+//                    try {
+//                        DayNum= (date.getTime() - format.parse(LastData).getTime()) / (24 * 60 * 60 * 1000);
+//                        QqDayNum= (date.getTime() - format.parse(QqLastData).getTime()) / (24 * 60 * 60 * 1000);
+//                    } catch ( ParseException e) {
+//                        e.printStackTrace();
+//                    }
+//                    /**
+//                     * 时间差小于7天，直接进主页，更新日期
+//                     */
+//                    if(DayNum<=7||QqDayNum<=7)
+//                    {
+//                        System.out.println("newdate"+format.format(date));
+//                        String Time = format.format(date);
+//                        if(QqDayNum>=DayNum)
+//                        {
+//                            editor.putString("LoginData",Time);
+//                        }
+//                        else
+//                        {
+//                            editor.putString("QqLoginData",Time);
+//                        }
+//                        //异步写入
+//                        editor.apply();
+//                        /**
+//                         * 登录信息没过期直接进入主页
+//                         */
+//                        Intent i=new Intent(getApplicationContext(), ErHuoActivity.class);
+//                        startActivity(i);
+//                        overridePendingTransition(0,0);
+//                        finish();
+//                    return;
+//                    }}
+//                /**
+//                 * 本地存储没用或者过期进入登陆页面
+//                 */
+//                Intent i=new Intent(getApplicationContext(), OneKeyLoginActivity.class);
+//                i.putExtra(THEME_KEY, 1);
+//                startActivity(i);
+//                overridePendingTransition(0,0);
+//                /**
+//                 * 跳转到OneKeyLoginActivity界面，并结束当前界面生命周期
+//                 * 当用户在下一个节目点击返回 则直接退出app 而不是返回当前页面
+//                 */
+//                finish();
+//
+//            }
+//        },4000);
 
     }
 

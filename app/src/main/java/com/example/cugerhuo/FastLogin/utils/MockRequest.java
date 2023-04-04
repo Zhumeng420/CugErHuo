@@ -10,6 +10,7 @@ import com.example.cugerhuo.tools.rsa.RsaClientUtilsImpl;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -88,7 +89,7 @@ public class MockRequest {
             try {
                 response = okHttpClient.newCall(request).execute();
                 byte [] a=response.body().bytes();
-                if(str!=""){
+                if(!Objects.equals(str, "")){
                 // 客户端利用私钥将密文解密
                 result = rsaClientUtils.decrypt(a, rsaClientUtils.getPrivateKey());
                 result=result.substring(result.length()-11);
