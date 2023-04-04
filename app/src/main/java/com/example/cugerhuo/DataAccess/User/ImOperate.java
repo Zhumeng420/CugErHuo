@@ -39,7 +39,7 @@ public class ImOperate {
             e.printStackTrace();
         }
         try {
-            jsonObject.put("token", "cug123456");
+            jsonObject.put("token", "123456");
         } catch (JSONException e) {
             e.printStackTrace();
         }
