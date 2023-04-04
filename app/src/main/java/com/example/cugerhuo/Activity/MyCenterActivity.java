@@ -37,24 +37,22 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
      * @time 2023/3/20 16:36
      */
     private RoundedImageView user_image;
-    private ImageView iv_tab_one;
-    private ImageView iv_tab_two;
     private ImageView iv_tab_three;
-    private ImageView iv_tab_four;
-    private ImageView iv_tab_five;
     private TextView user_focus;
     private TextView user_fans;
     private mHandler mhandler = new mHandler();
     private LinearLayout ll_tab_one;
     private LinearLayout ll_tab_two;
-    private LinearLayout ll_tab_three;
     private LinearLayout ll_tab_four;
     private LinearLayout ll_tab_five;
+
+    private LinearLayout user_concern;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_center);
         initView();
+        user_concern.setOnClickListener(this::user_concern_click);
         user_image = findViewById(R.id.user_img);
         SharedPreferences imagePath = getSharedPreferences("ImagePath", Context.MODE_PRIVATE);
         String imagpath = imagePath.getString("imagepath", "");
@@ -176,6 +174,12 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         iv_tab_three.setOnClickListener(this);
         user_fans=findViewById(R.id.user_fan);
         user_focus=findViewById(R.id.user_concern);
+        user_concern=findViewById(R.id.concern);
+    }
+
+    public void user_concern_click(View view){
+        startActivity(new Intent(getApplicationContext(),ConcernActivity.class));
+
     }
 
     /**

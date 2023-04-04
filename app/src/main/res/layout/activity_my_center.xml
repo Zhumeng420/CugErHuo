@@ -147,6 +147,7 @@
                             android:layout_height="wrap_content" />
                     </LinearLayout>
                     <LinearLayout
+                        android:id="@+id/concern"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:orientation="vertical"

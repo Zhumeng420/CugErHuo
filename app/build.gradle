@@ -138,5 +138,9 @@ dependencies {
     //阿里云链路追踪
     implementation 'io.jaegertracing:jaeger-client:0.31.0'
 
+    //滑动容器
+    implementation 'com.github.donkingliang:ConsecutiveScroller:4.6.4'
+
+
 }
 
