@@ -53,36 +53,25 @@ import com.example.cugerhuo.tools.MyToast;
 /**
  * "贰货“主页
  */
-public class ErHuoActivity extends AppCompatActivity {
+public class ErHuoActivity extends AppCompatActivity implements View.OnClickListener{
 
 
-    private ImageView iv_tab_one;
-    private ImageView iv_tab_two;
+    /**
+     * 变量从one-five依次对应，首页，悬赏，发布，消息，个人中心控件
+     * @author: 唐小莉
+     * @time 2023/3/20 16:36
+     */
     private ImageView iv_tab_three;
-    private ImageView iv_tab_four;
-    private ImageView iv_tab_five;
-
     private LinearLayout ll_tab_one;
     private LinearLayout ll_tab_two;
-    private LinearLayout ll_tab_three;
     private LinearLayout ll_tab_four;
     private LinearLayout ll_tab_five;
-
-    private MyToast toast=new MyToast();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_er_huo);
         initView();
-        ll_tab_four.setOnClickListener(this::onClickMessage);
-        ll_tab_two.setOnClickListener(this::onClickXuanShang);
-        ll_tab_three.setOnClickListener(this::onClickPost);
-        ll_tab_five.setOnClickListener(this::onClickMyCenter);
-        iv_tab_three = (ImageView) findViewById(R.id.iv_tab_three);
-        iv_tab_three.setOnClickListener(this::onClickPublish);
-
-
     }
 
     /**
@@ -92,80 +81,68 @@ public class ErHuoActivity extends AppCompatActivity {
      */
     public void initView(){
         ll_tab_one=findViewById(R.id.ll_tab_one);
+        ll_tab_one.setOnClickListener(this);
         ll_tab_two=findViewById(R.id.ll_tab_two);
-        ll_tab_three=findViewById(R.id.ll_tab_three);
+        ll_tab_two.setOnClickListener(this);
         ll_tab_four=findViewById(R.id.ll_tab_four);
+        ll_tab_four.setOnClickListener(this);
         ll_tab_five=findViewById(R.id.ll_tab_five);
-    }
-
-
-    /**
-     * 点击消息图标，进行跳转到消息界面， overridePendingTransition(0, 0):去掉进场动画
-     * @param view
-     * @author 唐小莉
-     * @time 2023/3/20 16:28
-     */
-    public void onClickMessage(View view){
-        Intent i = null;
-
-        i=new Intent(getApplicationContext(), MessageActivity.class);
-        startActivity(i);
-        overridePendingTransition(0, 0);
-
+        ll_tab_five.setOnClickListener(this);
+        iv_tab_three = (ImageView) findViewById(R.id.iv_tab_three);
+        iv_tab_three.setOnClickListener(this);
     }
 
     /**
-     * 点击悬赏图标，进行跳转到悬赏界面， overridePendingTransition(0, 0):去掉进场动画
+     * 底部导航栏点击事件
      * @param view
-     * @author 唐小莉
-     * @time 2023/3/20 16:28
      */
-    public void onClickXuanShang(View view){
-        Intent i = null;
-        i=new Intent(getApplicationContext(), XuanShangActivity.class);
-        startActivity(i);
-        overridePendingTransition(0, 0);
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.ll_tab_one:
+                break;
+            /**
+             * 点击悬赏图标，进行跳转到悬赏界面， overridePendingTransition(0, 0):去掉进场动画
+             * @author 唐小莉
+             * @time 2023/3/20 16:28
+             */
+            case R.id.ll_tab_two:
+                startActivity(new Intent(getApplicationContext(), XuanShangActivity.class));
+                overridePendingTransition(0,0);
+                break;
+            /**
+             * 点击中间加号按钮跳转选择界面+跳转动画
+             * @Author: 李柏睿
+             * @Time: 2023/3/22 16:38
+             */
+            case R.id.iv_tab_three:
+                final RotateAnimation animation = new RotateAnimation(0.0f, 90.0f,
+                        Animation.RELATIVE_TO_SELF, 0.5f,
+                        Animation.RELATIVE_TO_SELF, 0.5f);
+                animation.setDuration( 500 );
+                iv_tab_three.startAnimation( animation );
+                startActivity(new Intent(getApplicationContext(),PublishSelectionActivity.class));
+                overridePendingTransition(0,0);
+                break;
+            /**
+             * 点击消息图标，进行跳转到消息界面， overridePendingTransition(0, 0):去掉进场动画
+             * @author 唐小莉
+             * @time 2023/3/20 16:28
+             */
+            case R.id.ll_tab_four:
+                startActivity(new Intent(getApplicationContext(), MessageActivity.class));
+                overridePendingTransition(0,0);
+                break;
+            /**
+             * 点击个人中心图标，进行跳转到个人中心界面， overridePendingTransition(0, 0):去掉进场动画
+             * @author 唐小莉
+             * @time 2023/3/20 16:28
+             */
+            case R.id.ll_tab_five:
+                startActivity(new Intent(getApplicationContext(), MyCenterActivity.class));
+                overridePendingTransition(0,0);
+                break;
+        }
 
     }
-    /**
-     * 点击发布图标，进行跳转到发布界面， overridePendingTransition(0, 0):去掉进场动画
-     * @param view
-     * @author 唐小莉
-     * @time 2023/3/20 16:28
-     */
-    public void onClickPost(View view){
-
-    }
-    /**
-     * 点击个人中心图标，进行跳转到个人中心界面， overridePendingTransition(0, 0):去掉进场动画
-     * @param view
-     * @author 唐小莉
-     * @time 2023/3/20 16:28
-     */
-    public void onClickMyCenter(View view){
-        Intent i = null;
-        i=new Intent(getApplicationContext(), MyCenterActivity.class);
-        startActivity(i);
-        overridePendingTransition(0, 0);
-
-    }
-
-
-    /**
-     * 点击中间加号按钮跳转选择界面+跳转动画
-     * @param view
-     * @Author: 李柏睿
-     * @Time: 2023/3/22 16:38
-     */
-    public void onClickPublish(View view) {
-        final RotateAnimation animation = new RotateAnimation(0.0f, 90.0f,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f);
-        animation.setDuration( 500 );
-        iv_tab_three.startAnimation( animation );
-        Intent intent = new Intent(getApplicationContext(),PublishSelectionActivity.class);
-        startActivity(intent);
-        overridePendingTransition(0,0);
-    }
-
 }
