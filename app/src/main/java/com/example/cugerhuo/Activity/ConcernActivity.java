@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 
+import com.example.cugerhuo.Activity.adapter.Concern;
 import com.example.cugerhuo.Activity.adapter.RecyclerViewAdapter;
 import com.example.cugerhuo.R;
 
@@ -20,14 +21,13 @@ public class ConcernActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_concern);
-        RecyclerView recyclerView1 = findViewById(R.id.recyclerView1);
-        recyclerView1.setLayoutManager(new LinearLayoutManager(this));
-        RecyclerViewAdapter adapter1 = new RecyclerViewAdapter(this,"RecyclerView1-");
-        recyclerView1.setAdapter(adapter1);
 
+        //concern是自定义的存储关注列表的用户信息的类
+        Concern concern=new Concern("RecyclerView2-","xxxx","你好");
         RecyclerView recyclerView2 = findViewById(R.id.recyclerView2);
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
-        RecyclerViewAdapter adapter2 = new RecyclerViewAdapter(this,"RecyclerView2-");
+        RecyclerViewAdapter adapter2 = new RecyclerViewAdapter(this,concern);
         recyclerView2.setAdapter(adapter2);
+
     }
 }

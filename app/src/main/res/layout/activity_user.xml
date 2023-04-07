@@ -21,15 +21,16 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:src="@drawable/icon_arrow_black" />
+
         <TextView
-            android:layout_marginTop="7dp"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
             android:layout_marginRight="30dp"
-            android:layout_height="30dp"
             android:gravity="center"
-            android:textSize="16dp"
             android:text="个人信息"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textSize="16dp" />
 
     </LinearLayout>
 
