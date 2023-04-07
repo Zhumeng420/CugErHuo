@@ -3,7 +3,6 @@
     <string name="ip">123.249.120.9:8082</string>
     <string name="Tuip">123.249.11.83:8085</string>
     <string name="InsertUserToTu">user/adduser</string>
-
     <string name="InsertQqToBloom">bloomfilterofphone/insertbyqq</string>
     <string name="GetUserPhone">phonenumber/getnumber</string>
     <string name="InsertUserByPhone">user/insertuserbyphone</string>
@@ -16,6 +15,8 @@
     <string name="IsQqBanedInBloom">bloomfilterofphone/isqqbaned</string>
     <string name="GetIdByPhone">user/getidbyphone</string>
     <string name="GetIdByQq">user/getidbyqq</string>
+
+    <string name="GetOss">secret/oos</string>
 
     <string name="FocusNum">focus/myfocusnum</string>
     <string name="FansNum">focus/myfansnum</string>

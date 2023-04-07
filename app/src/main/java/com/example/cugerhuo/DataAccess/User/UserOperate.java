@@ -146,8 +146,7 @@ public class UserOperate {
          * 发送请求
          */
         String url="http://"+Ip+"/"+Router+"?"+Qq+"="+qq+"&"+Username+"="+username;
-        //循环form表单，将表单内容添加到form builder中
-        //构建formBody，将其传入Request请求中
+         //构建Request，将其传入Request请求中
         Request request = new Request.Builder().url(url).get().build();
         Response response = null;
         boolean IsInserted=false;
@@ -179,8 +178,8 @@ public class UserOperate {
          * 发送请求
          */
         String url="http://"+Ip+"/"+Router+"?"+PhoneNumber+"="+phone;
-        //循环form表单，将表单内容添加到form builder中
-        //构建formBody，将其传入Request请求中
+        //构建Request，将其传入Request请求中
+
         Request request = new Request.Builder().url(url).get().build();
         Response response = null;
         boolean IsInserted=false;
@@ -213,8 +212,8 @@ public class UserOperate {
          * 发送请求
          */
         String url="http://"+Ip+"/"+Router+"?"+Qq+"="+qq;
-        //循环form表单，将表单内容添加到form builder中
-        //构建formBody，将其传入Request请求中
+        //构建Request，将其传入Request请求中
+
         Request request = new Request.Builder().url(url).get().build();
         Response response = null;
         boolean IsInserted=false;
@@ -247,8 +246,8 @@ public class UserOperate {
          * 发送请求
          */
         String url="http://"+Ip+"/"+Router+"?"+PhoneNumber+"="+phone;
-        //循环form表单，将表单内容添加到form builder中
-        //构建formBody，将其传入Request请求中
+        //构建Request，将其传入Request请求中
+
         Request request = new Request.Builder().url(url).get().build();
         Response response = null;
         boolean IsInserted=false;
@@ -281,8 +280,8 @@ public class UserOperate {
          * 发送请求
          */
         String url="http://"+Ip+"/"+Router+"?"+Qq+"="+qq;
-        //循环form表单，将表单内容添加到form builder中
-        //构建formBody，将其传入Request请求中
+        //构建Request，将其传入Request请求中
+
         Request request = new Request.Builder().url(url).get().build();
         Response response = null;
         boolean IsInserted=false;
@@ -316,8 +315,8 @@ public class UserOperate {
          * 发送请求
          */
         String url="http://"+Ip+"/"+Router+"?"+PhoneNumber+"="+phone;
-        //循环form表单，将表单内容添加到form builder中
-        //构建formBody，将其传入Request请求中
+        //构建Request，将其传入Request请求中
+
         Request request = new Request.Builder().url(url).get().build();
         Response response = null;
         int result
@@ -352,8 +351,8 @@ public class UserOperate {
          * 发送请求
          */
         String url="http://"+Ip+"/"+Router+"?"+Qq+"="+qq;
-        //循环form表单，将表单内容添加到form builder中
-        //构建formBody，将其传入Request请求中
+        //构建Request，将其传入Request请求中
+
         Request request = new Request.Builder().url(url).get().build();
         Response response = null;
         int result
@@ -396,8 +395,6 @@ public class UserOperate {
         FormBody.Builder builder = new FormBody.Builder();
         builder.add(uid, String.valueOf(id));
         builder.add(name,username);
-        //循环form表单，将表单内容添加到form builder中
-        //构建formBody，将其传入Request请求中
         FormBody body = builder.build();
         Request request = new Request.Builder().url(url).post(body).build();
         Response response = null;

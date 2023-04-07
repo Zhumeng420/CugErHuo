@@ -14,11 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
 import com.example.cugerhuo.Activity.ErHuoActivity;
-import com.example.cugerhuo.Activity.IMessageActivity.ChatActivity;
 import com.example.cugerhuo.FastLogin.login.OneKeyLoginActivity;
-import com.netease.nimlib.sdk.NIMClient;
-import com.netease.nimlib.sdk.Observer;
-import com.netease.nimlib.sdk.lifecycle.SdkLifecycleObserver;
+import com.example.cugerhuo.ObjectStorege.InitOS;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -76,13 +73,21 @@ public class StartSplashActivity extends AppCompatActivity {
          */
         StatService.setDebugOn(true);
         StatService.autoTrace(this, true, false);
+
         /**
-         * 链路追踪初始化
+         * 链路追踪初始化以及对象存储初始化
          */
         new Thread(new Runnable() {
-
             @Override
             public void run() {
+                /**
+                 * 对象存储初始化
+                 */
+                InitOS m=InitOS.getInstance(getApplicationContext());
+                System.out.println("secret"+m.get());
+                /**
+                 * 链路追踪初始化
+                 */
                 io.jaegertracing.Configuration config = new io.jaegertracing.Configuration("CUG贰货");
                 io.jaegertracing.Configuration.SenderConfiguration sender = new io.jaegertracing.Configuration.SenderConfiguration();
                 // 将 <endpoint> 替换为控制台概览页面上相应客户端和地域的接入点。
@@ -215,7 +220,6 @@ public class StartSplashActivity extends AppCompatActivity {
                  * 当用户在下一个节目点击返回 则直接退出app 而不是返回当前页面
                  */
                 finish();
-
             }
         },4000);
 
