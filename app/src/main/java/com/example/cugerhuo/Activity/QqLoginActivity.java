@@ -6,11 +6,12 @@ import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.cugerhuo.DataAccess.SetGlobalIDandUrl;
+import com.example.cugerhuo.DataAccess.User.UserInfo;
 import com.example.cugerhuo.DataAccess.User.UserOperate;
 import com.example.cugerhuo.tools.NameUtil;
 import com.example.cugerhuo.tools.TracingHelper;
@@ -38,10 +39,7 @@ public class QqLoginActivity extends AppCompatActivity {
      * 腾讯接口实例
      */
     Tencent mTencent;
-    /**
-     * 登录按钮
-     */
-    Button LoginButton;
+
     /**
      *  监听接口结果
      */
@@ -161,7 +159,6 @@ public class QqLoginActivity extends AppCompatActivity {
                              * 先插入mysql
                              */
                             {
-
                                 boolean IsInserted;
                                 String username= NameUtil.getTwoSurname();
                                 Span span2 = tracer.buildSpan("查询mysql流程").withTag("函数：doComplete", "子追踪").start();
@@ -173,7 +170,6 @@ public class QqLoginActivity extends AppCompatActivity {
                                 } finally {
                                     span.finish();
                                 }
-
                                 if(IsInserted)
                                 {
                                     new Thread(new Runnable() {
@@ -194,6 +190,10 @@ public class QqLoginActivity extends AppCompatActivity {
                                                 span2.finish();
                                             }
                                             if(result!=-1){
+                                                /**
+                                                 * 保存ID
+                                                 */
+                                                UserInfo.setID(result);
                                                 /**
                                                  * 插入图数据库
                                                  * @time 2023/3/26
@@ -236,11 +236,19 @@ public class QqLoginActivity extends AppCompatActivity {
 
                         }
                         /**
-                         * 本地持久化+跳转到主页
+                         * 初始化全局变量，本地持久化+跳转到主页
                          */
-                        {
+                        {  /**
+                         * 初始化全局变量
+                         * @author 施立豪
+                         * @time 2023/4/9
+                         */
+                            SetGlobalIDandUrl.SetByQq(openid,QqLoginActivity.this);
+                            /**
+                             * 本地存储
+                             */
                             String Time = format.format(date);
-                            editor.putString("LoginData",Time);
+                            editor.putString("QqLoginData",Time);
                             editor.putString("QqId",openid);
                             System.out.println("newdate"+Time);
                             editor.apply();
@@ -289,7 +297,7 @@ public class QqLoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         Tencent.handleResultData(data, listener);
         super.onActivityResult(requestCode, resultCode, data);
-
+        finish();
     }
 
 }

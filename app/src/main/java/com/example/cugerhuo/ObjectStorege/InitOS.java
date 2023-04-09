@@ -43,7 +43,7 @@ public class InitOS {
     }
     public String get(){return accessKeySecret;};
     // yourEndpoint填写Bucket所在地域对应的Endpoint。以华东1（杭州）为例，Endpoint填写为https://oss-cn-hangzhou.aliyuncs.com。
-    String endpoint = "https://cugerhuo.oss-cn-beijing.aliyuncs.com";
+    String endpoint = "oss-cn-beijing.aliyuncs.com";
     // 从STS服务获取的临时访问密钥（AccessKey ID和AccessKey Secret）。
     String accessKeyId = null;
     String accessKeySecret = null;

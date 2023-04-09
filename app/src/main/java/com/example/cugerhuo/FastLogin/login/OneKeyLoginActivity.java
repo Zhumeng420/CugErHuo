@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.example.cugerhuo.Activity.ErHuoActivity;
+import com.example.cugerhuo.DataAccess.SetGlobalIDandUrl;
 import com.example.cugerhuo.DataAccess.User.UserOperate;
 import com.example.cugerhuo.FastLogin.config.BaseUIConfig;
 import com.example.cugerhuo.FastLogin.loginUtils.BuildConfig;
@@ -322,7 +323,6 @@ public class OneKeyLoginActivity extends Activity {
                                             } finally {
                                                 span.finish();
                                             }
-
                                             if(IsInserted)
                                             {
                                                 new Thread(new Runnable() {
@@ -385,9 +385,19 @@ public class OneKeyLoginActivity extends Activity {
 
                                     }
                                     /**
-                                     * 本地持久化+跳转到主页
+                                     * 初始化全局变量，本地持久化+跳转到主页
+                                     *
                                      */
                                     {
+                                        /**
+                                         * 初始化全局变量
+                                         * @author 施立豪
+                                         * @time 2023/4/9
+                                         */
+                                        SetGlobalIDandUrl.SetByPhone(phoneNumber, OneKeyLoginActivity.this);
+                                        /**
+                                         * 本地存储
+                                         */
                                         String Time = format.format(date);
                                         editor.putString("LoginData",Time);
                                         editor.putString("PhoneNumber",phoneNumber);

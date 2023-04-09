@@ -16,6 +16,9 @@
     <string name="GetIdByPhone">user/getidbyphone</string>
     <string name="GetIdByQq">user/getidbyqq</string>
 
+    <string name="SetUserImage">user-info/changeimage</string>
+    <string name="GetUserImage">user-info/getimage</string>
+
     <string name="GetOss">secret/oos</string>
 
     <string name="FocusNum">focus/myfocusnum</string>
@@ -25,6 +28,7 @@
     <string name="PhoneNumber">phone</string>
     <string name="Username">username</string>
     <string name="Name">name</string>
+    <string name="ImageUrl">imageUrl</string>
     <string name="UserId">userId</string>
 
 

@@ -103,8 +103,6 @@ public class UserOperate {
         String Router=context.getString(R.string.InsertUserByPhone);
         String PhoneNumber=context.getString(R.string.PhoneNumber);
         String Username=context.getString(R.string.Username);
-
-
         /**
          * 发送请求
          */

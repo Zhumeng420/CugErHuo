@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.cugerhuo.Activity.IMessageActivity.MessageActivity;
+import com.example.cugerhuo.DataAccess.User.UserInfo;
 import com.example.cugerhuo.DataAccess.User.UserOperate;
 import com.example.cugerhuo.R;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -45,7 +46,6 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
     private LinearLayout ll_tab_two;
     private LinearLayout ll_tab_four;
     private LinearLayout ll_tab_five;
-
     private LinearLayout user_concern;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +54,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         initView();
         user_concern.setOnClickListener(this::user_concern_click);
         user_image = findViewById(R.id.user_img);
-        SharedPreferences imagePath = getSharedPreferences("ImagePath", Context.MODE_PRIVATE);
-        String imagpath = imagePath.getString("imagepath", "");
+        String imagpath = UserInfo.getUrl();
         if (!imagpath.equals("")) {
             user_image.setImageURI(Uri.fromFile(new File(imagpath)));
         }
@@ -96,7 +95,6 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                  */
                 else{
                     Id=Integer.parseInt(id);
-
             }
                 /**
                  * 获取关注数量
@@ -222,8 +220,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==0x0001)
         {
-            SharedPreferences imagePath=getSharedPreferences("ImagePath", Context.MODE_PRIVATE);
-            String imagpath=imagePath.getString("imagepath","");
+            String imagpath=UserInfo.getUrl();
             if(!imagpath.equals(""))
             {
                 user_image.setImageURI(Uri.fromFile(new File(imagpath)));

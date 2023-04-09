@@ -11,10 +11,15 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * 用于获取访问对象存储的key，secret，token
+ * @author 施立豪
+ * @time 2023/4/7
+ */
 public class OssSecret {
     /**
      * 调用服务端获取临时访问对象存储的keyid接口
-     * @return 是否成功
+     * @return list中包含三项，第一项  accesskeyid，第二项secret，第三项token
      * @author 施立豪
      * @time 2023/4/7
      */

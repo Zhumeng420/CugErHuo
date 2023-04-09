@@ -14,9 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
 import com.example.cugerhuo.Activity.ErHuoActivity;
+import com.example.cugerhuo.DataAccess.SetGlobalIDandUrl;
 import com.example.cugerhuo.FastLogin.login.OneKeyLoginActivity;
 import com.example.cugerhuo.ObjectStorege.InitOS;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -114,7 +116,6 @@ public class StartSplashActivity extends AppCompatActivity {
         img=findViewById(R.id.img);
         logo=findViewById(R.id.logo);
         lottie=findViewById(R.id.lottie);
-
         /**
          * 设置lottie动画的动画效果
         translationX() 动画X轴偏移量,其中img设置上滑效果，故设置translationY(-2200)
@@ -166,7 +167,7 @@ public class StartSplashActivity extends AppCompatActivity {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 //当前日期
                 Date date=new Date();
-                if(LastData!=""){
+                if(!LastData.equals("")||!QqLastData.equals("")){
                     /**
                      * 日期转换,求上次与这次登录的时间差
                      */
@@ -177,8 +178,13 @@ public class StartSplashActivity extends AppCompatActivity {
 
                     double QqDayNum=10;//qq
                     try {
+                        /**
+                         * 判断是否为空
+                         */
+                        if(!LastData.equals(""))
                         DayNum= (date.getTime() - format.parse(LastData).getTime()) / (24 * 60 * 60 * 1000);
-                        QqDayNum= (date.getTime() - format.parse(QqLastData).getTime()) / (24 * 60 * 60 * 1000);
+                        if(!QqLastData.equals(""))
+                            QqDayNum= (date.getTime() - format.parse(QqLastData).getTime()) / (24 * 60 * 60 * 1000);
                     } catch ( ParseException e) {
                         e.printStackTrace();
                     }
@@ -189,13 +195,227 @@ public class StartSplashActivity extends AppCompatActivity {
                     {
                         System.out.println("newdate"+format.format(date));
                         String Time = format.format(date);
-                        if(QqDayNum>=DayNum)
+                        if(QqDayNum<=DayNum)
                         {
-                            editor.putString("LoginData",Time);
+                            /**
+                             * 更新登录时间
+                             */
+                            editor.putString("QqLoginData",Time);
+                            /**
+                             * 初始化全局变量
+                             */
+                            String qqId=LoginMessage.getString("QqId","");
+                SetGlobalIDandUrl.SetByQq(qqId,StartSplashActivity.this);
+//                            new Thread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    /**
+//                                     * 获取本地qqId，通过qqId获取ID
+//                                     * @author 施立豪
+//                                     * @time 2023/4/9
+//                                     */
+//
+//                                    String qqId=LoginMessage.getString("QqId","");
+//                                    Tracer tracer = GlobalTracer.get();
+//                                    // 创建spann
+//                                    int id=-1;
+//                                    Span span = tracer.buildSpan("通过qq启动获取用户ID流程").withTag("Oncreate函数：", "子追踪").start();
+//                                    try (Scope ignored = tracer.scopeManager().activate(span,true)) {
+//                                        // 业务逻辑写这里
+//                                        id= UserOperate.GetQqId(qqId,StartSplashActivity.this);
+//                                    } catch (Exception e) {
+//                                        TracingHelper.onError(e, span);
+//                                        throw e;
+//                                    } finally {
+//                                        span.finish();
+//                                    }
+//                                    if(id!=-1)
+//                                    {
+//                                        UserInfo.setID(id);
+//                                        String imageUrl="";
+//                                        Span span3 = tracer.buildSpan("通过id获取图片url").withTag("Oncreate函数：", "子追踪").start();
+//                                        try (Scope ignored = tracer.scopeManager().activate(span,true)) {
+//                                            // 调用获取头像url接口
+//                                            imageUrl=UserInfoOperate.GetImage(id,StartSplashActivity.this);
+//                                        } catch (Exception e) {
+//                                            TracingHelper.onError(e, span);
+//                                            throw e;
+//                                        } finally {
+//                                            span.finish();
+//                                        }
+//                                        /**
+//                                         * 得到url
+//                                         */
+//                                        if(!imageUrl.equals(""))
+//                                        {
+//                                            /**
+//                                             * 获取本地存储图片路径
+//                                             */
+//                                            SharedPreferences imagePath=getSharedPreferences("ImagePath", Context.MODE_PRIVATE);
+//                                            String imageAbsolutePath=imagePath.getString("imagepath","");
+//                                            String nativeName= GetFileNameUtil.GetFileName(imageAbsolutePath);
+//                                            /**
+//                                             * 如果本地和用户表中存储的文件名一致，则直接用本地的
+//                                             */
+//                                            if(imageUrl.equals(nativeName))
+//                                            {
+//                                                UserInfo.setUrl(imageAbsolutePath);
+//                                            }
+//                                            /**
+//                                             * 否则下载oss的文件到本地，并修改本地存储的图片路径
+//                                             */
+//                                            else
+//                                            {
+//                                                /**
+//                                                 * 下载
+//                                                 */
+//                                                boolean IsDownLoad=false;
+//                                                Span span4 = tracer.buildSpan("缓存头像流程").withTag("onCreaate函数：", "子追踪").start();
+//                                                try (Scope ignored = tracer.scopeManager().activate(span,true)) {
+//                                                    // 调用下载接口
+//                                                    IsDownLoad=OssOperate.DownLoad(imageUrl,getSandboxPath()+imageUrl);
+//                                                } catch (Exception e) {
+//                                                    TracingHelper.onError(e, span);
+//                                                    throw e;
+//                                                } finally {
+//                                                    span.finish();
+//                                                }
+//                                                if(IsDownLoad)
+//                                                    UserInfo.setUrl(getSandboxPath()+imageUrl);
+//                                                else
+//                                                {
+//                                                    Log.e(TAG,"从oss缓存头像URL失败");
+//                                                }
+//                                                UserInfo.setUrl(getSandboxPath()+imageUrl);
+//
+//                                            }
+//                                        }
+//                                        /**
+//                                         * 未得到url
+//                                         */
+//                                        else{
+//                                            Log.e(TAG,"Id获取头像URL失败");
+//                                        }
+//                                    }
+//
+//                                    else
+//                                    {
+//                                        System.out.println("qqId获取用户ID失败");
+//                                    }
+//                                }
+//                            }).start();
                         }
                         else
                         {
-                            editor.putString("QqLoginData",Time);
+                            /**
+                             * 更新登录时间
+                             */
+                            editor.putString("LoginData",Time);
+                            /**
+                             * 初始化全局变量
+                             * @author 施立豪
+                             * @time 2023/4/9
+                             */
+                            String phoneNumber=LoginMessage.getString("PhoneNumber","");
+                            SetGlobalIDandUrl.SetByPhone(phoneNumber,StartSplashActivity.this);
+//                            new Thread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    /**
+//                                     * 获取ID
+//                                     */
+//                                    String phoneNumber=LoginMessage.getString("PhoneNumber","");
+//                                    Tracer tracer = GlobalTracer.get();
+//                                    // 创建spann
+//                                    int id=-1;
+//                                    Span span = tracer.buildSpan("通过phone启动获取用户ID流程").withTag("Oncreate函数：", "子追踪").start();
+//                                    try (Scope ignored = tracer.scopeManager().activate(span,true)) {
+//                                        // 业务逻辑写这里
+//                                        id= UserOperate.GetId(phoneNumber,StartSplashActivity.this);
+//                                    } catch (Exception e) {
+//                                        TracingHelper.onError(e, span);
+//                                        throw e;
+//                                    } finally {
+//                                        span.finish();
+//                                    }
+//                                    /**
+//                                     * 得到ID，用id获取图片url
+//                                     */
+//                                    if(id!=-1)
+//                                    {
+//                                        UserInfo.setID(id);
+//                                        String imageUrl="";
+//                                        Span span3 = tracer.buildSpan("通过id获取图片url").withTag("Oncreate函数：", "子追踪").start();
+//                                        try (Scope ignored = tracer.scopeManager().activate(span,true)) {
+//                                            // 调用获取头像url接口
+//                                            imageUrl=UserInfoOperate.GetImage(id,StartSplashActivity.this);
+//                                        } catch (Exception e) {
+//                                            TracingHelper.onError(e, span);
+//                                            throw e;
+//                                        } finally {
+//                                            span.finish();
+//                                        }
+//                                        /**
+//                                         * 得到url
+//                                         */
+//                                        if(!imageUrl.equals(""))
+//                                        {
+//                                            /**
+//                                             * 获取本地存储图片路径
+//                                             */
+//                                           SharedPreferences imagePath=getSharedPreferences("ImagePath", Context.MODE_PRIVATE);
+//                                           String imageAbsolutePath=imagePath.getString("imagepath","");
+//                                           String nativeName= GetFileNameUtil.GetFileName(imageAbsolutePath);
+//                                            /**
+//                                             * 如果本地和用户表中存储的文件名一致，则直接用本地的
+//                                             */
+//                                           if(imageUrl.equals(nativeName))
+//                                           {
+//                                               UserInfo.setUrl(imageAbsolutePath);
+//                                           }
+//                                           /**
+//                                            * 否则下载oss的文件到本地，并修改本地存储的图片路径
+//                                            */
+//                                           else
+//                                           {
+//                                               /**
+//                                                * 下载
+//                                                */
+//                                               boolean IsDownLoad=false;
+//                                               Span span4 = tracer.buildSpan("缓存头像流程").withTag("onCreaate函数：", "子追踪").start();
+//                                               try (Scope ignored = tracer.scopeManager().activate(span,true)) {
+//                                                   // 调用下载接口
+//                                                   IsDownLoad=OssOperate.DownLoad(imageUrl,getSandboxPath()+imageUrl);
+//                                               } catch (Exception e) {
+//                                                   TracingHelper.onError(e, span);
+//                                                   throw e;
+//                                               } finally {
+//                                                   span.finish();
+//                                               }
+//                                               if(IsDownLoad)
+//                                               UserInfo.setUrl(getSandboxPath()+imageUrl);
+//                                               else
+//                                               {
+//                                                   Log.e(TAG,"从oss缓存头像URL失败");
+//                                               }
+//                                               UserInfo.setUrl(getSandboxPath()+imageUrl);
+//
+//                                           }
+//                                        }
+//                                        /**
+//                                         * 未得到url
+//                                         */
+//                                        else{
+//                                            Log.e(TAG,"Id获取头像URL失败");
+//                                        }
+//                                    }
+//                                    else
+//                                    {
+//                                        Log.e(TAG,"phone获取用户ID失败");
+//
+//                                    }
+//                                }
+//                            }).start();
                         }
                         //异步写入
                         editor.apply();
@@ -222,7 +442,19 @@ public class StartSplashActivity extends AppCompatActivity {
                 finish();
             }
         },4000);
-
+    }
+    /**
+     * 创建自定义输出目录
+     *
+     * @return 路径
+     */
+    private String getSandboxPath() {
+        File externalFilesDir = this.getExternalFilesDir("");
+        File customFile = new File(externalFilesDir.getAbsolutePath(), "Sandbox");
+        if (!customFile.exists()) {
+            customFile.mkdirs();
+        }
+        return customFile.getAbsolutePath() + File.separator;
     }
 
 

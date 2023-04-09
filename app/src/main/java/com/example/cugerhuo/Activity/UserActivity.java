@@ -22,7 +22,12 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.cugerhuo.DataAccess.User.UserInfo;
+import com.example.cugerhuo.DataAccess.User.UserInfoOperate;
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.tools.GetFileNameUtil;
+import com.example.cugerhuo.tools.OssOperate;
+import com.example.cugerhuo.tools.TracingHelper;
 import com.example.cugerhuo.tools.photoselect.GlideEngine;
 import com.example.cugerhuo.tools.photoselect.ImageLoaderUtils;
 import com.luck.picture.lib.animators.AnimationType;
@@ -51,6 +56,10 @@ import com.yalantis.ucrop.UCropImageEngine;
 import java.io.File;
 import java.util.ArrayList;
 
+import io.opentracing.Scope;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
+import io.opentracing.util.GlobalTracer;
 import top.zibin.luban.CompressionPredicate;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnNewCompressListener;
@@ -65,17 +74,16 @@ import top.zibin.luban.OnRenameListener;
 public class UserActivity extends AppCompatActivity {
     private RoundedImageView user_image;
     private SharedPreferences imagePath;
-
+    private Tracer  tracer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         imagePath=getSharedPreferences("ImagePath", Context.MODE_PRIVATE);
-
+         tracer = GlobalTracer.get();
         setContentView(R.layout.activity_user);
         user_image=findViewById(R.id.user_img);
-        user_image.setOnClickListener(this::onClickXuanShang);
-        SharedPreferences imagePath=getSharedPreferences("ImagePath", Context.MODE_PRIVATE);
-        String imagpath=imagePath.getString("imagepath","");
+        user_image.setOnClickListener(this::onChangeImage);
+        String imagpath=UserInfo.getUrl();
         if(!imagpath.equals(""))
         {
             user_image.setImageURI(Uri.fromFile(new File(imagpath)));
@@ -161,9 +169,15 @@ public class UserActivity extends AppCompatActivity {
             });
             uCrop.startEdit(fragment.requireActivity(), fragment, requestCode);
         }}
-    public void onClickXuanShang(View view){
-        PictureSelector.create(this)
 
+    /**
+     * 修改头像函数
+     * @author  施立豪
+     * @time 2023/4/9
+     * @param view
+     */
+    public void onChangeImage(View view){
+        PictureSelector.create(this)
                 .openGallery(SelectMimeType.ofImage())
                 .setSelectorUIStyle(selectorStyle)
                 .setCropEngine((CropEngine) null)
@@ -217,16 +231,16 @@ public class UserActivity extends AppCompatActivity {
                 .setRecyclerAnimationMode(AnimationType.DEFAULT_ANIMATION)
                 .isGif(false)
                 .forResult(new OnResultCallbackListener<LocalMedia>() {
+                    @SuppressLint("SuspiciousIndentation")
                     @Override
                     public void onResult(ArrayList<LocalMedia> result) {
-                        LocalMedia media= result.get(0);
+                        LocalMedia media = result.get(0);
                         Log.i(TAG, "文件名: " + media.getFileName());
                         Log.i(TAG, "是否压缩:" + media.isCompressed());
                         Log.i(TAG, "压缩:" + media.getCompressPath());
                         Log.i(TAG, "初始路径:" + media.getPath());
                         Log.i(TAG, "绝对路径:" + media.getRealPath());
                         Log.i(TAG, "是否裁剪:" + media.isCut());
-
                         Log.i(TAG, "裁剪路径:" + media.getCutPath());
                         Log.i(TAG, "是否开启原图:" + media.isOriginal());
                         Log.i(TAG, "原图路径:" + media.getOriginalPath());
@@ -234,15 +248,93 @@ public class UserActivity extends AppCompatActivity {
                         Log.i(TAG, "水印路径:" + media.getWatermarkPath());
                         Log.i(TAG, "视频缩略图:" + media.getVideoThumbnailPath());
                         Log.i(TAG, "原始宽高: " + media.getWidth() + "x" + media.getHeight());
-                        if(media.getWidth()!=media.getHeight())
-                        Log.i(TAG, "裁剪宽高: " + media.getCropImageWidth() + "x" + media.getCropImageHeight());
+                        if (media.getWidth() != media.getHeight())
+                            Log.i(TAG, "裁剪宽高: " + media.getCropImageWidth() + "x" + media.getCropImageHeight());
                         Log.i(TAG, "文件大小: " + PictureFileUtils.formatAccurateUnitFileSize(media.getSize()));
                         Log.i(TAG, "文件时长: " + media.getDuration());
+                        /**
+                         * 文件命名，使用裁剪后的文件名，是由裁剪时间命名的，重名概率较小，为确保不会重名，后续可添加唯一标识id。避免同名覆盖
+                         * @aythor 施立豪
+                         * @time 2023/4/9
+                         */
+                        String filePath = media.getSandboxPath();
+                        /**
+                         * 加上specific以与本地的文件区分
+                         */
+                        String fileName = "specific_"+GetFileNameUtil.GetFileName(filePath);
+                        System.out.println(fileName);
+                        /**
+                         * 子线程，将待进行oss的图片url插入用户信息数据库
+                         * 先插入数据库，再进行oss
+                         * @author 施立豪
+                         * @time 2023/4/9
+                         */
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                /**
+                                 * 接收插入mysql结果变量
+                                 */
+                                boolean IsSeted = false;
+                                // 创建spann
+                                Span span = tracer.buildSpan("修改头像流程，调用mysql接口").withTag("onChangeImage函数：", "子追踪").start();
+                                try (Scope ignored = tracer.scopeManager().activate(span,true)) {
+                                    // 插入接口调用
+                                    IsSeted = UserInfoOperate.SetImage(UserInfo.getID(), fileName, UserActivity.this);
+                                } catch (Exception e) {
+                                    TracingHelper.onError(e, span);
+                                    throw e;
+                                } finally {
+                                    span.finish();
+                                }
+                                /**
+                                 * 接收上传oos结果变量
+                                 */
+                                if (IsSeted) {
+                                boolean IsUped=false;
+                                Span span1 = tracer.buildSpan("上传头像到oss流程").withTag("onChangeImage函数：", "子追踪").start();
+                                try (Scope ignored = tracer.scopeManager().activate(span,true)) {
+                                    // 业务逻辑写这里
+                                   IsUped= OssOperate.Up(fileName, Uri.fromFile(new File(media.getSandboxPath())));
+                                   if(IsUped) {
+
+                                       Log.i(TAG, "修改头像oss上传成功");
+                                   }
+                                   else{
+                                       Log.e(TAG,"修改头像oss上传失败");
+                                   }
+                                   //UserInfo.setUrl(fileName);
+                                } catch (Exception e) {
+                                    TracingHelper.onError(e, span);
+                                    throw e;
+                                } finally {
+                                    span.finish();
+                                }
+                                }
+                                else
+                                {
+                                    Log.e(TAG,"修改头像接口调用失败");
+                                }
+                            }
+                        }).start();
+                        /**
+                         * 首先使用本地头像做头像
+                         */
                         user_image.setImageURI(Uri.fromFile(new File(media.getSandboxPath())));
-                        SharedPreferences.Editor editor = imagePath.edit();
-                        editor.putString("imagepath",media.getCompressPath());
-                        editor.apply();
-                    }
+                        UserInfo.setUrl(media.getSandboxPath());
+//                       /**
+//                         * 查询全局变量头像url，更新头像
+//                         */
+//                        String imageUrl=UserInfo.getUrl();
+//                        if(!imageUrl.equals(""))
+//                        {
+//                            user_image.setImageURI(Uri.fromFile(new File(imageUrl)));
+//                            SharedPreferences.Editor editor = imagePath.edit();
+//                            editor.putString("imagepath",imageUrl);
+//                            editor.apply();
+//                        }
+//
+                        }
 
                     @Override
                     public void onCancel() {

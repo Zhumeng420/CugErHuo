@@ -9,9 +9,33 @@ public class UserInfo {
     /**
      * 用户id
      */
-    static String ID;
+    static int ID;
     /**
      * 头像url
      */
     static String url;
+    /**
+     * 获取url
+     * @author 施立豪
+     * @time 2023/4/8
+     */
+    public static String getUrl(){return url;}
+    /**
+     * 设置url
+     * @author 施立豪
+     * @time 2023/4/8
+     */
+    public static void setID(int id){ID=id;}
+    /**
+     * 获取ID
+     * @author 施立豪
+     * @time 2023/4/9
+     */
+    public static int getID(){return ID;}
+    /**
+     * 设置ID
+     * @author 施立豪
+     * @time 2023/4/9
+     */
+    public static void setUrl(String Url){url=Url;}
 }
