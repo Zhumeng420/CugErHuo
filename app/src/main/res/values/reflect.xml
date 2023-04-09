@@ -18,6 +18,8 @@
 
     <string name="SetUserImage">user-info/changeimage</string>
     <string name="GetUserImage">user-info/getimage</string>
+    <string name="InsertUserInfo">user-info/insertuser</string>
+
 
     <string name="GetOss">secret/oos</string>
 

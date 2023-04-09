@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 
 import com.example.cugerhuo.Activity.ErHuoActivity;
 import com.example.cugerhuo.DataAccess.SetGlobalIDandUrl;
+import com.example.cugerhuo.DataAccess.User.UserInfoOperate;
 import com.example.cugerhuo.DataAccess.User.UserOperate;
 import com.example.cugerhuo.FastLogin.config.BaseUIConfig;
 import com.example.cugerhuo.FastLogin.loginUtils.BuildConfig;
@@ -356,7 +357,23 @@ public class OneKeyLoginActivity extends Activity {
                                                             throw e;
                                                         }finally {
                                                             span3.finish();
-                                                        }}else
+                                                        }
+                                                            /**
+                                                             * 插入用户资料表
+                                                             * @time 2023/4/9
+                                                             */
+                                                            boolean Isinserted1;
+                                                            Span span4 = tracer.buildSpan("手机注册插入用户至用户资料").withTag("函数：doComplete", "子追踪").start();
+                                                            try (Scope ignored1 = tracer.scopeManager().activate(span3,true)) {
+                                                                Isinserted= UserInfoOperate.InsertUser(result,username, OneKeyLoginActivity.this);
+                                                            } catch (Exception e) {
+                                                                TracingHelper.onError(e, span3);
+                                                                throw e;
+                                                            }finally {
+                                                                span3.finish();
+                                                            }
+                                                        }
+                                                        else
                                                         {
                                                             System.out.println("mysql的id查询失败！");
                                                         }

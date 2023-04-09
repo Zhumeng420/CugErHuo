@@ -1,5 +1,7 @@
 package com.example.cugerhuo.Activity;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.cugerhuo.DataAccess.SetGlobalIDandUrl;
 import com.example.cugerhuo.DataAccess.User.UserInfo;
+import com.example.cugerhuo.DataAccess.User.UserInfoOperate;
 import com.example.cugerhuo.DataAccess.User.UserOperate;
 import com.example.cugerhuo.tools.NameUtil;
 import com.example.cugerhuo.tools.TracingHelper;
@@ -207,9 +210,25 @@ public class QqLoginActivity extends AppCompatActivity {
                                                     throw e;
                                                 }finally {
                                                     span3.finish();
-                                                }}else
+                                                }
+                                                /**
+                                                 * 插入用户资料表
+                                                 * @time 2023/4/9
+                                                 */
+                                                boolean Isinserted1;
+                                                Span span4 = tracer.buildSpan("qq注册插入用户至用户资料").withTag("函数：doComplete", "子追踪").start();
+                                                try (Scope ignored1 = tracer.scopeManager().activate(span3,true)) {
+                                                    Isinserted= UserInfoOperate.InsertUser(result,username,QqLoginActivity.this);
+                                                } catch (Exception e) {
+                                                    TracingHelper.onError(e, span3);
+                                                    throw e;
+                                                }finally {
+                                                    span3.finish();
+                                                }
+                                            }
+                                            else
                                             {
-                                                System.out.println("mysql的id查询失败！");
+                                                Log.e(TAG,"mysql的id查询失败！");
                                             }
                                         }
                                     }).start();
