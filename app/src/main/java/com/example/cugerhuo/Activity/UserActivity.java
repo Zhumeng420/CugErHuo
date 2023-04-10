@@ -72,7 +72,7 @@ import top.zibin.luban.OnRenameListener;
 
 
 public class UserActivity extends AppCompatActivity {
-    private RoundedImageView user_image;
+    private RoundedImageView userImage;
     private SharedPreferences imagePath;
     private Tracer  tracer;
     @Override
@@ -81,12 +81,12 @@ public class UserActivity extends AppCompatActivity {
         imagePath=getSharedPreferences("ImagePath", Context.MODE_PRIVATE);
          tracer = GlobalTracer.get();
         setContentView(R.layout.activity_user);
-        user_image=findViewById(R.id.user_img);
-        user_image.setOnClickListener(this::onChangeImage);
+        userImage =findViewById(R.id.user_img);
+        userImage.setOnClickListener(this::onChangeImage);
         String imagpath=UserInfo.getUrl();
         if("".equals(imagpath))
         {
-            user_image.setImageURI(Uri.fromFile(new File(imagpath)));
+            userImage.setImageURI(Uri.fromFile(new File(imagpath)));
         }
     }
     /**
@@ -275,12 +275,12 @@ public class UserActivity extends AppCompatActivity {
                                 /**
                                  * 接收插入mysql结果变量
                                  */
-                                boolean IsSeted = false;
+                                boolean isSeted = false;
                                 // 创建spann
                                 Span span = tracer.buildSpan("修改头像流程，调用mysql接口").withTag("onChangeImage函数：", "子追踪").start();
                                 try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                                     // 插入接口调用
-                                    IsSeted = UserInfoOperate.setImage(UserInfo.getID(), fileName, UserActivity.this);
+                                    isSeted = UserInfoOperate.setImage(UserInfo.getID(), fileName, UserActivity.this);
                                 } catch (Exception e) {
                                     TracingHelper.onError(e, span);
                                     throw e;
@@ -290,13 +290,13 @@ public class UserActivity extends AppCompatActivity {
                                 /**
                                  * 接收上传oos结果变量
                                  */
-                                if (IsSeted) {
-                                boolean IsUped=false;
+                                if (isSeted) {
+                                boolean isUped=false;
                                 Span span1 = tracer.buildSpan("上传头像到oss流程").withTag("onChangeImage函数：", "子追踪").start();
                                 try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                                     // 业务逻辑写这里
-                                   IsUped= OssOperate.Up(fileName, Uri.fromFile(new File(media.getSandboxPath())));
-                                   if(IsUped) {
+                                   isUped= OssOperate.Up(fileName, Uri.fromFile(new File(media.getSandboxPath())));
+                                   if(isUped) {
 
                                        Log.i(TAG, "修改头像oss上传成功");
                                    }
@@ -320,7 +320,7 @@ public class UserActivity extends AppCompatActivity {
                         /**
                          * 首先使用本地头像做头像
                          */
-                        user_image.setImageURI(Uri.fromFile(new File(media.getSandboxPath())));
+                        userImage.setImageURI(Uri.fromFile(new File(media.getSandboxPath())));
                         UserInfo.setUrl(media.getSandboxPath());
 //                       /**
 //                         * 查询全局变量头像url，更新头像

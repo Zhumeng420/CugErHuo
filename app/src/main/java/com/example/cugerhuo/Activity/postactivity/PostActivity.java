@@ -1,4 +1,4 @@
-package com.example.cugerhuo.Activity.PostActivity;
+package com.example.cugerhuo.Activity.postactivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import com.example.cugerhuo.R;
 
-public class ChoosePostActivity extends AppCompatActivity {
+public class PostActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose_post);
+        setContentView(R.layout.activity_post);
     }
 }

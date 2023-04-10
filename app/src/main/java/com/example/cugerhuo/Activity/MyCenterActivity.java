@@ -85,7 +85,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                 if(id.equals(""))
                 {
 
-                    Id=UserOperate.GetId(LoginMessage.getString("PhoneNumber",""),MyCenterActivity.this);
+                    Id=UserOperate.getId(LoginMessage.getString("PhoneNumber",""),MyCenterActivity.this);
                     editor.putString("Id", String.valueOf(Id));
                     editor.apply();
 
@@ -99,7 +99,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                 /**
                  * 获取关注数量
                  */
-                focusNum=UserOperate.GetFocusNum(Id,MyCenterActivity.this);
+                focusNum=UserOperate.getFocusNum(Id,MyCenterActivity.this);
                 msg.arg2=focusNum;
                 //4、发送消息
                 mhandler.sendMessage(msg);
@@ -134,7 +134,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                 if(id.equals(""))
                 {
 
-                    Id=UserOperate.GetId(LoginMessage.getString("PhoneNumber",""),MyCenterActivity.this);
+                    Id=UserOperate.getId(LoginMessage.getString("PhoneNumber",""),MyCenterActivity.this);
                     editor.putString("Id", String.valueOf(Id));
                     editor.apply();
 

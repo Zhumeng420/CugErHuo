@@ -23,9 +23,9 @@ public class OssSecret {
      * @author 施立豪
      * @time 2023/4/7
      */
-    public static List<String> GetOss()
+    public static List<String> getOss()
     {
-        List<String> OssMessage=new ArrayList<>();
+        List<String> ossMessage=new ArrayList<>();
         OkHttpClient okHttpClient = new OkHttpClient();
         /**
          * 发送请求
@@ -38,14 +38,14 @@ public class OssSecret {
             response = okHttpClient.newCall(request).execute();
             JSONObject obj=new JSONObject(response.body().string());
             System.out.println("response.accessId"+obj.getString("accessId"));
-            OssMessage.add(obj.getString("accessId"));
-            OssMessage.add(obj.getString("accessSecret"));
-            OssMessage.add(obj.getString("securityToken"));
+            ossMessage.add(obj.getString("accessId"));
+            ossMessage.add(obj.getString("accessSecret"));
+            ossMessage.add(obj.getString("securityToken"));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return OssMessage;
+        return ossMessage;
     }
 }

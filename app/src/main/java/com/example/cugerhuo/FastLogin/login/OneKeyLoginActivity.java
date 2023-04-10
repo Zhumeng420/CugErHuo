@@ -267,7 +267,7 @@ public class OneKeyLoginActivity extends Activity {
                                     boolean IsPhoneExisted;
                                     Span span1 = tracer.buildSpan("查询redis流程1").withTag("函数：getResultWithToken", "子追踪").start();
                                     try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
-                                        IsPhoneExisted= UserOperate.IsPhoneExistBloom(phoneNumber,OneKeyLoginActivity.this);
+                                        IsPhoneExisted= UserOperate.isPhoneExistBloom(phoneNumber,OneKeyLoginActivity.this);
                                     } catch (Exception e) {
                                         TracingHelper.onError(e, span);
                                         throw e;
@@ -285,7 +285,7 @@ public class OneKeyLoginActivity extends Activity {
                                         boolean IsPhoneBaned;
                                         Span span2 = tracer.buildSpan("查询redis流程2").withTag("函数：getResultWithToken", "子追踪").start();
                                         try (Scope ignored1 = tracer.scopeManager().activate(span2,true)) {
-                                            IsPhoneBaned=UserOperate.IsPhoneBanedBloom(phoneNumber,OneKeyLoginActivity.this);
+                                            IsPhoneBaned=UserOperate.isPhoneBanedBloom(phoneNumber,OneKeyLoginActivity.this);
                                         } catch (Exception e) {
                                             TracingHelper.onError(e, span2);
                                             throw e;
@@ -316,7 +316,7 @@ public class OneKeyLoginActivity extends Activity {
                                             Span span2 = tracer.buildSpan("查询mysql流程").withTag("函数：getResultWithToken", "子追踪").start();
                                             try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
 
-                                                IsInserted=UserOperate.InsertByPhone(phoneNumber,username,OneKeyLoginActivity.this);
+                                                IsInserted=UserOperate.insertByPhone(phoneNumber,username,OneKeyLoginActivity.this);
 
                                             } catch (Exception e) {
                                                 TracingHelper.onError(e, span);
@@ -336,7 +336,7 @@ public class OneKeyLoginActivity extends Activity {
                                                         int result=-1;
                                                         Span span2 = tracer.buildSpan("查询mysql流程").withTag("函数：getResultWithToken", "子追踪").start();
                                                         try (Scope ignored1 = tracer.scopeManager().activate(span2,true)) {
-                                                            result=UserOperate.GetId(phoneNumber,OneKeyLoginActivity.this);
+                                                            result=UserOperate.getId(phoneNumber,OneKeyLoginActivity.this);
                                                         } catch (Exception e) {
                                                             TracingHelper.onError(e, span2);
                                                             throw e;
@@ -351,7 +351,7 @@ public class OneKeyLoginActivity extends Activity {
                                                         boolean Isinserted;
                                                         Span span3 = tracer.buildSpan("插入用户至图数据库").withTag("函数：getResultWithToken", "子追踪").start();
                                                         try (Scope ignored1 = tracer.scopeManager().activate(span3,true)) {
-                                                                Isinserted=UserOperate.InsertUserToTu(username,result,OneKeyLoginActivity.this);
+                                                                Isinserted=UserOperate.insertUserToTu(username,result,OneKeyLoginActivity.this);
                                                         } catch (Exception e) {
                                                             TracingHelper.onError(e, span3);
                                                             throw e;
@@ -388,7 +388,7 @@ public class OneKeyLoginActivity extends Activity {
                                                 boolean IsInserted1;
                                                 Span span3 = tracer.buildSpan("查询redis流程3").withTag("函数：getResultWithToken", "子追踪").start();
                                                 try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
-                                                    IsInserted1=UserOperate.InsertPhoneBloom(phoneNumber,OneKeyLoginActivity.this);
+                                                    IsInserted1=UserOperate.insertPhoneBloom(phoneNumber,OneKeyLoginActivity.this);
                                                 } catch (Exception e) {
                                                     TracingHelper.onError(e, span);
                                                     throw e;
@@ -411,7 +411,7 @@ public class OneKeyLoginActivity extends Activity {
                                          * @author 施立豪
                                          * @time 2023/4/9
                                          */
-                                        SetGlobalIDandUrl.SetByPhone(phoneNumber, OneKeyLoginActivity.this);
+                                        SetGlobalIDandUrl.setByPhone(phoneNumber, OneKeyLoginActivity.this);
                                         /**
                                          * 本地存储
                                          */

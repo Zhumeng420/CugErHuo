@@ -137,20 +137,20 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".Activity.PostActivity.PostActivity"
+            android:name=".Activity.postactivity.PostActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Activity.PostActivity.PostBuyActivity"
+            android:name=".Activity.postactivity.PostBuyActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.PostActivity.PostSellActivity"
+            android:name=".Activity.postactivity.PostSellActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.PostActivity.ChoosePostActivity"
+            android:name=".Activity.postactivity.ChoosePostActivity"
             android:exported="false" />
 
         <meta-data

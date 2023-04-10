@@ -32,7 +32,7 @@ public class SetGlobalIDandUrl {
      * @param context 辅助操作
      * @return      true
      */
-    public static boolean SetByPhone(String phone,Context context)
+    public static boolean setByPhone(String phone, Context context)
     {
         new Thread(new Runnable() {
             @Override
@@ -47,7 +47,7 @@ public class SetGlobalIDandUrl {
                 Span span = tracer.buildSpan("通过phone启动获取用户ID流程").withTag("Oncreate函数：", "子追踪").start();
                 try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                     // 调用接口
-                    id= UserOperate.GetId(phoneNumber, context);
+                    id= UserOperate.getId(phoneNumber, context);
                 } catch (Exception e) {
                     TracingHelper.onError(e, span);
                     throw e;
@@ -101,7 +101,7 @@ public class SetGlobalIDandUrl {
                             Span span4 = tracer.buildSpan("缓存头像流程").withTag("onCreaate函数：", "子追踪").start();
                             try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                                 // 调用下载接口
-                                IsDownLoad= OssOperate.DownLoad(imageUrl,getSandboxPath(context)+imageUrl);
+                                IsDownLoad= OssOperate.DownLoad(imageUrl, getSandBoxPath(context)+imageUrl);
                             } catch (Exception e) {
                                 TracingHelper.onError(e, span);
                                 throw e;
@@ -109,7 +109,7 @@ public class SetGlobalIDandUrl {
                                 span.finish();
                             }
                             if(IsDownLoad)
-                                UserInfo.setUrl(getSandboxPath(context)+imageUrl);
+                                UserInfo.setUrl(getSandBoxPath(context)+imageUrl);
                             else
                             {
                                 Log.e(TAG,"从oss缓存头像URL失败");
@@ -117,7 +117,7 @@ public class SetGlobalIDandUrl {
                             /**
                              * 设置全局URL，因为是异步下载图片，所以可能会直接忽略结果返回失败，因此直接默认会缓存成功
                              */
-                            UserInfo.setUrl(getSandboxPath(context)+imageUrl);
+                            UserInfo.setUrl(getSandBoxPath(context)+imageUrl);
 
                         }
                     }
@@ -143,7 +143,7 @@ public class SetGlobalIDandUrl {
      * @param context 辅助操作
      * @return      true
      */
-    public static boolean SetByQq(String qqId,Context context)
+    public static boolean setByQq(String qqId, Context context)
     {
         new Thread(new Runnable() {
             @Override
@@ -163,7 +163,7 @@ public class SetGlobalIDandUrl {
                 Span span = tracer.buildSpan("通过qq启动获取用户ID流程").withTag("Oncreate函数：", "子追踪").start();
                 try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                     // 获取id接口
-                    id= UserOperate.GetQqId(qqId, context);
+                    id= UserOperate.getQqId(qqId, context);
                 } catch (Exception e) {
                     TracingHelper.onError(e, span);
                     throw e;
@@ -223,7 +223,7 @@ public class SetGlobalIDandUrl {
                             Span span4 = tracer.buildSpan("缓存头像流程").withTag("onCreaate函数：", "子追踪").start();
                             try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                                 // 调用下载接口
-                                IsDownLoad=OssOperate.DownLoad(imageUrl,getSandboxPath(context)+imageUrl);
+                                IsDownLoad=OssOperate.DownLoad(imageUrl, getSandBoxPath(context)+imageUrl);
                             } catch (Exception e) {
                                 TracingHelper.onError(e, span);
                                 throw e;
@@ -231,7 +231,7 @@ public class SetGlobalIDandUrl {
                                 span.finish();
                             }
                             if(IsDownLoad)
-                                UserInfo.setUrl(getSandboxPath(context)+imageUrl);
+                                UserInfo.setUrl(getSandBoxPath(context)+imageUrl);
                             else
                             {
                                 Log.e(TAG,"从oss缓存头像URL失败");
@@ -239,7 +239,7 @@ public class SetGlobalIDandUrl {
                             /**
                              * 设置全局URL，因为是异步下载图片，所以可能会直接忽略结果返回失败，因此直接默认会缓存成功
                              */
-                            UserInfo.setUrl(getSandboxPath(context)+imageUrl);
+                            UserInfo.setUrl(getSandBoxPath(context)+imageUrl);
                         }
                     }
                     /**
@@ -263,7 +263,7 @@ public class SetGlobalIDandUrl {
      *
      * @return 路径
      */
-    private static String getSandboxPath(Context context) {
+    private static String getSandBoxPath(Context context) {
         File externalFilesDir = context.getExternalFilesDir("");
         File customFile = new File(externalFilesDir.getAbsolutePath(), "Sandbox");
         if (!customFile.exists()) {

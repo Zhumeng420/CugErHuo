@@ -119,7 +119,7 @@ public class QqLoginActivity extends AppCompatActivity {
                         boolean IsQqExisted;
                         Span span1 = tracer.buildSpan("查询redis流程1").withTag("函数：doComplete", "子追踪").start();
                         try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
-                            IsQqExisted= UserOperate.IsQqExistBloom(openid, QqLoginActivity.this);
+                            IsQqExisted= UserOperate.isQqExistBloom(openid, QqLoginActivity.this);
                         } catch (Exception e) {
                             TracingHelper.onError(e, span);
                             throw e;
@@ -137,7 +137,7 @@ public class QqLoginActivity extends AppCompatActivity {
                             boolean IsQqBaned;
                             Span span2 = tracer.buildSpan("查询redis流程2").withTag("函数：doComplete", "子追踪").start();
                             try (Scope ignored1 = tracer.scopeManager().activate(span2,true)) {
-                                IsQqBaned=UserOperate.IsQqBanedBloom(openid,QqLoginActivity.this);
+                                IsQqBaned=UserOperate.isQqBanedBloom(openid,QqLoginActivity.this);
                             } catch (Exception e) {
                                 TracingHelper.onError(e, span2);
                                 throw e;
@@ -166,7 +166,7 @@ public class QqLoginActivity extends AppCompatActivity {
                                 String username= NameUtil.getTwoSurname();
                                 Span span2 = tracer.buildSpan("查询mysql流程").withTag("函数：doComplete", "子追踪").start();
                                 try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
-                                    IsInserted=UserOperate.InsertByQq(openid,username,QqLoginActivity.this);
+                                    IsInserted=UserOperate.insertByQq(openid,username,QqLoginActivity.this);
                                 } catch (Exception e) {
                                     TracingHelper.onError(e, span);
                                     throw e;
@@ -185,7 +185,7 @@ public class QqLoginActivity extends AppCompatActivity {
                                             int result=-1;
                                             Span span2 = tracer.buildSpan("查询mysql流程").withTag("函数：doComplete", "子追踪").start();
                                             try (Scope ignored1 = tracer.scopeManager().activate(span2,true)) {
-                                                result=UserOperate.GetQqId(openid,QqLoginActivity.this);
+                                                result=UserOperate.getQqId(openid,QqLoginActivity.this);
                                             } catch (Exception e) {
                                                 TracingHelper.onError(e, span2);
                                                 throw e;
@@ -204,7 +204,7 @@ public class QqLoginActivity extends AppCompatActivity {
                                                 boolean Isinserted;
                                                 Span span3 = tracer.buildSpan("插入用户至图数据库").withTag("函数：doComplete", "子追踪").start();
                                                 try (Scope ignored1 = tracer.scopeManager().activate(span3,true)) {
-                                                    Isinserted=UserOperate.InsertUserToTu(username,result,QqLoginActivity.this);
+                                                    Isinserted=UserOperate.insertUserToTu(username,result,QqLoginActivity.this);
                                                 } catch (Exception e) {
                                                     TracingHelper.onError(e, span3);
                                                     throw e;
@@ -241,7 +241,7 @@ public class QqLoginActivity extends AppCompatActivity {
                                     boolean IsInserted1;
                                     Span span3 = tracer.buildSpan("查询redis流程3").withTag("函数：doComplete", "子追踪").start();
                                     try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
-                                        IsInserted1=UserOperate.InsertQqBloom(openid,QqLoginActivity.this);
+                                        IsInserted1=UserOperate.insertQqBloom(openid,QqLoginActivity.this);
                                     } catch (Exception e) {
                                         TracingHelper.onError(e, span);
                                         throw e;
@@ -262,7 +262,7 @@ public class QqLoginActivity extends AppCompatActivity {
                          * @author 施立豪
                          * @time 2023/4/9
                          */
-                            SetGlobalIDandUrl.SetByQq(openid,QqLoginActivity.this);
+                            SetGlobalIDandUrl.setByQq(openid,QqLoginActivity.this);
                             /**
                              * 本地存储
                              */

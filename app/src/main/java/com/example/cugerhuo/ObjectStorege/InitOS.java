@@ -20,7 +20,7 @@ public class InitOS {
     //让构造函数为 private，这样该类就不会被实例化
     private InitOS(Context context)
     {
-        List<String> Message=OssSecret.GetOss();
+        List<String> Message=OssSecret.getOss();
         accessKeyId=Message.get(0);
         accessKeySecret=Message.get(1);
         securityToken=Message.get(2);

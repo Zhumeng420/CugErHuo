@@ -27,24 +27,24 @@ public class UserInfoOperate
     /**
      * 插入用户
      * @param id 用户id
-     * @param userName 用户名
+     * @param userName1 用户名
      * @param context   获取映射文件
      * @return  是否成功
      */
-    public static boolean insertUser(int id, String userName, Context context)
+    public static boolean insertUser(int id, String userName1, Context context)
     {
         OkHttpClient okHttpClient = new OkHttpClient();
         /**
          * 获取XML文本
          */
-        String Ip=context.getString(R.string.ip);
-        String Router=context.getString(R.string.InsertUserInfo);
-        String UserName=context.getString(R.string.Username);
+        String ip=context.getString(R.string.ip);
+        String router=context.getString(R.string.InsertUserInfo);
+        String userName=context.getString(R.string.Username);
         String UserID=context.getString(R.string.UserId);
         /**
          * 发送请求
          */
-        String url="http://"+Ip+"/"+Router+"?"+UserName+"="+userName+"&"+UserID+"="+id;
+        String url="http://"+ip+"/"+router+"?"+userName+"="+userName1+"&"+UserID+"="+id;
         //循环form表单，将表单内容添加到form builder中
         //构建formBody，将其传入Request请求中
         Request request = new Request.Builder().url(url).get().build();
@@ -64,41 +64,41 @@ public class UserInfoOperate
     /**
      * 调用服务端向mysql用户资料表设置头像url
      * @param id 用户id
-     * @param imageUrl 图像在桶中的路径
+     * @param imageUrl1 图像在桶中的路径
      * @param context 获取映射文件
      * @return 是否成功
      * @author 施立豪
      * @time 2023/4/9
      */
-    public static boolean setImage(int id, String imageUrl, Context context)
+    public static boolean setImage(int id, String imageUrl1, Context context)
     {
         OkHttpClient okHttpClient = new OkHttpClient();
         /**
          * 获取XML文本
          */
-        String Ip=context.getString(R.string.ip);
-        String Router=context.getString(R.string.SetUserImage);
-        String ImageUrl=context.getString(R.string.ImageUrl);
-        String UserID=context.getString(R.string.UserId);
+        String ip=context.getString(R.string.ip);
+        String router=context.getString(R.string.SetUserImage);
+        String imageUrl=context.getString(R.string.ImageUrl);
+        String userID=context.getString(R.string.UserId);
         /**
          * 发送请求
          */
-        String url="http://"+Ip+"/"+Router+"?"+ImageUrl+"="+imageUrl+"&"+UserID+"="+id;
+        String url="http://"+ip+"/"+router+"?"+imageUrl+"="+imageUrl1+"&"+userID+"="+id;
         //循环form表单，将表单内容添加到form builder中
         //构建formBody，将其传入Request请求中
         Request request = new Request.Builder().url(url).get().build();
         Response response = null;
-        boolean IsSeted=false;
+        boolean isSeted=false;
         try {
             response = okHttpClient.newCall(request).execute();
             JSONObject obj=new JSONObject(response.body().string());
-            IsSeted=obj.getString("object").equals("true");
+            isSeted=obj.getString("object").equals("true");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return IsSeted;
+        return isSeted;
     }
 
     /**
@@ -114,13 +114,13 @@ public class UserInfoOperate
         /**
          * 获取XML文本
          */
-        String Ip=context.getString(R.string.ip);
-        String Router=context.getString(R.string.GetUserImage);
-        String UserID=context.getString(R.string.UserId);
+        String ip=context.getString(R.string.ip);
+        String router=context.getString(R.string.GetUserImage);
+        String userID=context.getString(R.string.UserId);
         /**
          * 发送请求
          */
-        String url="http://"+Ip+"/"+Router+"?"+UserID+"="+id;
+        String url="http://"+ip+"/"+router+"?"+userID+"="+id;
         //循环form表单，将表单内容添加到form builder中
         //构建formBody，将其传入Request请求中
         Request request = new Request.Builder().url(url).get().build();

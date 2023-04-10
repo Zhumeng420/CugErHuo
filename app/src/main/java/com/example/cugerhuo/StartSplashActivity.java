@@ -210,7 +210,7 @@ public class StartSplashActivity extends AppCompatActivity {
                              * 初始化全局变量
                              */
                             String qqId=LoginMessage.getString("QqId","");
-                SetGlobalIDandUrl.SetByQq(qqId,StartSplashActivity.this);
+                SetGlobalIDandUrl.setByQq(qqId,StartSplashActivity.this);
 //                            new Thread(new Runnable() {
 //                                @Override
 //                                public void run() {
@@ -322,7 +322,7 @@ public class StartSplashActivity extends AppCompatActivity {
                              * @time 2023/4/9
                              */
                             String phoneNumber=LoginMessage.getString("PhoneNumber","");
-                            SetGlobalIDandUrl.SetByPhone(phoneNumber,StartSplashActivity.this);
+                            SetGlobalIDandUrl.setByPhone(phoneNumber,StartSplashActivity.this);
 //                            new Thread(new Runnable() {
 //                                @Override
 //                                public void run() {
