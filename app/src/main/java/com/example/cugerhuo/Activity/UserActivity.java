@@ -84,7 +84,7 @@ public class UserActivity extends AppCompatActivity {
         user_image=findViewById(R.id.user_img);
         user_image.setOnClickListener(this::onChangeImage);
         String imagpath=UserInfo.getUrl();
-        if(!imagpath.equals(""))
+        if("".equals(imagpath))
         {
             user_image.setImageURI(Uri.fromFile(new File(imagpath)));
         }

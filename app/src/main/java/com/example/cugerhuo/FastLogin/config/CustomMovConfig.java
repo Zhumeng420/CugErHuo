@@ -183,6 +183,7 @@ public class CustomMovConfig extends BaseUIConfig {
                                  * @author 施立豪
                                  * @time 2023/3/27
                                  */
+
                                 System.out.println("qq登录");
                                 Intent intent=new Intent();
                                 intent.setClass(mContext, QqLoginActivity.class);
@@ -202,7 +203,7 @@ public class CustomMovConfig extends BaseUIConfig {
                 .setSloganHidden(true)
                 .setSwitchAccHidden(true)
                 .setPrivacyState(false)
-                .setCheckboxHidden(false)
+                .setCheckboxHidden(true)
                 .setLightColor(true)
                 .setNumFieldOffsetY(unit * 6)
                 .setLogBtnOffsetY(unit * 7)

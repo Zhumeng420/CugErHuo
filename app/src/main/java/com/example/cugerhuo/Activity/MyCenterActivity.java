@@ -55,7 +55,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         user_concern.setOnClickListener(this::user_concern_click);
         user_image = findViewById(R.id.user_img);
         String imagpath = UserInfo.getUrl();
-        if (!imagpath.equals("")) {
+        if ("".equals(imagpath)) {
             user_image.setImageURI(Uri.fromFile(new File(imagpath)));
         }
         /**
@@ -221,7 +221,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         if(requestCode==0x0001)
         {
             String imagpath=UserInfo.getUrl();
-            if(!imagpath.equals(""))
+            if("".equals(imagpath))
             {
                 user_image.setImageURI(Uri.fromFile(new File(imagpath)));
             }
