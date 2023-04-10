@@ -218,7 +218,7 @@ public class QqLoginActivity extends AppCompatActivity {
                                                 boolean Isinserted1;
                                                 Span span4 = tracer.buildSpan("qq注册插入用户至用户资料").withTag("函数：doComplete", "子追踪").start();
                                                 try (Scope ignored1 = tracer.scopeManager().activate(span3,true)) {
-                                                    Isinserted= UserInfoOperate.InsertUser(result,username,QqLoginActivity.this);
+                                                    Isinserted= UserInfoOperate.insertUser(result,username,QqLoginActivity.this);
                                                 } catch (Exception e) {
                                                     TracingHelper.onError(e, span3);
                                                     throw e;

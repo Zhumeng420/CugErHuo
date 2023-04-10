@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="ip">123.249.120.9:8082</string>
+    <string name="redisHost">123.249.120.9</string>
     <string name="Tuip">123.249.11.83:8085</string>
     <string name="InsertUserToTu">user/adduser</string>
     <string name="InsertQqToBloom">bloomfilterofphone/insertbyqq</string>
@@ -18,6 +19,7 @@
 
     <string name="SetUserImage">user-info/changeimage</string>
     <string name="GetUserImage">user-info/getimage</string>
+    <string name="GetPartUserInfo">user-info/getpartinfo</string>
     <string name="InsertUserInfo">user-info/insertuser</string>
 
 
@@ -32,6 +34,8 @@
     <string name="Name">name</string>
     <string name="ImageUrl">imageUrl</string>
     <string name="UserId">userId</string>
+    <string name="RedisPWD">CUGerhuo333</string>
+
 
 
     <string name="Token">token</string>

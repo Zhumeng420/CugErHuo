@@ -64,7 +64,7 @@ public class SetGlobalIDandUrl {
                     Span span3 = tracer.buildSpan("通过id获取图片url").withTag("Oncreate函数：", "子追踪").start();
                     try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                         // 调用获取头像url接口
-                        imageUrl= UserInfoOperate.GetImage(id,context);
+                        imageUrl= UserInfoOperate.getImage(id,context);
                     } catch (Exception e) {
                         TracingHelper.onError(e, span);
                         throw e;
@@ -183,7 +183,7 @@ public class SetGlobalIDandUrl {
                     Span span3 = tracer.buildSpan("通过id获取图片url").withTag("Oncreate函数：", "子追踪").start();
                     try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                         // 调用获取头像url接口
-                        imageUrl=UserInfoOperate.GetImage(id,context);
+                        imageUrl=UserInfoOperate.getImage(id,context);
                     } catch (Exception e) {
                         TracingHelper.onError(e, span);
                         throw e;

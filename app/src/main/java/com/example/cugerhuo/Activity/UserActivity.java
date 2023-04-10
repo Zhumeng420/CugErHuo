@@ -280,7 +280,7 @@ public class UserActivity extends AppCompatActivity {
                                 Span span = tracer.buildSpan("修改头像流程，调用mysql接口").withTag("onChangeImage函数：", "子追踪").start();
                                 try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                                     // 插入接口调用
-                                    IsSeted = UserInfoOperate.SetImage(UserInfo.getID(), fileName, UserActivity.this);
+                                    IsSeted = UserInfoOperate.setImage(UserInfo.getID(), fileName, UserActivity.this);
                                 } catch (Exception e) {
                                     TracingHelper.onError(e, span);
                                     throw e;

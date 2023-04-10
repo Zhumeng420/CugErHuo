@@ -126,4 +126,21 @@ public class demo {
             }
         });
     }
+
+    /**
+     * 操作redis的demo，以获取用户的id，个签，用户名，头像url为例
+     * @author 施立豪
+     * @time 2023/4/10
+     */
+    public void redisOperate(){
+        //建立连接对象
+//                LettuceBaseCase lettuce=new LettuceBaseCase();
+        //获取连接
+//                RedisCommands<String, String> con=lettuce.getSyncConnection();
+        //通过连接调用查询
+//                PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,5,StartSplashActivity.this);
+//                System.out.println(part.getImageUrl());
+        //关闭连接
+//                lettuce.close();
+    }
 }

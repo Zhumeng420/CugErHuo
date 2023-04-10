@@ -48,6 +48,7 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.netease.nim.demo.permission.RECEIVE_MSG" />
+    <!-- luttuce连接池 -->
 
     <application
         android:allowBackup="true"
@@ -303,5 +304,6 @@
             android:authorities="com.example.cugerhuo.ipc.provider.preference"
             android:exported="false" />
     </application>
+
 
 </manifest>

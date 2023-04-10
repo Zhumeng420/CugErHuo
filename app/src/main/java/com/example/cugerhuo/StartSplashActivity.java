@@ -23,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import io.jaegertracing.Configuration;
 import io.opentracing.util.GlobalTracer;
 
 /**
@@ -83,6 +84,10 @@ public class StartSplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 /**
+                 * test
+                 */
+
+                /**
                  * 对象存储初始化
                  */
                 InitOS m=InitOS.getInstance(getApplicationContext());
@@ -90,12 +95,12 @@ public class StartSplashActivity extends AppCompatActivity {
                 /**
                  * 链路追踪初始化
                  */
-                io.jaegertracing.Configuration config = new io.jaegertracing.Configuration("CUG贰货");
-                io.jaegertracing.Configuration.SenderConfiguration sender = new io.jaegertracing.Configuration.SenderConfiguration();
+                Configuration config = new Configuration("CUG贰货");
+                Configuration.SenderConfiguration sender = new Configuration.SenderConfiguration();
                 // 将 <endpoint> 替换为控制台概览页面上相应客户端和地域的接入点。
                 sender.withEndpoint("http://tracing-analysis-dc-hz.aliyuncs.com/adapt_f6yah647nw@42a790d7a35fc27_f6yah647nw@53df7ad2afe8301/api/traces");
-                config.withSampler(new io.jaegertracing.Configuration.SamplerConfiguration().withType("const").withParam(1));
-                config.withReporter(new io.jaegertracing.Configuration.ReporterConfiguration().withSender(sender).withMaxQueueSize(10000));
+                config.withSampler(new Configuration.SamplerConfiguration().withType("const").withParam(1));
+                config.withReporter(new Configuration.ReporterConfiguration().withSender(sender).withMaxQueueSize(10000));
                 if(GlobalTracer.isRegistered())
                 GlobalTracer.register(config.getTracer());
                 return;
