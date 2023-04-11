@@ -154,7 +154,11 @@ dependencies {
 
     //滑动容器
     implementation 'com.github.donkingliang:ConsecutiveScroller:4.6.4'
-
+    //redis连接
     implementation 'io.lettuce:lettuce-core:6.2.3.RELEASE'
+    //阿里云nlp
+    implementation 'com.aliyun:aliyun-java-sdk-core:4.5.13'
+    implementation 'com.aliyun:aliyun-java-sdk-alinlp:1.8.12'
+
 }
 
