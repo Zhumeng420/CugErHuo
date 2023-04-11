@@ -7,10 +7,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
+import android.widget.Toast;
 
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfoOperate;
@@ -88,6 +91,7 @@ public class ConcernActivity extends AppCompatActivity {
              * 获取关注列表id
              */
             getFocusIds=UserOperate.getConcernId(id1,ConcernActivity.this);
+
             /**
              * 建立连接对象
              */
@@ -100,12 +104,13 @@ public class ConcernActivity extends AppCompatActivity {
              * 通过连接调用查询
              */
                 for(int i=0;i<getFocusIds.size();i++){
-                    PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,getFocusIds.get(i),ConcernActivity.this);
+                    PartUserInfo part= UserInfoOperate.getInfoFromMysql(getFocusIds.get(i),ConcernActivity.this);
+                    System.out.println("关注idididdididi"+part.getUserName());
+                    System.out.println("简介简介简介简介"+part.getSignature());
+                    part.setUserId(getFocusIds.get(i));
                     getFocusInfo.add(part);
                     System.out.println("关注关注关注关注-------"+part.getImageUrl());
                 }
-
-
             /**
              * 关闭连接
              */
@@ -131,8 +136,8 @@ public class ConcernActivity extends AppCompatActivity {
                  * 获取关注列表
                  */
                 case 1:
-                    RecyclerViewAdapter adapter2 = new RecyclerViewAdapter(getActivity(),getFocusInfo);
-                    recyclerView2.setAdapter(adapter2);
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity(),getFocusInfo);
+                    recyclerView2.setAdapter(adapter);
                     break;
                 default:
                     break;

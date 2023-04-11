@@ -9,6 +9,7 @@
     android:background="@color/white">
 
     <LinearLayout
+        android:id="@+id/user_concern"
         android:orientation="horizontal"
         android:layout_marginTop="3dp"
         android:layout_weight="1"

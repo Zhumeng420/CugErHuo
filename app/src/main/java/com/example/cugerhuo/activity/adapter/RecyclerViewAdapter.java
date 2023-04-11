@@ -1,11 +1,13 @@
 package com.example.cugerhuo.activity.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.user.PartUserInfo;
+import com.example.cugerhuo.activity.OtherPeopleActivity;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
@@ -29,7 +32,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     /**
      * partUserInfo 关注的用户信息
-     * count 关注列表的Item个数，默认为30（为了前端调试）
+     * count 关注列表的Item个数
      * @author 唐小莉
      * @Time 2023/4/7 22：16
      */
@@ -77,12 +80,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         //进行item对应控件部分的内容设置
         holder.user_concern_name.setText(partUserInfo.get(position).getUserName());
         holder.user_concern_sign.setText(partUserInfo.get(position).getSignature());
+
         if ("".equals(partUserInfo.get(position).getImageUrl())) {
             holder.user_concern_img.setImageURI(Uri.fromFile(new File(partUserInfo.get(position).getImageUrl())));
         }
 
 
-        holder.btn_concerned.setOnClickListener(new View.OnClickListener() {
+        holder.user_concern.setOnClickListener(new View.OnClickListener() {
             /**
              * 点击每个RecyclerView子组件进行相应的响应事件
              * @param v
@@ -92,7 +96,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View v) {
                 Toast.makeText(context,holder.user_concern_name.getText().toString(),Toast.LENGTH_SHORT).show();
-
+                Intent intent=new Intent(context, OtherPeopleActivity.class);
+                intent.putExtra("id",partUserInfo.get(position).getId());
+                System.out.println("hhhhhhhhhhhhhhh"+partUserInfo.get(position).getId());
+                context.startActivity(intent);
             }
         });
 
@@ -112,6 +119,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         RoundedImageView user_concern_img;
         TextView user_concern_sign;
         Button btn_concerned;
+        LinearLayout user_concern;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -119,6 +127,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             user_concern_img=itemView.findViewById(R.id.user_concern_img);
             user_concern_sign=itemView.findViewById(R.id.user_concern_sign);
             btn_concerned=itemView.findViewById(R.id.btn_concerned);
+            user_concern=itemView.findViewById(R.id.user_concern);
         }
     }
 
