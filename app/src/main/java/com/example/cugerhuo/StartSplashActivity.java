@@ -101,8 +101,7 @@ public class StartSplashActivity extends AppCompatActivity {
                 sender.withEndpoint("http://tracing-analysis-dc-hz.aliyuncs.com/adapt_f6yah647nw@42a790d7a35fc27_f6yah647nw@53df7ad2afe8301/api/traces");
                 config.withSampler(new Configuration.SamplerConfiguration().withType("const").withParam(1));
                 config.withReporter(new Configuration.ReporterConfiguration().withSender(sender).withMaxQueueSize(10000));
-                if(GlobalTracer.isRegistered())
-                GlobalTracer.register(config.getTracer());
+                if(GlobalTracer.isRegistered()){GlobalTracer.register(config.getTracer());}
                 return;
             }
         }).start();
@@ -186,10 +185,10 @@ public class StartSplashActivity extends AppCompatActivity {
                         /**
                          * 判断是否为空
                          */
-                        if(!LastData.equals(""))
-                        DayNum= (date.getTime() - format.parse(LastData).getTime()) / (24 * 60 * 60 * 1000);
-                        if(!QqLastData.equals(""))
-                            QqDayNum= (date.getTime() - format.parse(QqLastData).getTime()) / (24 * 60 * 60 * 1000);
+                        if(!LastData.equals("")) {
+                            DayNum= (date.getTime() - format.parse(LastData).getTime()) / (24 * 60 * 60 * 1000);}
+                        if(!QqLastData.equals("")){
+                            QqDayNum= (date.getTime() - format.parse(QqLastData).getTime()) / (24 * 60 * 60 * 1000);}
                     } catch ( ParseException e) {
                         e.printStackTrace();
                     }

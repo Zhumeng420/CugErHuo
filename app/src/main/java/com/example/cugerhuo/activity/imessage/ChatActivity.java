@@ -99,6 +99,7 @@ private
          */
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(
                 new Observer<StatusCode> () {
+                    @Override
                     public void onEvent(StatusCode status) {
                         //获取状态的描述
                         String desc = status.getDesc();

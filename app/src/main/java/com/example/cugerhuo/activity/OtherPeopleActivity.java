@@ -192,6 +192,9 @@ public class OtherPeopleActivity extends AppCompatActivity {
         /**设置ViewPager适配器*/
         adapter = new ViewPagerAdapter(getSupportFragmentManager(),fragments);
         viewPager.setAdapter(adapter);
+        /**设置初始fragment*/
+        viewPager.setCurrentItem(0,false);
+
 
         /**关联ViewPager*/
         move.setupWithViewPager(viewPager);

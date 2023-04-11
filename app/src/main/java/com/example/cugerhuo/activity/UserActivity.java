@@ -248,8 +248,8 @@ public class UserActivity extends AppCompatActivity {
                         Log.i(TAG, "水印路径:" + media.getWatermarkPath());
                         Log.i(TAG, "视频缩略图:" + media.getVideoThumbnailPath());
                         Log.i(TAG, "原始宽高: " + media.getWidth() + "x" + media.getHeight());
-                        if (media.getWidth() != media.getHeight())
-                            Log.i(TAG, "裁剪宽高: " + media.getCropImageWidth() + "x" + media.getCropImageHeight());
+                        if (media.getWidth() != media.getHeight()){
+                            Log.i(TAG, "裁剪宽高: " + media.getCropImageWidth() + "x" + media.getCropImageHeight());}
                         Log.i(TAG, "文件大小: " + PictureFileUtils.formatAccurateUnitFileSize(media.getSize()));
                         Log.i(TAG, "文件时长: " + media.getDuration());
                         /**

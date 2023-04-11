@@ -380,7 +380,7 @@ public class OneKeyLoginActivity extends Activity {
                                                     }
                                                 }).start();
                                             }
-                                            if(!IsInserted) System.out.println("插入mysql失败");
+                                            if(!IsInserted){ System.out.println("插入mysql失败");}
                                             /**
                                              * 再插入redis
                                              */
@@ -395,7 +395,7 @@ public class OneKeyLoginActivity extends Activity {
                                                 } finally {
                                                     span.finish();
                                                 }
-                                                if(!IsInserted1) System.out.println("插入redis失败");
+                                                if(!IsInserted1){ System.out.println("插入redis失败");}
                                                 else{Log.i("e","插入redis成功");}
                                             }
                                         }

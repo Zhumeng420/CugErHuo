@@ -10,6 +10,11 @@ import com.example.cugerhuo.Fragment.MyFragment;
 
 import java.util.ArrayList;
 
+/**
+ * ViewPager适配器
+ * @Author: 李柏睿
+ * @Time: 2023/3/28 9:53
+ */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     private final ArrayList<MyFragment> fragments;

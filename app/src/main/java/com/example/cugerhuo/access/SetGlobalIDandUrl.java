@@ -108,8 +108,8 @@ public class SetGlobalIDandUrl {
                             } finally {
                                 span.finish();
                             }
-                            if(IsDownLoad)
-                                UserInfo.setUrl(getSandBoxPath(context)+imageUrl);
+                            if(IsDownLoad){
+                                UserInfo.setUrl(getSandBoxPath(context)+imageUrl);}
                             else
                             {
                                 Log.e(TAG,"从oss缓存头像URL失败");
@@ -230,8 +230,8 @@ public class SetGlobalIDandUrl {
                             } finally {
                                 span.finish();
                             }
-                            if(IsDownLoad)
-                                UserInfo.setUrl(getSandBoxPath(context)+imageUrl);
+                            if(IsDownLoad){
+                                UserInfo.setUrl(getSandBoxPath(context)+imageUrl);}
                             else
                             {
                                 Log.e(TAG,"从oss缓存头像URL失败");

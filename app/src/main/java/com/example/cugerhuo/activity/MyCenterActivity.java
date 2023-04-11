@@ -37,26 +37,26 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
      * @author: 唐小莉
      * @time 2023/3/20 16:36
      */
-    private RoundedImageView user_image;
-    private ImageView iv_tab_three;
-    private TextView user_focus;
-    private TextView user_fans;
-    private mHandler mhandler = new mHandler();
-    private LinearLayout ll_tab_one;
-    private LinearLayout ll_tab_two;
-    private LinearLayout ll_tab_four;
-    private LinearLayout ll_tab_five;
-    private LinearLayout user_concern;
+    private RoundedImageView userImage;
+    private ImageView ivTabThree;
+    private TextView userFocus;
+    private TextView userFans;
+    private MyHandler mhandler = new MyHandler();
+    private LinearLayout llTabOne;
+    private LinearLayout llTabTwo;
+    private LinearLayout llTabFour;
+    private LinearLayout llTabFive;
+    private LinearLayout userConcern;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_center);
         initView();
-        user_concern.setOnClickListener(this::user_concern_click);
-        user_image = findViewById(R.id.user_img);
+        userConcern.setOnClickListener(this::userConcernClick);
+        userImage = findViewById(R.id.user_img);
         String imagpath = UserInfo.getUrl();
         if ("".equals(imagpath)) {
-            user_image.setImageURI(Uri.fromFile(new File(imagpath)));
+            userImage.setImageURI(Uri.fromFile(new File(imagpath)));
         }
         /**
          * 获取关注数量
@@ -74,19 +74,19 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                  * @author 施立豪
                  * @time 2023/3/27
                  */
-                SharedPreferences LoginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
+                SharedPreferences loginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
                 //获得Editor 实例
-                SharedPreferences.Editor editor = LoginMessage.edit();
-                String id=LoginMessage.getString("Id","");
-                int Id=0;
+                SharedPreferences.Editor editor = loginMessage.edit();
+                String id=loginMessage.getString("Id","");
+                int myId=0;
                 /**
                  * 如果当前本地没有存储id，先查询id并持久化
                  */
-                if(id.equals(""))
+                if("".equals(id))
                 {
 
-                    Id=UserOperate.getId(LoginMessage.getString("PhoneNumber",""),MyCenterActivity.this);
-                    editor.putString("Id", String.valueOf(Id));
+                    myId=UserOperate.getId(loginMessage.getString("PhoneNumber",""),MyCenterActivity.this);
+                    editor.putString("Id", String.valueOf(myId));
                     editor.apply();
 
                 }
@@ -94,12 +94,12 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                  * 本地有id，则查询id
                  */
                 else{
-                    Id=Integer.parseInt(id);
+                    myId=Integer.parseInt(id);
             }
                 /**
                  * 获取关注数量
                  */
-                focusNum=UserOperate.getFocusNum(Id,MyCenterActivity.this);
+                focusNum=UserOperate.getFocusNum(myId,MyCenterActivity.this);
                 msg.arg2=focusNum;
                 //4、发送消息
                 mhandler.sendMessage(msg);
@@ -123,19 +123,19 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                  * @author 施立豪
                  * @time 2023/3/27
                  */
-                SharedPreferences LoginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
+                SharedPreferences loginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
                 //获得Editor 实例
-                SharedPreferences.Editor editor = LoginMessage.edit();
-                String id=LoginMessage.getString("Id","");
-                int Id=0;
+                SharedPreferences.Editor editor = loginMessage.edit();
+                String id=loginMessage.getString("Id","");
+                int myId=0;
                 /**
                  * 如果当前本地没有存储id，先查询id并持久化
                  */
-                if(id.equals(""))
+                if("".equals(id))
                 {
 
-                    Id=UserOperate.getId(LoginMessage.getString("PhoneNumber",""),MyCenterActivity.this);
-                    editor.putString("Id", String.valueOf(Id));
+                    myId=UserOperate.getId(loginMessage.getString("PhoneNumber",""),MyCenterActivity.this);
+                    editor.putString("Id", String.valueOf(myId));
                     editor.apply();
 
                 }
@@ -143,10 +143,10 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                  * 本地有id，则查询id
                  */
                 else{
-                    Id=Integer.parseInt(id);
+                    myId=Integer.parseInt(id);
 
                 }
-                fansNum=UserOperate.getFansNum(Id,MyCenterActivity.this);
+                fansNum=UserOperate.getFansNum(myId,MyCenterActivity.this);
                 msg.arg2=fansNum;
                 //4、发送消息
                 mhandler.sendMessage(msg);
@@ -160,22 +160,22 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
      * @time 2023/3/20 16:28
      */
     public void initView(){
-        ll_tab_one=findViewById(R.id.ll_tab_one);
-        ll_tab_one.setOnClickListener(this);
-        ll_tab_two=findViewById(R.id.ll_tab_two);
-        ll_tab_two.setOnClickListener(this);
-        ll_tab_four=findViewById(R.id.ll_tab_four);
-        ll_tab_four.setOnClickListener(this);
-        ll_tab_five=findViewById(R.id.ll_tab_five);
-        ll_tab_five.setOnClickListener(this);
-        iv_tab_three = (ImageView) findViewById(R.id.iv_tab_three);
-        iv_tab_three.setOnClickListener(this);
-        user_fans=findViewById(R.id.user_fan);
-        user_focus=findViewById(R.id.user_concern);
-        user_concern=findViewById(R.id.concern);
+        llTabOne =findViewById(R.id.ll_tab_one);
+        llTabOne.setOnClickListener(this);
+        llTabTwo =findViewById(R.id.ll_tab_two);
+        llTabTwo.setOnClickListener(this);
+        llTabFour =findViewById(R.id.ll_tab_four);
+        llTabFour.setOnClickListener(this);
+        llTabFive =findViewById(R.id.ll_tab_five);
+        llTabFive.setOnClickListener(this);
+        ivTabThree = (ImageView) findViewById(R.id.iv_tab_three);
+        ivTabThree.setOnClickListener(this);
+        userFans =findViewById(R.id.user_fan);
+        userFocus =findViewById(R.id.user_concern);
+        userConcern =findViewById(R.id.concern);
     }
 
-    public void user_concern_click(View view){
+    public void userConcernClick(View view){
         startActivity(new Intent(getApplicationContext(),ConcernActivity.class));
 
     }
@@ -211,7 +211,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
      * @Time: 2023/3/21 19:38
      */
     public void onClickSetting(View view){
-        Intent intent = new Intent(getApplicationContext(),SettingActivity.class);
+        Intent intent = new Intent(getApplicationContext(),OtherPeopleActivity.class);
         startActivity(intent);
     }
 
@@ -223,7 +223,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
             String imagpath=UserInfo.getUrl();
             if("".equals(imagpath))
             {
-                user_image.setImageURI(Uri.fromFile(new File(imagpath)));
+                userImage.setImageURI(Uri.fromFile(new File(imagpath)));
             }
         }
     }
@@ -256,7 +256,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                         Animation.RELATIVE_TO_SELF, 0.5f,
                         Animation.RELATIVE_TO_SELF, 0.5f);
                 animation.setDuration( 500 );
-                iv_tab_three.startAnimation( animation );
+                ivTabThree.startAnimation( animation );
                 startActivity(new Intent(getApplicationContext(),PublishSelectionActivity.class));
                 overridePendingTransition(0,0);
                 break;
@@ -280,6 +280,8 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                 overridePendingTransition(0,0);
                 finish();
                 break;
+            default:
+                break;
         }
 
     }
@@ -289,7 +291,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
      * @author 施立豪
      * @time 2023/3/26
      */
-    private class mHandler extends Handler {
+    private class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -299,7 +301,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                  */
                 case 1:
                     System.out.println("关注数"+msg.arg2);
-                    user_focus.setText(String.valueOf(msg.arg2));
+                    userFocus.setText(String.valueOf(msg.arg2));
                     break;
                 /**
                  * 更新粉丝数
@@ -307,10 +309,10 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                  */
                 case 2:
                     System.out.println(String.valueOf(msg.arg2));
-
-                    user_fans.setText(String.valueOf(msg.arg2));
+                    userFans.setText(String.valueOf(msg.arg2));
                     break;
-
+                default:
+                    break;
             }
         }
     }

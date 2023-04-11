@@ -189,7 +189,6 @@
                 app:tabSelectedTextColor="@color/orange"
                 app:tabTextColor="@color/md_grey_700"
                 tools:ignore="SpeakableTextPresentCheck" />
-<!--            androidx.viewpager.widget.ViewPager-->
             <com.example.cugerhuo.views.MyViewPager
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
