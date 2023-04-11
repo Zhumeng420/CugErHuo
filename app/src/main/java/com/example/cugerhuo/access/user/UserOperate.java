@@ -2,9 +2,13 @@ package com.example.cugerhuo.access.user;
 
 import android.content.Context;
 
+import com.alibaba.fastjson.JSONArray;
 import com.example.cugerhuo.R;
+import com.google.gson.JsonArray;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -316,8 +320,7 @@ public class UserOperate {
 
         Request request = new Request.Builder().url(url).get().build();
         Response response = null;
-        int result
-                =-1;
+        int result =-1;
         try {
             response = okHttpClient.newCall(request).execute();
             result= Integer.parseInt(response.body().string());
@@ -482,6 +485,46 @@ public class UserOperate {
         } catch (IOException e) {
             e.printStackTrace();
         }return result;
+    }
+
+    /**
+     * 获取关注列表用户id
+     * @param id 登录用户id
+     * @param context 获取映射文件
+     * @return 返回关注列表id
+     * @author 唐小莉
+     * @time 2023/4/11 19:15
+     */
+    public static List<Integer> getConcernId(int id, Context context){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.Tuip);
+        String router=context.getString(R.string.Focus);
+        String uid=context.getString(R.string.UserId);
+
+        String url="http://"+ip+"/"+router;
+        //循环form表单，将表单内容添加到form builder中
+        //构建formBody，将其传入Request请求中
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add(uid, String.valueOf(id));
+        //循环form表单，将表单内容添加到form builder中
+        //构建formBody，将其传入Request请求中
+        FormBody body = builder.build();
+        Request request = new Request.Builder().url(url).post(body).build();
+        Response response = null;
+        List<Integer> result=new ArrayList<>();
+        //System.out.println("哇哇哇哇哇哇哇+"+id);
+        try {
+            response = okHttpClient.newCall(request).execute();
+            response.body();
+            result= JSONArray.parseArray(response.body().string(),Integer.class);
+            //System.out.println("result  aaaaaaa"+result.get(0));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }return result;
+
     }
 
 }

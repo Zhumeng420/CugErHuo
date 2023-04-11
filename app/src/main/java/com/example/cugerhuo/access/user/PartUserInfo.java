@@ -6,7 +6,16 @@ package com.example.cugerhuo.access.user;
  * @time 2023/4/10
  */
 public class PartUserInfo {
+    /**
+     * id 用户id
+     * imageUrl 头像url
+     * signature 简介
+     * username 昵称
+     */
     private int id;
+    private String imageUrl;
+    private String signature;
+    private String userName;
 
     public int getId() {
         return id;
@@ -40,7 +49,5 @@ public class PartUserInfo {
         this.userName = userName;
     }
 
-    private String imageUrl;
-    private String signature;
-    private String userName;
+
 }

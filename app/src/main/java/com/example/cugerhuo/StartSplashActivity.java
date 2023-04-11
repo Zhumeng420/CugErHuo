@@ -1,6 +1,6 @@
 package com.example.cugerhuo;
 
-import static com.example.cugerhuo.login.loginUtils.Constant.THEME_KEY;
+import static com.example.cugerhuo.login.loginutils.Constant.THEME_KEY;
 
 import android.content.Context;
 import android.content.Intent;
@@ -102,7 +102,7 @@ public class StartSplashActivity extends AppCompatActivity {
                 config.withSampler(new Configuration.SamplerConfiguration().withType("const").withParam(1));
                 config.withReporter(new Configuration.ReporterConfiguration().withSender(sender).withMaxQueueSize(10000));
                 if(GlobalTracer.isRegistered())
-                GlobalTracer.register(config.getTracer());
+                { GlobalTracer.register(config.getTracer());}
                 return;
             }
         }).start();
@@ -187,9 +187,9 @@ public class StartSplashActivity extends AppCompatActivity {
                          * 判断是否为空
                          */
                         if(!LastData.equals(""))
-                        DayNum= (date.getTime() - format.parse(LastData).getTime()) / (24 * 60 * 60 * 1000);
+                        {DayNum= (date.getTime() - format.parse(LastData).getTime()) / (24 * 60 * 60 * 1000);}
                         if(!QqLastData.equals(""))
-                            QqDayNum= (date.getTime() - format.parse(QqLastData).getTime()) / (24 * 60 * 60 * 1000);
+                        { QqDayNum= (date.getTime() - format.parse(QqLastData).getTime()) / (24 * 60 * 60 * 1000);}
                     } catch ( ParseException e) {
                         e.printStackTrace();
                     }
