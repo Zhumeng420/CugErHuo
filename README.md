@@ -2,7 +2,7 @@
 
 ## 一、项目描述：
 
-​	这是一个校园二手交易平台的项目，具备和“咸鱼”类似的功能。它以**DevOps+持续交付+微服务+容器**的云原生思想为核心，利用jenkins+docker持续集成，具备推荐系统（Spark+Redis+Kafka+MongoDB+Neo4j)，日志系统（美团Logan），监控系统（百度移动统计），后台管理系统（vue+springboot+mybatis)等核心功能。集成了手机号码一键登录、图像索引、关键词提取、商品分类、文本审核、手机短信等第三方服务。
+​	这是一个校园二手交易平台的项目，具备和“咸鱼”类似的功能。它以**DevOps+持续交付+微服务+容器**的云原生思想为核心，利用jenkins+docker持续集成，具备推荐系统（Spark+Redis+Kafka+MongoDB+Neo4j)，链路追踪系统（阿里巴巴TracingAnalysis），监控系统（百度移动统计），搜索引擎（k8s+docker+Elasticsearch集群），后台管理系统（vue+springboot+mybatis+nginx)等核心功能。集成了手机号码一键登录、图像索引、关键词提取、商品分类、文本审核、手机短信等第三方服务。
 
 ## 二、用户故事：
 
