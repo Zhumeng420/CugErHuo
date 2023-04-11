@@ -7,11 +7,17 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
+import com.example.cugerhuo.activity.adapter.ViewPagerAdapter;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
 import com.example.cugerhuo.R;
+import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
 
 /**
  * 底部带悬浮球导航栏：
@@ -65,12 +71,20 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
     private LinearLayout llTabTwo;
     private LinearLayout llTabFour;
     private LinearLayout llTabFive;
+    ViewPager viewPager;
+    ArrayList<com.example.cugerhuo.fragment.MyFragment> fragments;
+    ViewPagerAdapter adapter;
+    TabLayout tabLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_er_huo);
         initView();
+        viewPager = findViewById(R.id.viewPager);
+        tabLayout = findViewById(R.id.tab_home_navigation);
+        initFragment();
     }
 
     /**
@@ -144,6 +158,60 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
             default:
                 break;
         }
+    }
+    /**
+     * fragment初始化
+     * @Author: 李柏睿
+     * @Time: 2023/4/7 20:38
+     */
+    public void initFragment(){
+        /**初始化数据*/
+        fragments = new ArrayList<>();
+        fragments.add(new com.example.cugerhuo.fragment.MyFragment("关注",null,R.layout.fragment_concern));
+        fragments.add(new com.example.cugerhuo.fragment.MyFragment("推荐",null,R.layout.fragment_suggest));
+        fragments.add(new com.example.cugerhuo.fragment.MyFragment("地区",null,R.layout.fragment_regin));
 
+        /**设置ViewPager适配器*/
+        adapter = new ViewPagerAdapter(getSupportFragmentManager(),fragments);
+        viewPager.setAdapter(adapter);
+        /**设置初始fragment*/
+        viewPager.setCurrentItem(1,false);
+
+        /**
+         * @param
+         * @return: void
+         * @Author: 李柏睿
+         * @Time: 2023/4/7 22:24
+         */
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                View customView = tab.getCustomView();
+                if (customView == null) {
+                    tab.setCustomView(R.layout.tab_text_layout);
+                }
+                TextView textView = tab.getCustomView().findViewById(android.R.id.text1);
+                textView.setTextAppearance(ErHuoActivity.this, R.style.fragment_selected);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                View customView = tab.getCustomView();
+                if (customView == null) {
+                    tab.setCustomView(R.layout.tab_text_layout);
+                }
+                TextView textView = tab.getCustomView().findViewById(android.R.id.text1);
+                textView.setTextAppearance(ErHuoActivity.this, R.style.fragment);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+        /**关联ViewPager*/
+        tabLayout.setupWithViewPager(viewPager);
+        /**设置固定的tab*/
+        tabLayout.setTabMode(TabLayout.MODE_FIXED);
     }
 }

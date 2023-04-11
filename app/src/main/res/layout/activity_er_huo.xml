@@ -22,9 +22,9 @@
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorColor="@null"
             tools:ignore="SpeakableTextPresentCheck" />
-<!--        app:tabTextColor="@color/md_grey_700"-->
-<!--        app:tabSelectedTextColor="@color/orange"-->
-<!--        app:tabIndicatorColor="@color/orange"-->
+        <!--        app:tabTextColor="@color/md_grey_700"-->
+        <!--        app:tabSelectedTextColor="@color/orange"-->
+        <!--        app:tabIndicatorColor="@color/orange"-->
 
         <LinearLayout
             android:layout_width="match_parent"
