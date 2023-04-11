@@ -13,14 +13,14 @@ public class Concern {
      * @author 唐小莉
      * @Time 2023/4/7 22：16
      */
-    private String concern_name;
-    private String concern_imgPath;
-    private String concern_desc;
+    private String concernName;
+    private String concernImgPath;
+    private String concernDesc;
 
     public Concern(String name, String imgPath,String desc) {
-        this.concern_name=name;
-        this.concern_imgPath=imgPath;
-        this.concern_desc=desc;
+        this.concernName =name;
+        this.concernImgPath =imgPath;
+        this.concernDesc =desc;
     }
 
     /**
@@ -30,7 +30,7 @@ public class Concern {
      * @time 2023/4/7 22:23
      */
     public String getName() {
-        return concern_name;
+        return concernName;
     }
 
     /**
@@ -39,8 +39,8 @@ public class Concern {
      * @author 唐小莉
      * @time 2023/4/7 22:23
      */
-    public String getConcern_imgPath() {
-        return concern_imgPath;
+    public String getConcernImgPath() {
+        return concernImgPath;
     }
     /**
      * 获取自我介绍
@@ -48,7 +48,7 @@ public class Concern {
      * @author 唐小莉
      * @time 2023/4/7 22:23
      */
-    public String getConcern_desc(){
-        return concern_desc;
+    public String getConcernDesc(){
+        return concernDesc;
     }
 }

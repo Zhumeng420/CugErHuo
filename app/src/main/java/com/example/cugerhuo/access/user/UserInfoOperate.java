@@ -40,26 +40,26 @@ public class UserInfoOperate
         String ip=context.getString(R.string.ip);
         String router=context.getString(R.string.InsertUserInfo);
         String userName=context.getString(R.string.Username);
-        String UserID=context.getString(R.string.UserId);
+        String userid=context.getString(R.string.UserId);
         /**
          * 发送请求
          */
-        String url="http://"+ip+"/"+router+"?"+userName+"="+userName1+"&"+UserID+"="+id;
+        String url="http://"+ip+"/"+router+"?"+userName+"="+userName1+"&"+userid+"="+id;
         //循环form表单，将表单内容添加到form builder中
         //构建formBody，将其传入Request请求中
         Request request = new Request.Builder().url(url).get().build();
         Response response = null;
-        boolean IsSeted=false;
+        boolean isSeted=false;
         try {
             response = okHttpClient.newCall(request).execute();
             JSONObject obj=new JSONObject(response.body().string());
-            IsSeted=obj.getString("object").equals("true");
+            isSeted="true".equals(obj.getString("object"));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return IsSeted;
+        return isSeted;
     }
     /**
      * 调用服务端向mysql用户资料表设置头像url
@@ -79,11 +79,11 @@ public class UserInfoOperate
         String ip=context.getString(R.string.ip);
         String router=context.getString(R.string.SetUserImage);
         String imageUrl=context.getString(R.string.ImageUrl);
-        String userID=context.getString(R.string.UserId);
+        String userid=context.getString(R.string.UserId);
         /**
          * 发送请求
          */
-        String url="http://"+ip+"/"+router+"?"+imageUrl+"="+imageUrl1+"&"+userID+"="+id;
+        String url="http://"+ip+"/"+router+"?"+imageUrl+"="+imageUrl1+"&"+userid+"="+id;
         //循环form表单，将表单内容添加到form builder中
         //构建formBody，将其传入Request请求中
         Request request = new Request.Builder().url(url).get().build();
@@ -92,7 +92,7 @@ public class UserInfoOperate
         try {
             response = okHttpClient.newCall(request).execute();
             JSONObject obj=new JSONObject(response.body().string());
-            isSeted=obj.getString("object").equals("true");
+            isSeted="true".equals(obj.getString("object"));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -116,11 +116,11 @@ public class UserInfoOperate
          */
         String ip=context.getString(R.string.ip);
         String router=context.getString(R.string.GetUserImage);
-        String userID=context.getString(R.string.UserId);
+        String userid=context.getString(R.string.UserId);
         /**
          * 发送请求
          */
-        String url="http://"+ip+"/"+router+"?"+userID+"="+id;
+        String url="http://"+ip+"/"+router+"?"+userid+"="+id;
         //循环form表单，将表单内容添加到form builder中
         //构建formBody，将其传入Request请求中
         Request request = new Request.Builder().url(url).get().build();
@@ -153,11 +153,11 @@ public class UserInfoOperate
          */
         String ip=context.getString(R.string.ip);
         String router=context.getString(R.string.GetPartUserInfo);
-        String userID=context.getString(R.string.UserId);
+        String userid=context.getString(R.string.UserId);
         /**
          * 发送请求
          */
-        String url="http://"+ip+"/"+router+"?"+userID+"="+id;
+        String url="http://"+ip+"/"+router+"?"+userid+"="+id;
         //循环form表单，将表单内容添加到form builder中
         //构建formBody，将其传入Request请求中
         Request request = new Request.Builder().url(url).get().build();

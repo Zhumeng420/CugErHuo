@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.cugerhuo.Fragment.MyFragment;
+import com.example.cugerhuo.fragment.MyFragment;
 
 import java.util.ArrayList;
 

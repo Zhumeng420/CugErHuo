@@ -1,8 +1,5 @@
 package com.example.cugerhuo.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -12,9 +9,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.example.cugerhuo.activity.adapter.ViewPagerAdapter;
-import com.example.cugerhuo.Fragment.MyFragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.activity.adapter.ViewPagerAdapter;
+import com.example.cugerhuo.fragment.MyFragment;
 import com.example.cugerhuo.views.MyScrollView;
 import com.google.android.material.tabs.TabLayout;
 

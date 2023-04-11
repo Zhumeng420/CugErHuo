@@ -32,7 +32,7 @@ public class OssOperate {
      * @param imageUri 图片Uri
      * @return 返回对象存储中保存的文件名，此文件名需要保存，以方便后续获取该图片，如果存储失败，则返回空字符串，接收结果时进行判断
      */
-    public static boolean  Up(String fileName,Uri imageUri)
+    public static boolean up(String fileName, Uri imageUri)
     {
         // 构造上传请求。
         // 依次填写Bucket名称（例如examplebucket）、Object完整路径（例如exampledir/exampleobject.txt）和本地文件完整路径（例如/storage/emulated/0/oss/examplefile.txt）。
@@ -51,7 +51,7 @@ public class OssOperate {
                 Log.d("PutObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
             }
         });
-        OSSClient oss= InitOS.getOSSClient();
+        OSSClient oss= InitOS.getossclient();
         OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
             @Override
             public void onSuccess(PutObjectRequest request, PutObjectResult result) {
@@ -89,7 +89,7 @@ public class OssOperate {
      * @param outPutPath  下载到本地的位置
      * @return      是否下载成功
      */
-    public static boolean DownLoad(String filePath,String outPutPath)
+    public static boolean downLoad(String filePath, String outPutPath)
     {
 
         // 构造下载文件请求。
@@ -98,11 +98,11 @@ public class OssOperate {
         /**
          * 获取oss实例
          */
-        OSSClient oss= InitOS.getOSSClient();
+        OSSClient oss= InitOS.getossclient();
         /**
          * 接收结果变量
          */
-        final boolean[] IsDownloaded = {false};
+        final boolean[] isDownloaded = {false};
         oss.asyncGetObject(get, new OSSCompletedCallback<GetObjectRequest, GetObjectResult>() {
             @Override
             public void onSuccess(GetObjectRequest request, GetObjectResult result) {
@@ -123,7 +123,7 @@ public class OssOperate {
                         FileOutputStream fout = new FileOutputStream(outPutPath);
                         fout.write(buffer);
                         fout.close();
-                        IsDownloaded[0] =true;
+                        isDownloaded[0] =true;
                     } catch (Exception e) {
                         OSSLog.logInfo(e.toString());
                     }
@@ -136,6 +136,6 @@ public class OssOperate {
             Log.e(TAG,"oss下载文件失败");
             }
         });
-        return IsDownloaded[0];
+        return isDownloaded[0];
     }
 }

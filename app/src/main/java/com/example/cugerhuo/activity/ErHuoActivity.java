@@ -60,11 +60,11 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
      * @author: 唐小莉
      * @time 2023/3/20 16:36
      */
-    private ImageView iv_tab_three;
-    private LinearLayout ll_tab_one;
-    private LinearLayout ll_tab_two;
-    private LinearLayout ll_tab_four;
-    private LinearLayout ll_tab_five;
+    private ImageView ivTabThree;
+    private LinearLayout llTabOne;
+    private LinearLayout llTabTwo;
+    private LinearLayout llTabFour;
+    private LinearLayout llTabFive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,16 +79,16 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
      * @time 2023/3/20 16:28
      */
     public void initView(){
-        ll_tab_one=findViewById(R.id.ll_tab_one);
-        ll_tab_one.setOnClickListener(this);
-        ll_tab_two=findViewById(R.id.ll_tab_two);
-        ll_tab_two.setOnClickListener(this);
-        ll_tab_four=findViewById(R.id.ll_tab_four);
-        ll_tab_four.setOnClickListener(this);
-        ll_tab_five=findViewById(R.id.ll_tab_five);
-        ll_tab_five.setOnClickListener(this);
-        iv_tab_three = (ImageView) findViewById(R.id.iv_tab_three);
-        iv_tab_three.setOnClickListener(this);
+        llTabOne =findViewById(R.id.ll_tab_one);
+        llTabOne.setOnClickListener(this);
+        llTabTwo =findViewById(R.id.ll_tab_two);
+        llTabTwo.setOnClickListener(this);
+        llTabFour =findViewById(R.id.ll_tab_four);
+        llTabFour.setOnClickListener(this);
+        llTabFive =findViewById(R.id.ll_tab_five);
+        llTabFive.setOnClickListener(this);
+        ivTabThree = (ImageView) findViewById(R.id.iv_tab_three);
+        ivTabThree.setOnClickListener(this);
     }
 
     /**
@@ -119,7 +119,7 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
                         Animation.RELATIVE_TO_SELF, 0.5f,
                         Animation.RELATIVE_TO_SELF, 0.5f);
                 animation.setDuration( 500 );
-                iv_tab_three.startAnimation( animation );
+                ivTabThree.startAnimation( animation );
                 startActivity(new Intent(getApplicationContext(),PublishSelectionActivity.class));
                 overridePendingTransition(0,0);
                 break;
@@ -140,6 +140,8 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
             case R.id.ll_tab_five:
                 startActivity(new Intent(getApplicationContext(), MyCenterActivity.class));
                 overridePendingTransition(0,0);
+                break;
+            default:
                 break;
         }
 

@@ -61,7 +61,7 @@ public class demo {
                 Log.d("PutObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
             }
         });
-        OSSClient oss= InitOS.getOSSClient();
+        OSSClient oss= InitOS.getossclient();
         OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
             @Override
             public void onSuccess(PutObjectRequest request, PutObjectResult result) {
@@ -102,7 +102,7 @@ public class demo {
 // CreateBucketRequest.setBucketACL(CannedAccessControlList.Private);
 // 指定Bucket的存储类型。
 // CreateBucketRequest.setBucketStorageClass(StorageClass.Standard);
-        OSSClient oss=InitOS.getOSSClient();
+        OSSClient oss=InitOS.getossclient();
 // 异步创建存储空间。
         OSSAsyncTask createTask = oss.asyncCreateBucket(createBucketRequest, new OSSCompletedCallback<CreateBucketRequest, CreateBucketResult>() {
             @Override

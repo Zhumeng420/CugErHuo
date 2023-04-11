@@ -1,4 +1,4 @@
-package com.example.cugerhuo.login.loginUtils;
+package com.example.cugerhuo.login.loginutils;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

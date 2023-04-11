@@ -1,4 +1,4 @@
-package com.example.cugerhuo.login.loginUtils;
+package com.example.cugerhuo.login.loginutils;
 
 /**
  * 一键登录相关常量配置

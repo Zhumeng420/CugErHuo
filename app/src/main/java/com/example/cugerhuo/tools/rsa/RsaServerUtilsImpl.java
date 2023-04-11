@@ -1,13 +1,17 @@
 package com.example.cugerhuo.tools.rsa;
 
-import java.util.Base64;
-
-import javax.crypto.Cipher;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 
+import javax.crypto.Cipher;
+
+/**
+ * 利用RSA算法将明文加密
+ * @author 施立豪
+ */
 public class RsaServerUtilsImpl implements RsaServerUtils {
     @Override
     public byte[] encrypt(String plainText, String publicKey) {

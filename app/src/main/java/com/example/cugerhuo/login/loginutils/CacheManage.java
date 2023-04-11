@@ -1,4 +1,4 @@
-package com.example.cugerhuo.login.loginUtils;
+package com.example.cugerhuo.login.loginutils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -114,7 +114,7 @@ public class CacheManage {
         }
         checkAndCreateBitmapCache();
         mBitmapLruCache.put(key, bitmap);
-        SaveImageDisk(bitmap, key);
+        saveImageDisk(bitmap, key);
     }
 
     /**
@@ -164,7 +164,7 @@ public class CacheManage {
      * @param image
      * @param url
      */
-    public void SaveImageDisk(Bitmap image, String url) {
+    public void saveImageDisk(Bitmap image, String url) {
         final File dir = new File(context.getCacheDir(), CACHE_COVER_DIR);
         if (!dir.exists()) {
             dir.mkdirs();

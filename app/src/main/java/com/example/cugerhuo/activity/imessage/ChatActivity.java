@@ -1,12 +1,12 @@
 package com.example.cugerhuo.activity.imessage;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.tools.MyToast;
@@ -30,7 +30,7 @@ import java.util.List;
 
 public class ChatActivity extends AppCompatActivity  implements  View.OnClickListener  {
 private
-    Button Send;
+    Button send;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,7 @@ private
                 new RequestCallback<LoginInfo>() {
                     @Override
                     public void onSuccess(LoginInfo param) {
-                        MyToast.Toast(ChatActivity.this,"登录成功",3);
+                        MyToast.toast(ChatActivity.this,"登录成功",3);
                         // your code
                         /**
                          *监听数据同步状态
@@ -58,9 +58,9 @@ private
                             @Override
                             public void onEvent(LoginSyncStatus status) {
                                 if (status == LoginSyncStatus.BEGIN_SYNC) {
-                                    MyToast.Toast(ChatActivity.this,"数据同步开始",3);
+                                    MyToast.toast(ChatActivity.this,"数据同步开始",3);
                                 } else if (status == LoginSyncStatus.SYNC_COMPLETED) {
-                                    MyToast.Toast(ChatActivity.this,"数据同步完成",3);
+                                    MyToast.toast(ChatActivity.this,"数据同步完成",3);
                                 }
                             }
                         }, true);
@@ -72,7 +72,7 @@ private
                                     // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
                                     TextView recevie=findViewById(R.id.textView);
                                     recevie.setText(messages.get(0).getFromAccount()+":"+messages.get(0).getContent());
-                                    MyToast.Toast(ChatActivity.this,messages.toString(),3);
+                                    MyToast.toast(ChatActivity.this,messages.toString(),3);
                                 };
                         NIMClient.getService(MsgServiceObserve.class)
                                 .observeReceiveMessage(incomingMessageObserver, true);
@@ -80,7 +80,7 @@ private
                     @Override
                     public void onFailed(int code) {
                         if (code == 302) {
-                            MyToast.Toast(ChatActivity.this,"账号密码错误",1);
+                            MyToast.toast(ChatActivity.this,"账号密码错误",1);
                             // your code
                         } else {
                             // your code
@@ -99,6 +99,7 @@ private
          */
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(
                 new Observer<StatusCode> () {
+                    @Override
                     public void onEvent(StatusCode status) {
                         //获取状态的描述
                         String desc = status.getDesc();
@@ -118,8 +119,8 @@ private
             /**
              * 发送消息点击事件
              */
-            Send=findViewById(R.id.send);
-            Send.setOnClickListener(this);
+            send =findViewById(R.id.send);
+            send.setOnClickListener(this);
 
         }
 
@@ -161,20 +162,23 @@ private
                 NIMClient.getService(MsgService.class).sendMessage(textMessage, false).setCallback(new RequestCallback<Void>() {
                     @Override
                     public void onSuccess(Void param) {
-                        MyToast.Toast(ChatActivity.this,"消息发送成功",3);
+                        MyToast.toast(ChatActivity.this,"消息发送成功",3);
                     }
 
                     @Override
                     public void onFailed(int code) {
-                        MyToast.Toast(ChatActivity.this,"消息发送失败",1);
+                        MyToast.toast(ChatActivity.this,"消息发送失败",1);
                     }
 
                     @Override
                     public void onException(Throwable exception) {
-                        MyToast.Toast(ChatActivity.this,"消息发送异常",1);
+                        MyToast.toast(ChatActivity.this,"消息发送异常",1);
                     }
                 });
+                break;
             }
+            default:
+                break;
         }
     }
 

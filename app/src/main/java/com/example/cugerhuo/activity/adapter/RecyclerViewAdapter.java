@@ -79,7 +79,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         //进行item对应控件部分的内容设置
         holder.user_concern_name.setText(concern.getName() + (position + 1));
-        holder.user_concern_sign.setText(concern.getConcern_desc()+(position+1));
+        holder.user_concern_sign.setText(concern.getConcernDesc()+(position+1));
         holder.user_concern_name.setOnClickListener(new View.OnClickListener() {
             /**
              * 点击每个RecyclerView子组件进行相应的响应事件

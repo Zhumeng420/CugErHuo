@@ -25,8 +25,8 @@ import com.example.cugerhuo.access.SetGlobalIDandUrl;
 import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.access.user.UserOperate;
 import com.example.cugerhuo.login.config.BaseUIConfig;
-import com.example.cugerhuo.login.loginUtils.BuildConfig;
-import com.example.cugerhuo.login.loginUtils.Constant;
+import com.example.cugerhuo.login.loginutils.BuildConfig;
+import com.example.cugerhuo.login.loginutils.Constant;
 import com.example.cugerhuo.login.utils.ExecutorManager;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.tools.NameUtil;
@@ -80,11 +80,11 @@ public class OneKeyLoginActivity extends Activity {
     /**
      * 画面显示类型  0：GIF  1：视频
      */
-    private int mUIType;
+    private int uiType;
     /**
      * 登录画面配置器
      */
-    private BaseUIConfig mUIConfig;
+    private BaseUIConfig uiConfig;
 
     /**
      * 创建时加载
@@ -101,11 +101,11 @@ public class OneKeyLoginActivity extends Activity {
         /**
          * 通过intent得到当前显示主题为GIF或视频，设置相应布局和号码认证服务
          */
-        mUIType = getIntent().getIntExtra(Constant.THEME_KEY, -1);
+        uiType = getIntent().getIntExtra(Constant.THEME_KEY, -1);
         setContentView(R.layout.activity_login);
         mTvResult = findViewById(R.id.tv_result);
         sdkInit(BuildConfig.AUTH_SECRET);
-        mUIConfig = BaseUIConfig.init(mUIType, this, mPhoneNumberAuthHelper);
+        uiConfig = BaseUIConfig.init(uiType, this, mPhoneNumberAuthHelper);
         oneKeyLogin();
         /**
          * 增加EditTxt的复制功能
@@ -202,7 +202,7 @@ public class OneKeyLoginActivity extends Activity {
     private void oneKeyLogin() {
         mPhoneNumberAuthHelper = PhoneNumberAuthHelper.getInstance(getApplicationContext(), mTokenResultListener);
         mPhoneNumberAuthHelper.checkEnvAvailable();
-        mUIConfig.configAuthPage();
+        uiConfig.configAuthPage();
         //用户控制返回键及左上角返回按钮效果
         mPhoneNumberAuthHelper.userControlAuthPageCancel();
         //用户禁用utdid
@@ -239,9 +239,9 @@ public class OneKeyLoginActivity extends Activity {
                 /**
                  * 查询本地存储
                  */
-                SharedPreferences LoginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
+                SharedPreferences loginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
                 //获得Editor 实例
-                SharedPreferences.Editor editor = LoginMessage.edit();
+                SharedPreferences.Editor editor = loginMessage.edit();
                 //以key-value形式保存数据
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date=new Date();
@@ -264,10 +264,10 @@ public class OneKeyLoginActivity extends Activity {
                                     /**查询布隆过滤器redis
                                      * 手机号是否存在
                                      */
-                                    boolean IsPhoneExisted;
+                                    boolean isPhoneExisted;
                                     Span span1 = tracer.buildSpan("查询redis流程1").withTag("函数：getResultWithToken", "子追踪").start();
                                     try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
-                                        IsPhoneExisted= UserOperate.isPhoneExistBloom(phoneNumber,OneKeyLoginActivity.this);
+                                        isPhoneExisted= UserOperate.isPhoneExistBloom(phoneNumber,OneKeyLoginActivity.this);
                                     } catch (Exception e) {
                                         TracingHelper.onError(e, span);
                                         throw e;
@@ -277,15 +277,15 @@ public class OneKeyLoginActivity extends Activity {
                                     /**
                                      * 账号已注册
                                      */
-                                    if(IsPhoneExisted)
+                                    if(isPhoneExisted)
                                     {
                                         /**
                                          * 手机号是否被封
                                          */
-                                        boolean IsPhoneBaned;
+                                        boolean isPhoneBaned;
                                         Span span2 = tracer.buildSpan("查询redis流程2").withTag("函数：getResultWithToken", "子追踪").start();
                                         try (Scope ignored1 = tracer.scopeManager().activate(span2,true)) {
-                                            IsPhoneBaned=UserOperate.isPhoneBanedBloom(phoneNumber,OneKeyLoginActivity.this);
+                                            isPhoneBaned=UserOperate.isPhoneBanedBloom(phoneNumber,OneKeyLoginActivity.this);
                                         } catch (Exception e) {
                                             TracingHelper.onError(e, span2);
                                             throw e;
@@ -295,7 +295,7 @@ public class OneKeyLoginActivity extends Activity {
                                         /**
                                          * 被封处理
                                          */
-                                        if(IsPhoneBaned){
+                                        if(isPhoneBaned){
                                             System.out.println("账号已被封");
                                             Log.i("e","账号被封");
                                             return ;
@@ -311,12 +311,12 @@ public class OneKeyLoginActivity extends Activity {
                                          */
                                         {
 
-                                            boolean IsInserted;
+                                            boolean isInserted;
                                             String username= NameUtil.getTwoSurname();
                                             Span span2 = tracer.buildSpan("查询mysql流程").withTag("函数：getResultWithToken", "子追踪").start();
                                             try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
 
-                                                IsInserted=UserOperate.insertByPhone(phoneNumber,username,OneKeyLoginActivity.this);
+                                                isInserted=UserOperate.insertByPhone(phoneNumber,username,OneKeyLoginActivity.this);
 
                                             } catch (Exception e) {
                                                 TracingHelper.onError(e, span);
@@ -324,7 +324,7 @@ public class OneKeyLoginActivity extends Activity {
                                             } finally {
                                                 span.finish();
                                             }
-                                            if(IsInserted)
+                                            if(isInserted)
                                             {
                                                 new Thread(new Runnable() {
                                                     @Override
@@ -348,10 +348,10 @@ public class OneKeyLoginActivity extends Activity {
                                                          * 插入图数据库
                                                          * @time 2023/3/26
                                                          */
-                                                        boolean Isinserted;
+                                                        boolean isinserted;
                                                         Span span3 = tracer.buildSpan("插入用户至图数据库").withTag("函数：getResultWithToken", "子追踪").start();
                                                         try (Scope ignored1 = tracer.scopeManager().activate(span3,true)) {
-                                                                Isinserted=UserOperate.insertUserToTu(username,result,OneKeyLoginActivity.this);
+                                                                isinserted=UserOperate.insertUserToTu(username,result,OneKeyLoginActivity.this);
                                                         } catch (Exception e) {
                                                             TracingHelper.onError(e, span3);
                                                             throw e;
@@ -362,10 +362,10 @@ public class OneKeyLoginActivity extends Activity {
                                                              * 插入用户资料表
                                                              * @time 2023/4/9
                                                              */
-                                                            boolean Isinserted1;
+                                                            boolean isinserted1;
                                                             Span span4 = tracer.buildSpan("手机注册插入用户至用户资料").withTag("函数：doComplete", "子追踪").start();
                                                             try (Scope ignored1 = tracer.scopeManager().activate(span3,true)) {
-                                                                Isinserted= UserInfoOperate.insertUser(result,username, OneKeyLoginActivity.this);
+                                                                isinserted1= UserInfoOperate.insertUser(result,username, OneKeyLoginActivity.this);
                                                             } catch (Exception e) {
                                                                 TracingHelper.onError(e, span3);
                                                                 throw e;
@@ -380,22 +380,22 @@ public class OneKeyLoginActivity extends Activity {
                                                     }
                                                 }).start();
                                             }
-                                            if(!IsInserted) System.out.println("插入mysql失败");
+                                            if(!isInserted) {System.out.println("插入mysql失败");}
                                             /**
                                              * 再插入redis
                                              */
                                             else{Log.i("e","插入mysql成功");
-                                                boolean IsInserted1;
+                                                boolean isInserted1;
                                                 Span span3 = tracer.buildSpan("查询redis流程3").withTag("函数：getResultWithToken", "子追踪").start();
                                                 try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
-                                                    IsInserted1=UserOperate.insertPhoneBloom(phoneNumber,OneKeyLoginActivity.this);
+                                                    isInserted1=UserOperate.insertPhoneBloom(phoneNumber,OneKeyLoginActivity.this);
                                                 } catch (Exception e) {
                                                     TracingHelper.onError(e, span);
                                                     throw e;
                                                 } finally {
                                                     span.finish();
                                                 }
-                                                if(!IsInserted1) System.out.println("插入redis失败");
+                                                if(!isInserted1){ System.out.println("插入redis失败");}
                                                 else{Log.i("e","插入redis成功");}
                                             }
                                         }
@@ -415,10 +415,10 @@ public class OneKeyLoginActivity extends Activity {
                                         /**
                                          * 本地存储
                                          */
-                                        String Time = format.format(date);
-                                        editor.putString("LoginData",Time);
+                                        String time = format.format(date);
+                                        editor.putString("LoginData",time);
                                         editor.putString("PhoneNumber",phoneNumber);
-                                        System.out.println("newdate"+Time);
+                                        System.out.println("newdate"+time);
                                         editor.apply();
                                         Intent intent=new Intent(getApplicationContext(), ErHuoActivity.class);
                                         startActivity(intent);
@@ -486,7 +486,7 @@ public class OneKeyLoginActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        mUIConfig.onResume();
+        uiConfig.onResume();
     }
 
 

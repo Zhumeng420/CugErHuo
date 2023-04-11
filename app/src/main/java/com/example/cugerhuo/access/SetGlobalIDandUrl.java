@@ -59,7 +59,7 @@ public class SetGlobalIDandUrl {
                  */
                 if(id!=-1)
                 {
-                    UserInfo.setID(id);
+                    UserInfo.setid(id);
                     String imageUrl="";
                     Span span3 = tracer.buildSpan("通过id获取图片url").withTag("Oncreate函数：", "子追踪").start();
                     try (Scope ignored = tracer.scopeManager().activate(span,true)) {
@@ -74,14 +74,14 @@ public class SetGlobalIDandUrl {
                     /**
                      * 得到url
                      */
-                    if(!imageUrl.equals(""))
+                    if(!"".equals(imageUrl))
                     {
                         /**
                          * 获取本地存储图片路径
                          */
                         SharedPreferences imagePath=context.getSharedPreferences("ImagePath", Context.MODE_PRIVATE);
                         String imageAbsolutePath=imagePath.getString("imagepath","");
-                        String nativeName= GetFileNameUtil.GetFileName(imageAbsolutePath);
+                        String nativeName= GetFileNameUtil.getFileName(imageAbsolutePath);
                         /**
                          * 如果本地和用户表中存储的文件名一致，则直接用本地的
                          */
@@ -97,19 +97,19 @@ public class SetGlobalIDandUrl {
                             /**
                              * 接收下载结果
                              */
-                            boolean IsDownLoad=false;
+                            boolean isDownLoad=false;
                             Span span4 = tracer.buildSpan("缓存头像流程").withTag("onCreaate函数：", "子追踪").start();
                             try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                                 // 调用下载接口
-                                IsDownLoad= OssOperate.DownLoad(imageUrl, getSandBoxPath(context)+imageUrl);
+                                isDownLoad= OssOperate.downLoad(imageUrl, getSandBoxPath(context)+imageUrl);
                             } catch (Exception e) {
                                 TracingHelper.onError(e, span);
                                 throw e;
                             } finally {
                                 span.finish();
                             }
-                            if(IsDownLoad)
-                                UserInfo.setUrl(getSandBoxPath(context)+imageUrl);
+                            if(isDownLoad)
+                            {UserInfo.setUrl(getSandBoxPath(context)+imageUrl);}
                             else
                             {
                                 Log.e(TAG,"从oss缓存头像URL失败");
@@ -175,7 +175,7 @@ public class SetGlobalIDandUrl {
                     /**
                      * 设置全局ID
                      */
-                    UserInfo.setID(id);
+                    UserInfo.setid(id);
                     /**
                      * 接收返回结果
                      */
@@ -193,14 +193,14 @@ public class SetGlobalIDandUrl {
                     /**
                      * 得到url
                      */
-                    if(!imageUrl.equals(""))
+                    if(!"".equals(imageUrl))
                     {
                         /**
                          * 获取本地存储图片路径
                          */
                         SharedPreferences imagePath=context.getSharedPreferences("ImagePath", Context.MODE_PRIVATE);
                         String imageAbsolutePath=imagePath.getString("imagepath","");
-                        String nativeName= GetFileNameUtil.GetFileName(imageAbsolutePath);
+                        String nativeName= GetFileNameUtil.getFileName(imageAbsolutePath);
                         /**
                          * 如果本地和用户表中存储的文件名一致，则直接用本地的
                          */
@@ -219,19 +219,19 @@ public class SetGlobalIDandUrl {
                             /**
                              * 下载
                              */
-                            boolean IsDownLoad=false;
+                            boolean isDownLoad=false;
                             Span span4 = tracer.buildSpan("缓存头像流程").withTag("onCreaate函数：", "子追踪").start();
                             try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                                 // 调用下载接口
-                                IsDownLoad=OssOperate.DownLoad(imageUrl, getSandBoxPath(context)+imageUrl);
+                                isDownLoad=OssOperate.downLoad(imageUrl, getSandBoxPath(context)+imageUrl);
                             } catch (Exception e) {
                                 TracingHelper.onError(e, span);
                                 throw e;
                             } finally {
                                 span.finish();
                             }
-                            if(IsDownLoad)
-                                UserInfo.setUrl(getSandBoxPath(context)+imageUrl);
+                            if(isDownLoad)
+                            { UserInfo.setUrl(getSandBoxPath(context)+imageUrl);}
                             else
                             {
                                 Log.e(TAG,"从oss缓存头像URL失败");

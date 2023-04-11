@@ -226,7 +226,8 @@ public class UserActivity extends AppCompatActivity {
                 .setSelectAnimListener( null)
                 .isMaxSelectEnabledMask(true)
                 .isDirectReturnSingle(false)
-                .setMaxSelectNum(1) //选择图片数量
+                //选择图片数量
+                .setMaxSelectNum(1)
                 .setMaxVideoSelectNum(0)
                 .setRecyclerAnimationMode(AnimationType.DEFAULT_ANIMATION)
                 .isGif(false)
@@ -249,7 +250,7 @@ public class UserActivity extends AppCompatActivity {
                         Log.i(TAG, "视频缩略图:" + media.getVideoThumbnailPath());
                         Log.i(TAG, "原始宽高: " + media.getWidth() + "x" + media.getHeight());
                         if (media.getWidth() != media.getHeight())
-                            Log.i(TAG, "裁剪宽高: " + media.getCropImageWidth() + "x" + media.getCropImageHeight());
+                        {Log.i(TAG, "裁剪宽高: " + media.getCropImageWidth() + "x" + media.getCropImageHeight());}
                         Log.i(TAG, "文件大小: " + PictureFileUtils.formatAccurateUnitFileSize(media.getSize()));
                         Log.i(TAG, "文件时长: " + media.getDuration());
                         /**
@@ -261,7 +262,7 @@ public class UserActivity extends AppCompatActivity {
                         /**
                          * 加上specific以与本地的文件区分
                          */
-                        String fileName = "specific_"+GetFileNameUtil.GetFileName(filePath);
+                        String fileName = "specific_"+GetFileNameUtil.getFileName(filePath);
                         System.out.println(fileName);
                         /**
                          * 子线程，将待进行oss的图片url插入用户信息数据库
@@ -280,7 +281,7 @@ public class UserActivity extends AppCompatActivity {
                                 Span span = tracer.buildSpan("修改头像流程，调用mysql接口").withTag("onChangeImage函数：", "子追踪").start();
                                 try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                                     // 插入接口调用
-                                    isSeted = UserInfoOperate.setImage(UserInfo.getID(), fileName, UserActivity.this);
+                                    isSeted = UserInfoOperate.setImage(UserInfo.getid(), fileName, UserActivity.this);
                                 } catch (Exception e) {
                                     TracingHelper.onError(e, span);
                                     throw e;
@@ -295,7 +296,7 @@ public class UserActivity extends AppCompatActivity {
                                 Span span1 = tracer.buildSpan("上传头像到oss流程").withTag("onChangeImage函数：", "子追踪").start();
                                 try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                                     // 业务逻辑写这里
-                                   isUped= OssOperate.Up(fileName, Uri.fromFile(new File(media.getSandboxPath())));
+                                   isUped= OssOperate.up(fileName, Uri.fromFile(new File(media.getSandboxPath())));
                                    if(isUped) {
 
                                        Log.i(TAG, "修改头像oss上传成功");

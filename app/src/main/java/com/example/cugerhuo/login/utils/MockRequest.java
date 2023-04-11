@@ -49,7 +49,7 @@ public class MockRequest {
      * 3、app服务端拿到手机号帮用户完成注册以及登录的逻辑，返回账户信息给app
      * @return 账户信息
      */
-    public static String getPhoneNumber(String token, Context context) {
+    public static String getPhoneNumber(String token1, Context context) {
         String result = "";
         try {
 
@@ -62,24 +62,24 @@ public class MockRequest {
             /**
              * 获取XML文本
              */
-            String Ip=context.getString(R.string.ip);
-            String Router=context.getString(R.string.GetUserPhone);
-            String Token=context.getString(R.string.Token);
-            String PublicKey=context.getString(R.string.PublicKey);
+            String ip=context.getString(R.string.ip);
+            String router=context.getString(R.string.GetUserPhone);
+            String token=context.getString(R.string.Token);
+            String publicKey=context.getString(R.string.PublicKey);
             /**
              * 获取公钥
              */
             RsaClientUtils rsaClientUtils = new RsaClientUtilsImpl();
             rsaClientUtils.generateKey();
-            String publicKey = rsaClientUtils.getPublicKey();
+            String publicKey1 = rsaClientUtils.getPublicKey();
             /**
              * 发送请求
              */
             Map<String,String> map=new HashMap<>();
-            String url="http://"+Ip+"/"+Router;
+            String url="http://"+ip+"/"+router;
             FormBody.Builder builder = new FormBody.Builder();
-            builder.add(Token,token);
-            builder.add(PublicKey,publicKey);
+            builder.add(token,token1);
+            builder.add(publicKey,publicKey1);
             //循环form表单，将表单内容添加到form builder中
             //构建formBody，将其传入Request请求中
             FormBody body = builder.build();

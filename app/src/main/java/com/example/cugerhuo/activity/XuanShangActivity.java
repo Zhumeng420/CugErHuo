@@ -1,7 +1,5 @@
 package com.example.cugerhuo.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,8 +8,10 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.example.cugerhuo.activity.imessage.MessageActivity;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.activity.imessage.MessageActivity;
 
 public class XuanShangActivity extends AppCompatActivity implements View.OnClickListener{
     /**
@@ -113,6 +113,8 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
                 startActivity(new Intent(getApplicationContext(), MyCenterActivity.class));
                 overridePendingTransition(0,0);
                 finish();
+                break;
+            default:
                 break;
         }
 

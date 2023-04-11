@@ -1,5 +1,9 @@
 package com.example.cugerhuo.tools.rsa;
 
+/**
+ * 对称加密接口类
+ * @author 施立豪
+ */
 public interface RsaClientUtils {
 
     /**
