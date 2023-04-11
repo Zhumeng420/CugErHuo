@@ -13,15 +13,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
-import com.example.cugerhuo.activity.ErHuoActivity;
 import com.example.cugerhuo.access.SetGlobalIDandUrl;
+import com.example.cugerhuo.access.api.Nlp;
+import com.example.cugerhuo.activity.ErHuoActivity;
 import com.example.cugerhuo.login.login.OneKeyLoginActivity;
 import com.example.cugerhuo.oss.InitOS;
+
+import org.json.JSONException;
 
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import io.jaegertracing.Configuration;
 import io.opentracing.util.GlobalTracer;
@@ -86,7 +90,15 @@ public class StartSplashActivity extends AppCompatActivity {
                 /**
                  * test
                  */
-
+                try {
+                    List<String> a=Nlp.getNlpCatrgory("这是一个手机壳",StartSplashActivity.this);
+                    for(String i:a)
+                    {
+                        System.out.println("catr"+i);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 /**
                  * 对象存储初始化
                  */
