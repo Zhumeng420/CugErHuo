@@ -1,10 +1,19 @@
 package com.example.cugerhuo.tools.rsa;
+/**
+ * 对称加密实现类
+ * @author 施立豪
+ */
 
-import javax.crypto.Cipher;
 import java.nio.charset.StandardCharsets;
-import java.security.*;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.SecureRandom;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
+
+import javax.crypto.Cipher;
 
 public class RsaClientUtilsImpl implements RsaClientUtils {
 

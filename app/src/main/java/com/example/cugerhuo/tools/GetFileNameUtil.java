@@ -8,12 +8,12 @@ package com.example.cugerhuo.tools;
 public class GetFileNameUtil {
     /**
      * 得到文件名
-     * @param FileAbsolutePath 文件路径
+     * @param fileAbsolutePath 文件路径
       * @return   文件名
      */
-    public static String GetFileName(String FileAbsolutePath)
+    public static String getFileName(String fileAbsolutePath)
     {
-        String filePath = FileAbsolutePath;
+        String filePath = fileAbsolutePath;
         int lastIndex = filePath.lastIndexOf("/");
         String fileName = filePath.substring(lastIndex
                 + 1, filePath.length());

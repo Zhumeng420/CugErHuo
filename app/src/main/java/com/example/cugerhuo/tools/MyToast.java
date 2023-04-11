@@ -22,7 +22,7 @@ public class MyToast {
      * @param i 需要提醒的类型
      * i=0 警告提醒；i=1 错误提醒；i=2 加载提醒；i=3 成功提醒
      */
-    public static  void Toast(Context context,String messgage,int i){
+    public static  void toast(Context context, String messgage, int i){
         android.widget.Toast toast2=new android.widget.Toast(context);
         LayoutInflater inflater=LayoutInflater.from(context);
         /**

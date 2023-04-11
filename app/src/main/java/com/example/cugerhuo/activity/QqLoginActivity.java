@@ -103,9 +103,9 @@ public class QqLoginActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    SharedPreferences LoginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
+                    SharedPreferences loginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
                     //获得Editor 实例
-                    SharedPreferences.Editor editor = LoginMessage.edit();
+                    SharedPreferences.Editor editor = loginMessage.edit();
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     Date date=new Date();
                     //单例模式
@@ -116,10 +116,10 @@ public class QqLoginActivity extends AppCompatActivity {
                         /**查询布隆过滤器redis
                          * 手机号是否存在
                          */
-                        boolean IsQqExisted;
+                        boolean isQqExisted;
                         Span span1 = tracer.buildSpan("查询redis流程1").withTag("函数：doComplete", "子追踪").start();
                         try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
-                            IsQqExisted= UserOperate.isQqExistBloom(openid, QqLoginActivity.this);
+                            isQqExisted= UserOperate.isQqExistBloom(openid, QqLoginActivity.this);
                         } catch (Exception e) {
                             TracingHelper.onError(e, span);
                             throw e;
@@ -129,15 +129,15 @@ public class QqLoginActivity extends AppCompatActivity {
                         /**
                          * 账号已注册
                          */
-                        if(IsQqExisted)
+                        if(isQqExisted)
                         {
                             /**
                              * qq是否被封
                              */
-                            boolean IsQqBaned;
+                            boolean isQqBaned;
                             Span span2 = tracer.buildSpan("查询redis流程2").withTag("函数：doComplete", "子追踪").start();
                             try (Scope ignored1 = tracer.scopeManager().activate(span2,true)) {
-                                IsQqBaned=UserOperate.isQqBanedBloom(openid,QqLoginActivity.this);
+                                isQqBaned=UserOperate.isQqBanedBloom(openid,QqLoginActivity.this);
                             } catch (Exception e) {
                                 TracingHelper.onError(e, span2);
                                 throw e;
@@ -147,7 +147,7 @@ public class QqLoginActivity extends AppCompatActivity {
                             /**
                              * 被封处理
                              */
-                            if(IsQqBaned){
+                            if(isQqBaned){
                                 System.out.println("账号已被封");
                                 Log.i("e","账号被封");
                                 return ;
@@ -162,18 +162,18 @@ public class QqLoginActivity extends AppCompatActivity {
                              * 先插入mysql
                              */
                             {
-                                boolean IsInserted;
+                                boolean isInserted;
                                 String username= NameUtil.getTwoSurname();
                                 Span span2 = tracer.buildSpan("查询mysql流程").withTag("函数：doComplete", "子追踪").start();
                                 try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
-                                    IsInserted=UserOperate.insertByQq(openid,username,QqLoginActivity.this);
+                                    isInserted=UserOperate.insertByQq(openid,username,QqLoginActivity.this);
                                 } catch (Exception e) {
                                     TracingHelper.onError(e, span);
                                     throw e;
                                 } finally {
                                     span.finish();
                                 }
-                                if(IsInserted)
+                                if(isInserted)
                                 {
                                     new Thread(new Runnable() {
                                         @Override
@@ -196,15 +196,15 @@ public class QqLoginActivity extends AppCompatActivity {
                                                 /**
                                                  * 保存ID
                                                  */
-                                                UserInfo.setID(result);
+                                                UserInfo.setid(result);
                                                 /**
                                                  * 插入图数据库
                                                  * @time 2023/3/26
                                                  */
-                                                boolean Isinserted;
+                                                boolean isInserted1;
                                                 Span span3 = tracer.buildSpan("插入用户至图数据库").withTag("函数：doComplete", "子追踪").start();
                                                 try (Scope ignored1 = tracer.scopeManager().activate(span3,true)) {
-                                                    Isinserted=UserOperate.insertUserToTu(username,result,QqLoginActivity.this);
+                                                    isInserted1 =UserOperate.insertUserToTu(username,result,QqLoginActivity.this);
                                                 } catch (Exception e) {
                                                     TracingHelper.onError(e, span3);
                                                     throw e;
@@ -215,10 +215,9 @@ public class QqLoginActivity extends AppCompatActivity {
                                                  * 插入用户资料表
                                                  * @time 2023/4/9
                                                  */
-                                                boolean Isinserted1;
                                                 Span span4 = tracer.buildSpan("qq注册插入用户至用户资料").withTag("函数：doComplete", "子追踪").start();
                                                 try (Scope ignored1 = tracer.scopeManager().activate(span3,true)) {
-                                                    Isinserted= UserInfoOperate.insertUser(result,username,QqLoginActivity.this);
+                                                    isInserted1 = UserInfoOperate.insertUser(result,username,QqLoginActivity.this);
                                                 } catch (Exception e) {
                                                     TracingHelper.onError(e, span3);
                                                     throw e;
@@ -233,22 +232,22 @@ public class QqLoginActivity extends AppCompatActivity {
                                         }
                                     }).start();
                                 }
-                                if(!IsInserted){ System.out.println("插入mysql失败");}
+                                if(!isInserted) {System.out.println("插入mysql失败");}
                                 /**
                                  * 再插入redis
                                  */
                                 else{Log.i("e","插入mysql成功");
-                                    boolean IsInserted1;
+                                    boolean isInserted1;
                                     Span span3 = tracer.buildSpan("查询redis流程3").withTag("函数：doComplete", "子追踪").start();
                                     try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
-                                        IsInserted1=UserOperate.insertQqBloom(openid,QqLoginActivity.this);
+                                        isInserted1=UserOperate.insertQqBloom(openid,QqLoginActivity.this);
                                     } catch (Exception e) {
                                         TracingHelper.onError(e, span);
                                         throw e;
                                     } finally {
                                         span.finish();
                                     }
-                                    if(!IsInserted1){ System.out.println("插入redis失败");}
+                                    if(!isInserted1){ System.out.println("插入redis失败");}
                                     else{Log.i("e","插入redis成功");}
                                 }
                             }
@@ -266,10 +265,10 @@ public class QqLoginActivity extends AppCompatActivity {
                             /**
                              * 本地存储
                              */
-                            String Time = format.format(date);
-                            editor.putString("QqLoginData",Time);
+                            String time = format.format(date);
+                            editor.putString("QqLoginData",time);
                             editor.putString("QqId",openid);
-                            System.out.println("newdate"+Time);
+                            System.out.println("newdate"+time);
                             editor.apply();
                             Intent intent=new Intent(getApplicationContext(), ErHuoActivity.class);
                             startActivity(intent);

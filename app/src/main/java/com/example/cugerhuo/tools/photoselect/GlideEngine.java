@@ -107,10 +107,10 @@ public class GlideEngine implements ImageEngine {
     }
 
     private static final class InstanceHolder {
-        static final GlideEngine instance = new GlideEngine();
+        static final GlideEngine INSTANCE = new GlideEngine();
     }
 
     public static GlideEngine createGlideEngine() {
-        return InstanceHolder.instance;
+        return InstanceHolder.INSTANCE;
     }
 }

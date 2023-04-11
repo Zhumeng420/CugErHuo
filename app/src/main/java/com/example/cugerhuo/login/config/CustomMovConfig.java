@@ -14,9 +14,9 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.cugerhuo.activity.QqLoginActivity;
-import com.example.cugerhuo.login.loginUtils.AppUtils;
-import com.example.cugerhuo.login.loginUtils.CacheManage;
-import com.example.cugerhuo.login.loginUtils.NativeBackgroundAdapter;
+import com.example.cugerhuo.login.loginutils.AppUtils;
+import com.example.cugerhuo.login.loginutils.CacheManage;
+import com.example.cugerhuo.login.loginutils.NativeBackgroundAdapter;
 import com.example.cugerhuo.R;
 import com.mobile.auth.gatewayauth.AuthRegisterXmlConfig;
 import com.mobile.auth.gatewayauth.AuthUIConfig;
@@ -153,8 +153,8 @@ public class CustomMovConfig extends BaseUIConfig {
                 .setLayout(R.layout.authsdk_widget_custom_layout, new AbstractPnsViewDelegate() {
                     @Override
                     public void onViewCreated(View view) {
-                        final FrameLayout fly_container = view.findViewById(R.id.fly_container);
-                        nativeBackgroundAdapter.solveView(fly_container, "#FF8C00");
+                        final FrameLayout flyContainer = view.findViewById(R.id.fly_container);
+                        nativeBackgroundAdapter.solveView(flyContainer, "#FF8C00");
                     }
                 })
                 .build());

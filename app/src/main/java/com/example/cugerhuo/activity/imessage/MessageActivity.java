@@ -1,7 +1,5 @@
 package com.example.cugerhuo.activity.imessage;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,11 +8,13 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.cugerhuo.R;
 import com.example.cugerhuo.activity.ErHuoActivity;
 import com.example.cugerhuo.activity.MyCenterActivity;
 import com.example.cugerhuo.activity.PublishSelectionActivity;
 import com.example.cugerhuo.activity.XuanShangActivity;
-import com.example.cugerhuo.R;
 
 /**
  * 消息主页
@@ -31,11 +31,11 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
      * @time 2023/3/20 16:36
      */
 
-    private ImageView iv_tab_three;
-    private LinearLayout ll_tab_one;
-    private LinearLayout ll_tab_two;
-    private LinearLayout ll_tab_four;
-    private LinearLayout ll_tab_five;
+    private ImageView ivTabThree;
+    private LinearLayout llTabOne;
+    private LinearLayout llTabTwo;
+    private LinearLayout llTabFour;
+    private LinearLayout llTabFive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,16 +51,16 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
      * @time 2023/3/20 16:28
      */
     public void initView(){
-        ll_tab_one=findViewById(R.id.ll_tab_one);
-        ll_tab_one.setOnClickListener(this);
-        ll_tab_two=findViewById(R.id.ll_tab_two);
-        ll_tab_two.setOnClickListener(this);
-        ll_tab_four=findViewById(R.id.ll_tab_four);
-        ll_tab_four.setOnClickListener(this);
-        ll_tab_five=findViewById(R.id.ll_tab_five);
-        ll_tab_five.setOnClickListener(this);
-        iv_tab_three = (ImageView) findViewById(R.id.iv_tab_three);
-        iv_tab_three.setOnClickListener(this);
+        llTabOne =findViewById(R.id.ll_tab_one);
+        llTabOne.setOnClickListener(this);
+        llTabTwo =findViewById(R.id.ll_tab_two);
+        llTabTwo.setOnClickListener(this);
+        llTabFour =findViewById(R.id.ll_tab_four);
+        llTabFour.setOnClickListener(this);
+        llTabFive =findViewById(R.id.ll_tab_five);
+        llTabFive.setOnClickListener(this);
+        ivTabThree = (ImageView) findViewById(R.id.iv_tab_three);
+        ivTabThree.setOnClickListener(this);
     }
     /**
      * 重写finish方法，去掉出场动画
@@ -106,7 +106,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                         Animation.RELATIVE_TO_SELF, 0.5f,
                         Animation.RELATIVE_TO_SELF, 0.5f);
                 animation.setDuration( 500 );
-                iv_tab_three.startAnimation( animation );
+                ivTabThree.startAnimation( animation );
                 startActivity(new Intent(getApplicationContext(),PublishSelectionActivity.class));
                 overridePendingTransition(0,0);
                 break;
@@ -126,6 +126,8 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                 startActivity(new Intent(getApplicationContext(), MyCenterActivity.class));
                 overridePendingTransition(0,0);
                 finish();
+                break;
+            default:
                 break;
         }
 

@@ -1,4 +1,4 @@
-package com.example.cugerhuo.login.loginUtils;
+package com.example.cugerhuo.login.loginutils;
 
 import android.content.Context;
 import android.util.DisplayMetrics;

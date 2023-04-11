@@ -34,14 +34,14 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
 
     /**
      * 变量从one-five依次对应，首页，悬赏，发布，消息，个人中心控件
-     * @author: 唐小莉
+     * @author 唐小莉
      * @time 2023/3/20 16:36
      */
     private RoundedImageView userImage;
     private ImageView ivTabThree;
     private TextView userFocus;
     private TextView userFans;
-    private MyHandler mhandler = new MyHandler();
+    private final mHandler mHandler = new mHandler();
     private LinearLayout llTabOne;
     private LinearLayout llTabTwo;
     private LinearLayout llTabFour;
@@ -63,95 +63,89 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
          * @author 施立豪
          * @time 2023/3/26
          */
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Message msg = Message.obtain();
-                msg.arg1 = 1;
-                int focusNum=0;
-                /**
-                 * 查询本地存储
-                 * @author 施立豪
-                 * @time 2023/3/27
-                 */
-                SharedPreferences loginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
-                //获得Editor 实例
-                SharedPreferences.Editor editor = loginMessage.edit();
-                String id=loginMessage.getString("Id","");
-                int myId=0;
-                /**
-                 * 如果当前本地没有存储id，先查询id并持久化
-                 */
-                if("".equals(id))
-                {
+        // 5、开启线程
+        new Thread(() -> {
+            Message msg = Message.obtain();
+            msg.arg1 = 1;
+            int focusNum;
+            /**
+             * 查询本地存储
+             * @author 施立豪
+             * @time 2023/3/27
+             */
+            SharedPreferences loginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
+            //获得Editor 实例
+            SharedPreferences.Editor editor = loginMessage.edit();
+            String id=loginMessage.getString("Id","");
+            int userId=0;
+            /**
+             * 如果当前本地没有存储id，先查询id并持久化
+             */
+            if("".equals(id))
+            {
 
-                    myId=UserOperate.getId(loginMessage.getString("PhoneNumber",""),MyCenterActivity.this);
-                    editor.putString("Id", String.valueOf(myId));
-                    editor.apply();
+                userId=UserOperate.getId(loginMessage.getString("PhoneNumber",""),MyCenterActivity.this);
+                editor.putString("Id", String.valueOf(userId));
+                editor.apply();
 
-                }
-                /**
-                 * 本地有id，则查询id
-                 */
-                else{
-                    myId=Integer.parseInt(id);
             }
-                /**
-                 * 获取关注数量
-                 */
-                focusNum=UserOperate.getFocusNum(myId,MyCenterActivity.this);
-                msg.arg2=focusNum;
-                //4、发送消息
-                mhandler.sendMessage(msg);
-            }
-            // 5、开启线程
+            /**
+             * 本地有id，则查询id
+             */
+            else{
+                userId=Integer.parseInt(id);
+        }
+            /**
+             * 获取关注数量
+             */
+            focusNum=UserOperate.getFocusNum(userId,MyCenterActivity.this);
+            msg.arg2=focusNum;
+            //4、发送消息
+            mHandler.sendMessage(msg);
         }).start();
         /**
          * 获取粉丝数量
          * @author 施立豪
          * @time 2023/3/26
          */
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        // 5、开启线程
+        new Thread(() -> {
 
-                Message msg = Message.obtain();
-                msg.arg1 = 2;
-                int fansNum=0;
-                /**
-                 * 查询本地存储
-                 * @author 施立豪
-                 * @time 2023/3/27
-                 */
-                SharedPreferences loginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
-                //获得Editor 实例
-                SharedPreferences.Editor editor = loginMessage.edit();
-                String id=loginMessage.getString("Id","");
-                int myId=0;
-                /**
-                 * 如果当前本地没有存储id，先查询id并持久化
-                 */
-                if("".equals(id))
-                {
+            Message msg = Message.obtain();
+            msg.arg1 = 2;
+            int fansNum;
+            /**
+             * 查询本地存储
+             * @author 施立豪
+             * @time 2023/3/27
+             */
+            SharedPreferences loginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
+            //获得Editor 实例
+            SharedPreferences.Editor editor = loginMessage.edit();
+            String id=loginMessage.getString("Id","");
+            int id1;
+            /**
+             * 如果当前本地没有存储id，先查询id并持久化
+             */
+            if("".equals(id))
+            {
 
-                    myId=UserOperate.getId(loginMessage.getString("PhoneNumber",""),MyCenterActivity.this);
-                    editor.putString("Id", String.valueOf(myId));
-                    editor.apply();
+                id1=UserOperate.getId(loginMessage.getString("PhoneNumber",""),MyCenterActivity.this);
+                editor.putString("Id", String.valueOf(id1));
+                editor.apply();
 
-                }
-                /**
-                 * 本地有id，则查询id
-                 */
-                else{
-                    myId=Integer.parseInt(id);
-
-                }
-                fansNum=UserOperate.getFansNum(myId,MyCenterActivity.this);
-                msg.arg2=fansNum;
-                //4、发送消息
-                mhandler.sendMessage(msg);
             }
-            // 5、开启线程
+            /**
+             * 本地有id，则查询id
+             */
+            else{
+                id1=Integer.parseInt(id);
+
+            }
+            fansNum=UserOperate.getFansNum(id1,MyCenterActivity.this);
+            msg.arg2=fansNum;
+            //4、发送消息
+            mHandler.sendMessage(msg);
         }).start();
     }
     /**
@@ -211,7 +205,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
      * @Time: 2023/3/21 19:38
      */
     public void onClickSetting(View view){
-        Intent intent = new Intent(getApplicationContext(),OtherPeopleActivity.class);
+        Intent intent = new Intent(getApplicationContext(),SettingActivity.class);
         startActivity(intent);
     }
 
@@ -291,7 +285,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
      * @author 施立豪
      * @time 2023/3/26
      */
-    private class MyHandler extends Handler {
+    private class mHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -300,7 +294,6 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                  * 更新关注数
                  */
                 case 1:
-                    System.out.println("关注数"+msg.arg2);
                     userFocus.setText(String.valueOf(msg.arg2));
                     break;
                 /**
@@ -308,7 +301,6 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                  * @time 2023/3/27
                  */
                 case 2:
-                    System.out.println(String.valueOf(msg.arg2));
                     userFans.setText(String.valueOf(msg.arg2));
                     break;
                 default:

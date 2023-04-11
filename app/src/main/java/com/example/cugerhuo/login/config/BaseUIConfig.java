@@ -12,8 +12,8 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.cugerhuo.login.loginUtils.AppUtils;
-import com.example.cugerhuo.login.loginUtils.Constant;
+import com.example.cugerhuo.login.loginutils.AppUtils;
+import com.example.cugerhuo.login.loginutils.Constant;
 import com.example.cugerhuo.R;
 import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
 

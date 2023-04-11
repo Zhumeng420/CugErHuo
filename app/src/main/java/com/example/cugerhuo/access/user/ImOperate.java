@@ -27,7 +27,7 @@ public class ImOperate {
      * @author
      * @return
      */
-    public boolean Resgiser() throws JSONException {
+    public boolean resgiser() throws JSONException {
         OkHttpClient client = new OkHttpClient();
         JSONObject jsonObject = new JSONObject();
         try {
@@ -62,7 +62,7 @@ public class ImOperate {
      * @author 朱萌
      * @time 2023/4/3 21：14
      */
-    public void DoLogin() throws JSONException {
+    public void doLogin() throws JSONException {
         System.out.println("测试！测试！测试！测试！测试！测试！");
         LoginInfo info = new LoginInfo("test1","123456");
         RequestCallback<LoginInfo> callback =

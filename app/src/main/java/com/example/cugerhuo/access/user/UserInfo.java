@@ -25,17 +25,18 @@ public class UserInfo {
      * @author 施立豪
      * @time 2023/4/8
      */
-    public static void setID(int id){ID=id;}
+    public static void setid(int id){ID=id;}
     /**
      * 获取ID
      * @author 施立豪
      * @time 2023/4/9
      */
-    public static int getID(){return ID;}
+    public static int getid(){return ID;}
     /**
      * 设置ID
      * @author 施立豪
      * @time 2023/4/9
      */
-    public static void setUrl(String Url){url=Url;}
+    public static void setUrl(String url){
+        UserInfo.url =url;}
 }

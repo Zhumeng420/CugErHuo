@@ -103,6 +103,8 @@ public class MyScrollView extends ScrollView {
             case MotionEvent.ACTION_UP:
                 handler.sendMessageDelayed(handler.obtainMessage(), 20);
                 break;
+            default:
+                break;
         }
         return super.onTouchEvent(ev);
     }
