@@ -104,7 +104,7 @@ public class ConcernActivity extends AppCompatActivity {
              * 通过连接调用查询
              */
                 for(int i=0;i<getFocusIds.size();i++){
-                    PartUserInfo part= UserInfoOperate.getInfoFromMysql(getFocusIds.get(i),ConcernActivity.this);
+                    PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,getFocusIds.get(i),ConcernActivity.this);
                     System.out.println("关注idididdididi"+part.getUserName());
                     System.out.println("简介简介简介简介"+part.getSignature());
                     part.setUserId(getFocusIds.get(i));
