@@ -25,6 +25,11 @@
 
     <string name="GetOss">secret/oos</string>
 
+    <string name="GetWord">nlp/categorys</string>
+
+    <string name="Text">text</string>
+
+
     <string name="FocusNum">focus/myfocusnum</string>
     <string name="FansNum">focus/myfansnum</string>
 

@@ -1,6 +1,7 @@
 package com.example.cugerhuo;
 
-import static com.example.cugerhuo.login.loginUtils.Constant.THEME_KEY;
+
+import static com.example.cugerhuo.login.loginutils.Constant.THEME_KEY;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,15 +14,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
-import com.example.cugerhuo.activity.ErHuoActivity;
 import com.example.cugerhuo.access.SetGlobalIDandUrl;
+import com.example.cugerhuo.access.api.Nlp;
+import com.example.cugerhuo.activity.ErHuoActivity;
 import com.example.cugerhuo.login.login.OneKeyLoginActivity;
 import com.example.cugerhuo.oss.InitOS;
+
+import org.json.JSONException;
 
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import io.jaegertracing.Configuration;
 import io.opentracing.util.GlobalTracer;
@@ -86,6 +91,15 @@ public class StartSplashActivity extends AppCompatActivity {
                 /**
                  * test
                  */
+                try {
+                   List<String> a= Nlp.getNlpWords("这是一个文本",StartSplashActivity.this);
+                   for(String i:a)
+                   {
+                       System.out.println("category"+i);
+                   }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 /**
                  * 对象存储初始化
@@ -101,8 +115,8 @@ public class StartSplashActivity extends AppCompatActivity {
                 sender.withEndpoint("http://tracing-analysis-dc-hz.aliyuncs.com/adapt_f6yah647nw@42a790d7a35fc27_f6yah647nw@53df7ad2afe8301/api/traces");
                 config.withSampler(new Configuration.SamplerConfiguration().withType("const").withParam(1));
                 config.withReporter(new Configuration.ReporterConfiguration().withSender(sender).withMaxQueueSize(10000));
-                if(GlobalTracer.isRegistered())
-                GlobalTracer.register(config.getTracer());
+                if(GlobalTracer.isRegistered()){
+                GlobalTracer.register(config.getTracer());}
                 return;
             }
         }).start();
@@ -186,10 +200,10 @@ public class StartSplashActivity extends AppCompatActivity {
                         /**
                          * 判断是否为空
                          */
-                        if(!LastData.equals(""))
-                        DayNum= (date.getTime() - format.parse(LastData).getTime()) / (24 * 60 * 60 * 1000);
-                        if(!QqLastData.equals(""))
-                            QqDayNum= (date.getTime() - format.parse(QqLastData).getTime()) / (24 * 60 * 60 * 1000);
+                        if(!LastData.equals("")){
+                        DayNum= (date.getTime() - format.parse(LastData).getTime()) / (24 * 60 * 60 * 1000);}
+                        if(!QqLastData.equals("")){
+                            QqDayNum= (date.getTime() - format.parse(QqLastData).getTime()) / (24 * 60 * 60 * 1000);}
                     } catch ( ParseException e) {
                         e.printStackTrace();
                     }

@@ -1,7 +1,5 @@
 package com.example.cugerhuo;
 
-import com.example.cugerhuo.tools.JedisPoolConnectRedis;
-
 import org.junit.Test;
 
 /**
@@ -12,7 +10,7 @@ import org.junit.Test;
 public class ExampleUnitTest {
     @Test
     public void test1(){
-        JedisPoolConnectRedis m=new JedisPoolConnectRedis();
+//        JedisPoolConnectRedis m=new JedisPoolConnectRedis();
 
         //System.out.println(m.get("stua"));
 
