@@ -9,7 +9,7 @@
     android:background="#F4F4F4"
     android:clipChildren="false"
     android:orientation="vertical"
-    tools:context=".Activity.ConcernActivity">
+    tools:context=".activity.ConcernActivity">
 
 
         <LinearLayout

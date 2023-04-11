@@ -62,17 +62,17 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".Activity.ConcernActivity"
+            android:name=".activity.ConcernActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Activity.IMessageActivity.ChatActivity"
+            android:name=".activity.imessage.ChatActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.OtherPeopleActivity"
+            android:name=".activity.OtherPeopleActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -90,7 +90,7 @@
         </provider>
 
         <activity
-            android:name=".Activity.QqLoginActivity"
+            android:name=".activity.QqLoginActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -116,41 +116,41 @@
             android:screenOrientation="behind"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name=".Activity.PublishSelectionActivity"
+            android:name=".activity.PublishSelectionActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Activity.SettingActivity"
+            android:name=".activity.SettingActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Activity.UserActivity"
+            android:name=".activity.UserActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Activity.postactivity.PostActivity"
+            android:name=".activity.post.PostActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Activity.postactivity.PostBuyActivity"
+            android:name=".activity.post.PostBuyActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.postactivity.PostSellActivity"
+            android:name=".activity.post.PostSellActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.postactivity.ChoosePostActivity"
+            android:name=".activity.post.ChoosePostActivity"
             android:exported="false" />
 
         <meta-data
@@ -186,26 +186,26 @@
             android:value="true" />
 
         <activity
-            android:name=".Activity.MyCenterActivity"
+            android:name=".activity.MyCenterActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.IMessageActivity.MessageActivity"
+            android:name=".activity.imessage.MessageActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.XuanShangActivity"
+            android:name=".activity.XuanShangActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.ErHuoActivity"
+            android:name=".activity.ErHuoActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.LoginActivity"
+            android:name=".activity.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".FastLogin.login.OneKeyLoginActivity"
+            android:name=".login.login.OneKeyLoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|uiMode|fontScale"
             android:screenOrientation="sensorPortrait" />
         <activity
-            android:name=".FastLogin.auth.CustomWebViewActivity"
+            android:name=".login.auth.CustomWebViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|uiMode|fontScale"
             android:exported="false"
             android:screenOrientation="sensorPortrait">
@@ -216,11 +216,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FastLogin.auth.NumberAuthActivity"
+            android:name=".login.auth.NumberAuthActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="sensorPortrait" />
         <activity
-            android:name=".FastLogin.loginUtils.MessageActivity"
+            android:name=".login.loginUtils.MessageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="sensorPortrait" /> <!-- 联通电信授权页 -->
         <!-- 如果不需要使用窗口模式，不要使用authsdk_activity_dialog主题，会出现异常动画 -->

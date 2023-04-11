@@ -16,7 +16,7 @@ import com.alibaba.sdk.android.oss.model.GetObjectRequest;
 import com.alibaba.sdk.android.oss.model.GetObjectResult;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
-import com.example.cugerhuo.ObjectStorege.InitOS;
+import com.example.cugerhuo.oss.InitOS;
 
 import java.io.FileOutputStream;
 

@@ -1,6 +1,6 @@
 package com.example.cugerhuo;
 
-import static com.example.cugerhuo.FastLogin.loginUtils.Constant.THEME_KEY;
+import static com.example.cugerhuo.login.loginUtils.Constant.THEME_KEY;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,10 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
-import com.example.cugerhuo.Activity.ErHuoActivity;
-import com.example.cugerhuo.DataAccess.SetGlobalIDandUrl;
-import com.example.cugerhuo.FastLogin.login.OneKeyLoginActivity;
-import com.example.cugerhuo.ObjectStorege.InitOS;
+import com.example.cugerhuo.activity.ErHuoActivity;
+import com.example.cugerhuo.access.SetGlobalIDandUrl;
+import com.example.cugerhuo.login.login.OneKeyLoginActivity;
+import com.example.cugerhuo.oss.InitOS;
 
 import java.io.File;
 import java.text.ParseException;

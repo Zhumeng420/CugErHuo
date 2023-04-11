@@ -13,7 +13,7 @@ import com.alibaba.sdk.android.oss.model.CreateBucketRequest;
 import com.alibaba.sdk.android.oss.model.CreateBucketResult;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
-import com.example.cugerhuo.ObjectStorege.InitOS;
+import com.example.cugerhuo.oss.InitOS;
 
 import java.util.Date;
 
