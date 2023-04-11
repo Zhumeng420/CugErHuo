@@ -1,6 +1,7 @@
 package com.example.cugerhuo.activity.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,11 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.access.user.PartUserInfo;
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * @Author 唐小莉
@@ -23,18 +28,19 @@ import com.makeramen.roundedimageview.RoundedImageView;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     /**
-     * concern 关注的用户
+     * partUserInfo 关注的用户信息
      * count 关注列表的Item个数，默认为30（为了前端调试）
      * @author 唐小莉
      * @Time 2023/4/7 22：16
      */
     private Context context;
-    private Concern concern;
-    private int count = 30;
+    private List<PartUserInfo> partUserInfo;
+    private int count;
 
-    public RecyclerViewAdapter(Context context, Concern concern) {
+    public RecyclerViewAdapter(Context context, List<PartUserInfo>partUserInfo) {
         this.context = context;
-        this.concern=concern;
+        this.partUserInfo=partUserInfo;
+        count=partUserInfo.size();
     }
 
     /**
@@ -50,15 +56,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public int getCount() {
         return count;
-    }
-    /**
-     * 设置目前RecyclerView中的item数量
-     * @author 唐小莉
-     * @time 2023/4/7 22:26
-     */
-    public void setCount(int count) {
-        this.count = count;
-        notifyDataSetChanged();
     }
 
     /**
@@ -78,9 +75,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         //进行item对应控件部分的内容设置
-        holder.user_concern_name.setText(concern.getName() + (position + 1));
-        holder.user_concern_sign.setText(concern.getConcernDesc()+(position+1));
-        holder.user_concern_name.setOnClickListener(new View.OnClickListener() {
+        holder.user_concern_name.setText(partUserInfo.get(position).getUserName());
+        holder.user_concern_sign.setText(partUserInfo.get(position).getSignature());
+        if ("".equals(partUserInfo.get(position).getImageUrl())) {
+            holder.user_concern_img.setImageURI(Uri.fromFile(new File(partUserInfo.get(position).getImageUrl())));
+        }
+
+
+        holder.btn_concerned.setOnClickListener(new View.OnClickListener() {
             /**
              * 点击每个RecyclerView子组件进行相应的响应事件
              * @param v
