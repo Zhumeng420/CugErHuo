@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -71,6 +72,7 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
     private LinearLayout llTabTwo;
     private LinearLayout llTabFour;
     private LinearLayout llTabFive;
+    private LinearLayout llSearch;
     ViewPager viewPager;
     ArrayList<com.example.cugerhuo.fragment.MyFragment> fragments;
     ViewPagerAdapter adapter;
@@ -103,6 +105,9 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
         llTabFive.setOnClickListener(this);
         ivTabThree = (ImageView) findViewById(R.id.iv_tab_three);
         ivTabThree.setOnClickListener(this);
+        llSearch = findViewById(R.id.linear_search_item);
+        llSearch.setOnClickListener(this);
+
     }
 
     /**
@@ -153,6 +158,15 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
              */
             case R.id.ll_tab_five:
                 startActivity(new Intent(getApplicationContext(), MyCenterActivity.class));
+                overridePendingTransition(0,0);
+                break;
+            /**
+             * 点击搜索跳转
+             * @Author: 李柏睿
+             * @Time: 2023/4/12 16:12
+             */
+            case R.id.linear_search_item:
+                startActivity(new Intent(getApplicationContext(), SearchActivity.class));
                 overridePendingTransition(0,0);
                 break;
             default:
