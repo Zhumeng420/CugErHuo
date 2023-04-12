@@ -190,7 +190,6 @@ public class OtherPeopleActivity extends AppCompatActivity {
                     }
                 }
 
-
                 /**滑动到下面,吸顶*/
                 if(scrollY >= moveTop - mSmallTitleHeight){
                     stop.setVisibility(View.VISIBLE);
