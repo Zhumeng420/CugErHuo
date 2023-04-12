@@ -58,6 +58,7 @@ public class StartSplashActivity extends AppCompatActivity {
      * @time 2023/3/4 14:12
      * @link https://www.bilibili.com/video/BV14o4y197t5/?spm_id_from=333.999.0.0&vd_source=60999ec892c4a648641fb136253c49c5
      */
+
     ImageView img;
     ImageView logo;
     Thread tracerThread;
