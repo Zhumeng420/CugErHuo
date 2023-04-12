@@ -2,25 +2,21 @@ package com.example.cugerhuo.activity;
 
 import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.View;
-import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.access.user.UserOperate;
-import com.example.cugerhuo.activity.adapter.Concern;
 import com.example.cugerhuo.activity.adapter.RecyclerViewAdapter;
-import com.example.cugerhuo.R;
 import com.example.cugerhuo.tools.LettuceBaseCase;
 
 import java.util.ArrayList;
@@ -144,6 +140,4 @@ public class ConcernActivity extends AppCompatActivity {
             }
         }
     }
-
-
 }
