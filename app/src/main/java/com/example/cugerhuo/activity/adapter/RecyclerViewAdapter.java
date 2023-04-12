@@ -106,7 +106,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.btn_concerned.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // Toast.makeText(context,"已关注",Toast.LENGTH_SHORT).show();
+               Toast.makeText(context,"已关注",Toast.LENGTH_SHORT).show();
 
             }
         });
