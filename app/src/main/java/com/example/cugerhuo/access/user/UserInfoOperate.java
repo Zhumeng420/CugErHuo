@@ -200,4 +200,8 @@ public class UserInfoOperate
         }
         return user;
     }
+    public static void remove(RedisCommands<String, String> connection, int id, Context context)
+    {
+        connection.hdel("UserInfo",String.valueOf(id));
+    }
 }

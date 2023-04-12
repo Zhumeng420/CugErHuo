@@ -100,7 +100,7 @@ public class StartSplashActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 /**
-                 * 对象存储初始化
+                 * 对象存储初始化1
                  */
                 InitOS m=InitOS.getInstance(getApplicationContext());
                 System.out.println("secret"+m.get());
