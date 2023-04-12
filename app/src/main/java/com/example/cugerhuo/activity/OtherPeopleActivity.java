@@ -1,6 +1,11 @@
 package com.example.cugerhuo.activity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -8,11 +13,13 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.access.user.UserOperate;
 import com.example.cugerhuo.activity.adapter.ViewPagerAdapter;
 import com.example.cugerhuo.fragment.MyFragment;
 import com.example.cugerhuo.views.MyScrollView;
@@ -44,6 +51,11 @@ public class OtherPeopleActivity extends AppCompatActivity {
     ImageView popImg,userImg;//下拉弹出的小头像，用户头像
     private AlphaAnimation alphaAniShow, alphaAniHide;
     private TranslateAnimation translateAniShow,translateAniHide;
+    private TextView username;//用户名
+    private TextView userConcernNum;//用户关注数
+    private TextView userFansNum;//用户粉丝数
+    private final OtherPeopleActivity.mHandler mHandler=new mHandler();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +73,9 @@ public class OtherPeopleActivity extends AppCompatActivity {
         userImg = findViewById(R.id.other_user_img);
         popFollowed = findViewById(R.id.is_followed_pop);
         allBottom = findViewById(R.id.all_bott);//弹出关注按钮所在的LinearLayout
+        username=findViewById(R.id.username);
+        userConcernNum=findViewById(R.id.user_concern);
+        userFansNum=findViewById(R.id.user_fans);
         initFragment();
 
         //调用fragment控件
@@ -153,6 +168,38 @@ public class OtherPeopleActivity extends AppCompatActivity {
                 }
             }
         });
+        // 5、开启线程
+        new Thread(() -> {
+            Message msg = Message.obtain();
+            msg.arg1 = 1;
+            int focusNum;
+            Intent intent =getIntent();
+            int userId=intent.getIntExtra("id",0);
+            System.out.println("呱呱呱呱呱呱"+userId);
+            /**
+             * 获取关注数量
+             */
+            focusNum=UserOperate.getFocusNum(userId,OtherPeopleActivity.this);
+            System.out.println("哈哈哈哈哈哈哈"+focusNum);
+            msg.arg2=focusNum;
+            //4、发送消息
+            mHandler.sendMessage(msg);
+        }).start();
+        // 5、开启线程
+        new Thread(() -> {
+            Message msg = Message.obtain();
+            msg.arg1 = 1;
+            int fansNum;
+            Intent intent =getIntent();
+            int userId=intent.getIntExtra("id",0);
+            /**
+             * 获取关注数量
+             */
+            fansNum=UserOperate.getFansNum(userId,OtherPeopleActivity.this);
+            msg.arg2=fansNum;
+            //4、发送消息
+            mHandler.sendMessage(msg);
+        }).start();
     }
 
     /**
@@ -235,4 +282,34 @@ public class OtherPeopleActivity extends AppCompatActivity {
         translateAniHide.setRepeatMode(Animation.REVERSE);
         translateAniHide.setDuration(200);
     }
+    /**
+     * 消息发送接收，异步更新UI
+     * @author 施立豪
+     * @time 2023/3/26
+     */
+    private class mHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.arg1) {
+                /**
+                 * 更新关注数
+                 */
+                case 1:
+                    userConcernNum.setText(String.valueOf(msg.arg2));
+                    break;
+                /**
+                 * 更新粉丝数
+                 * @time 2023/3/27
+                 */
+                case 2:
+                    userFansNum.setText(String.valueOf(msg.arg2));
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+
 }

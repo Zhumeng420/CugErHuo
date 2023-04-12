@@ -162,7 +162,7 @@ public class UserInfoOperate
         //构建formBody，将其传入Request请求中
         Request request = new Request.Builder().url(url).get().build();
         Response response = null;
-        PartUserInfo user=null;
+        PartUserInfo user=new PartUserInfo();
         try {
             response = okHttpClient.newCall(request).execute();
             user = (PartUserInfo) JSON.parseObject(response.body().string(),PartUserInfo.class);

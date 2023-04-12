@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.alibaba.fastjson.JSONArray;
 import com.example.cugerhuo.R;
-import com.google.gson.JsonArray;
 
 import java.io.IOException;
 import java.util.ArrayList;

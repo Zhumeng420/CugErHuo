@@ -26,6 +26,7 @@
     <string name="GetOss">secret/oos</string>
 
     <string name="GetWord">nlp/categorys</string>
+    <string name="GetClass">nlp/class</string>
 
     <string name="Text">text</string>
 
