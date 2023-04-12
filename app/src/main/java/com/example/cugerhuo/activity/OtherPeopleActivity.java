@@ -3,6 +3,7 @@ package com.example.cugerhuo.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,12 +20,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserOperate;
 import com.example.cugerhuo.activity.adapter.ViewPagerAdapter;
 import com.example.cugerhuo.fragment.MyFragment;
 import com.example.cugerhuo.views.MyScrollView;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -34,26 +37,82 @@ import java.util.ArrayList;
  */
 
 public class OtherPeopleActivity extends AppCompatActivity {
-    private MyScrollView scrollView;//滚动
-    private LinearLayout llSVTitle;//背景图的顶部
-    private LinearLayout llSVSmallTitle;//在下滑过程慢慢浮现的顶部
-    private TabLayout move,stop;//下面的fragment导航栏(进行吸顶)
-    private int mTitleHeight;//llSVTitle的高度
-    private int mSmallTitleHeight;//llSVSmallTitle的高度
-    private int moveHeight,moveTop,imgHeight,popHeight;//导航栏高度，距离顶部距离，(大)头像高度，(小)弹出按钮高度
-    private Button isFollowed,popFollowed; //是否关注按钮,弹出关注按钮
-    LinearLayout allBottom;//是否关注按钮在的LinearLayout
-    private ImageView isF; //是否关注伴随改变
+
+    /**
+     *滚动
+     */
+    private MyScrollView scrollView;
+    /**
+     * 背景图的顶部
+     */
+    private LinearLayout llSVTitle;
+    /**
+     * 在下滑过程慢慢浮现的顶部
+     */
+    private LinearLayout llSVSmallTitle;
+    /**
+     * 下面的fragment导航栏(进行吸顶)
+     */
+    private TabLayout move,stop;
+    /**
+     * llSVTitle的高度
+     */
+    private int mTitleHeight;
+    /**
+     * llSVSmallTitle的高度
+     */
+    private int mSmallTitleHeight;
+    /**
+     * 导航栏高度，距离顶部距离，(大)头像高度，(小)弹出按钮高度
+     */
+    private int moveHeight,moveTop,imgHeight,popHeight;
+    /**
+     * 是否关注按钮,弹出关注按钮
+     */
+    private Button isFollowed,popFollowed;
+    /**
+     * 是否关注按钮在的LinearLayout
+     */
+    LinearLayout allBottom;
+    /**
+     * 是否关注伴随改变
+     */
+    private ImageView isF;
     ViewPager viewPager;
     ArrayList<MyFragment> fragments;
     ViewPagerAdapter adapter;
     TabLayout tabLayout;
-    ImageView popImg,userImg;//下拉弹出的小头像，用户头像
+    /**
+     * 下拉弹出的小头像，用户头像
+     */
+    ImageView popImg,userImg;
     private AlphaAnimation alphaAniShow, alphaAniHide;
     private TranslateAnimation translateAniShow,translateAniHide;
-    private TextView username;//用户名
-    private TextView userConcernNum;//用户关注数
-    private TextView userFansNum;//用户粉丝数
+    /**
+     * 用户名
+     */
+    private TextView username;
+    /**
+     * 用户关注数
+     */
+    private TextView userConcernNum;
+    /**
+     * 用户粉丝数
+     */
+    private TextView userFansNum;
+    /**
+     * 用户自我介绍
+     */
+    private TextView introduction;
+    /**
+     * 用户头像
+     */
+    private ImageView other_user_img;
+
+    /**
+     * 用户信息类
+     */
+    private  PartUserInfo partUserInfo=new PartUserInfo();
     private final OtherPeopleActivity.mHandler mHandler=new mHandler();
 
 
@@ -61,27 +120,12 @@ public class OtherPeopleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_people);
-        scrollView = findViewById(R.id.scrollView_scrollview);
-        llSVTitle = findViewById(R.id.ll_scrollview_title);
-        llSVSmallTitle = findViewById(R.id.ll_scrollview_small_title);
-        isFollowed = findViewById(R.id.is_followed_1);
-        isF = findViewById(R.id.is_followed_2);
-        move = findViewById(R.id.move);
-        stop = findViewById(R.id.stop);
-        viewPager = findViewById(R.id.viewPager);
-        popImg = findViewById(R.id.user_img_pop);
-        userImg = findViewById(R.id.other_user_img);
-        popFollowed = findViewById(R.id.is_followed_pop);
-        allBottom = findViewById(R.id.all_bott);//弹出关注按钮所在的LinearLayout
-        username=findViewById(R.id.username);
-        userConcernNum=findViewById(R.id.user_concern);
-        userFansNum=findViewById(R.id.user_fans);
+        init();
         initFragment();
 
-        //调用fragment控件
-//        Button button = getActivity().findViewById(R.id.zhan);
-
-        /**给viewPager重置高度*/
+        /**
+         *  给viewPager重置高度
+         */
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -168,19 +212,31 @@ public class OtherPeopleActivity extends AppCompatActivity {
                 }
             }
         });
+        /**
+         * 直接获取上个界面传递的用户信息
+         */
+        Intent intent =getIntent();
+        partUserInfo= (PartUserInfo) intent.getSerializableExtra("concernUser");
+        /**
+         * 将用户信息进行加载显示
+         */
+        username.setText(partUserInfo.getUserName());
+        introduction.setText(partUserInfo.getSignature());
+        if (!"".equals(partUserInfo.getImageUrl())&&partUserInfo.getImageUrl()!=null)
+        {
+            other_user_img.setImageURI(Uri.fromFile(new File(partUserInfo.getImageUrl())));
+        }
+
         // 5、开启线程
         new Thread(() -> {
             Message msg = Message.obtain();
             msg.arg1 = 1;
             int focusNum;
-            Intent intent =getIntent();
-            int userId=intent.getIntExtra("id",0);
-            System.out.println("呱呱呱呱呱呱"+userId);
             /**
              * 获取关注数量
              */
-            focusNum=UserOperate.getFocusNum(userId,OtherPeopleActivity.this);
-            System.out.println("哈哈哈哈哈哈哈"+focusNum);
+            focusNum=UserOperate.getFocusNum(partUserInfo.getId(),OtherPeopleActivity.this);
+
             msg.arg2=focusNum;
             //4、发送消息
             mHandler.sendMessage(msg);
@@ -188,18 +244,44 @@ public class OtherPeopleActivity extends AppCompatActivity {
         // 5、开启线程
         new Thread(() -> {
             Message msg = Message.obtain();
-            msg.arg1 = 1;
+            msg.arg1 = 2;
             int fansNum;
-            Intent intent =getIntent();
-            int userId=intent.getIntExtra("id",0);
             /**
-             * 获取关注数量
+             * 获取粉丝数量
              */
-            fansNum=UserOperate.getFansNum(userId,OtherPeopleActivity.this);
+            fansNum=UserOperate.getFansNum(partUserInfo.getId(),OtherPeopleActivity.this);
             msg.arg2=fansNum;
             //4、发送消息
             mHandler.sendMessage(msg);
         }).start();
+    }
+
+    /**
+     * 初始化各控件
+     * @author 唐小莉
+     * @time 2023/4/12
+     */
+    public void init(){
+        scrollView = findViewById(R.id.scrollView_scrollview);
+        llSVTitle = findViewById(R.id.ll_scrollview_title);
+        llSVSmallTitle = findViewById(R.id.ll_scrollview_small_title);
+        isFollowed = findViewById(R.id.is_followed_1);
+        isF = findViewById(R.id.is_followed_2);
+        move = findViewById(R.id.move);
+        stop = findViewById(R.id.stop);
+        viewPager = findViewById(R.id.viewPager);
+        popImg = findViewById(R.id.user_img_pop);
+        userImg = findViewById(R.id.other_user_img);
+        popFollowed = findViewById(R.id.is_followed_pop);
+        /**
+         * 弹出关注按钮所在的LinearLayout
+         */
+        allBottom = findViewById(R.id.all_bott);
+        username=findViewById(R.id.username);
+        userConcernNum=findViewById(R.id.user_concern);
+        userFansNum=findViewById(R.id.user_fans);
+        introduction=findViewById(R.id.introduction);
+        other_user_img=findViewById(R.id.other_user_img);
     }
 
     /**
@@ -257,28 +339,38 @@ public class OtherPeopleActivity extends AppCompatActivity {
      * @Time: 2023/3/22 13:47
      */
     private void translateAnimation() {
-        //向上位移显示动画  从自身位置的最下端向上滑动了自身的高度
+        /** 向上位移显示动画  从自身位置的最下端向上滑动了自身的高度*/
         translateAniShow = new TranslateAnimation(
-                Animation.RELATIVE_TO_SELF,//RELATIVE_TO_SELF表示操作自身
-                0,//fromXValue表示开始的X轴位置
+                /** RELATIVE_TO_SELF表示操作自身*/
                 Animation.RELATIVE_TO_SELF,
-                0,//fromXValue表示结束的X轴位置
+                /** fromXValue表示开始的X轴位置*/
+                0,
                 Animation.RELATIVE_TO_SELF,
-                1,//fromXValue表示开始的Y轴位置
+                /** fromXValue表示结束的X轴位置*/
+                0,
                 Animation.RELATIVE_TO_SELF,
-                0);//fromXValue表示结束的Y轴位置
+                /** fromXValue表示开始的Y轴位置*/
+                1,
+                Animation.RELATIVE_TO_SELF,
+                /** fromXValue表示结束的Y轴位置*/
+                0);
         translateAniShow.setRepeatMode(Animation.REVERSE);
         translateAniShow.setDuration(100);
-        //向下位移隐藏动画  从自身位置的最上端向下滑动了自身的高度
+        /** 向下位移隐藏动画  从自身位置的最上端向下滑动了自身的高度*/
         translateAniHide = new TranslateAnimation(
-                Animation.RELATIVE_TO_SELF,//RELATIVE_TO_SELF表示操作自身
-                0,//fromXValue表示开始的X轴位置
+                /** RELATIVE_TO_SELF表示操作自身*/
                 Animation.RELATIVE_TO_SELF,
-                0,//fromXValue表示结束的X轴位置
+                /** fromXValue表示开始的X轴位置*/
+                0,
                 Animation.RELATIVE_TO_SELF,
-                0,//fromXValue表示开始的Y轴位置
+                /** fromXValue表示结束的X轴位置*/
+                0,
                 Animation.RELATIVE_TO_SELF,
-                1);//fromXValue表示结束的Y轴位置
+                /** fromXValue表示开始的Y轴位置*/
+                0,
+                Animation.RELATIVE_TO_SELF,
+                /** fromXValue表示结束的Y轴位置*/
+                1);
         translateAniHide.setRepeatMode(Animation.REVERSE);
         translateAniHide.setDuration(200);
     }

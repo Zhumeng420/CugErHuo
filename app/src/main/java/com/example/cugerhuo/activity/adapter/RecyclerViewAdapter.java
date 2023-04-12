@@ -98,11 +98,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onClick(View v) {
                 Toast.makeText(context,holder.user_concern_name.getText().toString(),Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(context, OtherPeopleActivity.class);
-                intent.putExtra("id",partUserInfo.get(position).getId());
+                intent.putExtra("concernUser",partUserInfo.get(position));
                 System.out.println("hhhhhhhhhhhhhhh"+partUserInfo.get(position).getId());
                 context.startActivity(intent);
             }
         });
+        holder.btn_concerned.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context,"已关注",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
 
     }
 

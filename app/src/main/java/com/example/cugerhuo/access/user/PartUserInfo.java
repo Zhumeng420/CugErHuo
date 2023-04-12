@@ -1,11 +1,13 @@
 package com.example.cugerhuo.access.user;
 
+import java.io.Serializable;
+
 /**
  * 存放从redis获取的信息
  * @author 施立豪
  * @time 2023/4/10
  */
-public class PartUserInfo {
+public class PartUserInfo implements Serializable {
     /**
      * id 用户id
      * imageUrl 头像url
