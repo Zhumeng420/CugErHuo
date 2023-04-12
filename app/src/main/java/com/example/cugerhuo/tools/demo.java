@@ -143,4 +143,30 @@ public class demo {
         //关闭连接
 //                lettuce.close();
     }
+    /**
+     * 操作redis的demo，以获取用户的id，个签，用户名，头像url为例
+     * @author 施立豪
+     * @time 2023/4/10
+     */
+    public void imageGet(){
+        /**
+         * 获取关注对象的头像
+         * @author 施立豪
+         * @time 2023/4/12
+         */
+        //getFocusInfo 列表
+//        for(PartUserInfo i :getFocusInfo)
+//        {
+//            String url=i.getImageUrl();
+//            String newUrl=getSandBoxPath(ConcernActivity.this)+url;
+//            if(!"".equals(i.getImageUrl())&&i.getImageUrl()!=null)
+//            {
+//                OssOperate.downLoad(i.getImageUrl(),newUrl);
+//                i.setImageUrl(newUrl);
+//                System.out.println(newUrl+i.getImageUrl());
+//            }
+//        }
+
+    }
+
 }

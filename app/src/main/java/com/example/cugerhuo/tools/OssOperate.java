@@ -1,7 +1,9 @@
 package com.example.cugerhuo.tools;
 
 import static android.content.ContentValues.TAG;
+import static com.example.cugerhuo.access.SetGlobalIDandUrl.getSandBoxPath;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
@@ -16,9 +18,11 @@ import com.alibaba.sdk.android.oss.model.GetObjectRequest;
 import com.alibaba.sdk.android.oss.model.GetObjectResult;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
+import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.oss.InitOS;
 
 import java.io.FileOutputStream;
+import java.util.List;
 
 /**
  * 对象存储操作类
@@ -136,5 +140,32 @@ public class OssOperate {
             }
         });
         return isDownloaded[0];
+    }
+
+    /**
+     * 获取头像列表
+     * @param a    需要获取头像的用户列表
+     * @param context       activity.this
+     * @return
+     */
+    public  static boolean downLoadList(List<PartUserInfo> a, Context context)
+    {
+        /**
+         * 获取关注对象的头像
+         * @author 施立豪
+         * @time 2023/4/12
+         */
+        for(PartUserInfo i :a)
+        {
+            String url=i.getImageUrl();
+            String newUrl=getSandBoxPath(context)+url;
+            if(!"".equals(i.getImageUrl())&&i.getImageUrl()!=null)
+            {
+                OssOperate.downLoad(i.getImageUrl(),newUrl);
+                i.setImageUrl(newUrl);
+                System.out.println(newUrl+i.getImageUrl());
+            }
+        }
+    return false;
     }
 }
