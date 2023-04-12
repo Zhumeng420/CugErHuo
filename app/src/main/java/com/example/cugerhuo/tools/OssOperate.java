@@ -91,7 +91,6 @@ public class OssOperate {
      */
     public static boolean downLoad(String filePath, String outPutPath)
     {
-
         // 构造下载文件请求。
         // 依次填写Bucket名称（例如examplebucket）和Object完整路径，Object完整路径中不能包含Bucket名称。
         GetObjectRequest get = new GetObjectRequest("cugerhuo", filePath);

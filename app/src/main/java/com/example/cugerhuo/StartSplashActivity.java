@@ -117,7 +117,6 @@ public class StartSplashActivity extends AppCompatActivity {
                 return;
             }
         }).start();
-
         /**
          * 启动动画
          * @author 唐小莉

@@ -1,5 +1,6 @@
 package com.example.cugerhuo.activity;
 
+import static com.example.cugerhuo.access.SetGlobalIDandUrl.getSandBoxPath;
 import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 
 import android.content.Context;
@@ -18,6 +19,7 @@ import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.access.user.UserOperate;
 import com.example.cugerhuo.activity.adapter.RecyclerViewAdapter;
 import com.example.cugerhuo.tools.LettuceBaseCase;
+import com.example.cugerhuo.tools.OssOperate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,10 +105,27 @@ public class ConcernActivity extends AppCompatActivity {
                     PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,getFocusIds.get(i),ConcernActivity.this);
                     System.out.println("关注idididdididi"+part.getUserName());
                     System.out.println("简介简介简介简介"+part.getSignature());
-                    part.setUserId(getFocusIds.get(i));
                     getFocusInfo.add(part);
                     System.out.println("关注关注关注关注-------"+part.getImageUrl());
                 }
+            /**
+             * 获取关注对象的头像
+             * @author 施立豪
+             * @time 2023/4/12
+             */
+            for(PartUserInfo i :getFocusInfo)
+            {
+                String url=i.getImageUrl();
+                String newUrl=getSandBoxPath(ConcernActivity.this)+url;
+                if(!"".equals(i.getImageUrl())&&i.getImageUrl()!=null)
+                {
+                OssOperate.downLoad(i.getImageUrl(),newUrl);
+                i.setImageUrl(newUrl);
+                    System.out.println(newUrl+i.getImageUrl());
+                }
+            }
+
+
             /**
              * 关闭连接
              */

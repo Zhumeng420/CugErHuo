@@ -263,7 +263,7 @@ public class SetGlobalIDandUrl {
      *
      * @return 路径
      */
-    private static String getSandBoxPath(Context context) {
+    public static String getSandBoxPath(Context context) {
         File externalFilesDir = context.getExternalFilesDir("");
         File customFile = new File(externalFilesDir.getAbsolutePath(), "Sandbox");
         if (!customFile.exists()) {

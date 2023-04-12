@@ -81,7 +81,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.user_concern_name.setText(partUserInfo.get(position).getUserName());
         holder.user_concern_sign.setText(partUserInfo.get(position).getSignature());
 
-        if ("".equals(partUserInfo.get(position).getImageUrl())) {
+        if (!"".equals(partUserInfo.get(position).getImageUrl())&&partUserInfo.get(position).getImageUrl()!=null)
+        {
             holder.user_concern_img.setImageURI(Uri.fromFile(new File(partUserInfo.get(position).getImageUrl())));
         }
 

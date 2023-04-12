@@ -198,6 +198,10 @@ public class UserInfoOperate
             connection.hset("UserInfo",String.valueOf(id),userString);
             Log.i(TAG,"查询mysql for userinfo");
         }
+        if(user!=null)
+        {
+            user.setUserId(id);
+        }
         return user;
     }
     public static void remove(RedisCommands<String, String> connection, int id, Context context)

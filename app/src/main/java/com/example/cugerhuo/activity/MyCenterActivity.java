@@ -68,33 +68,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
             Message msg = Message.obtain();
             msg.arg1 = 1;
             int focusNum;
-            /**
-             * 查询本地存储
-             * @author 施立豪
-             * @time 2023/3/27
-             */
-            SharedPreferences loginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
-            //获得Editor 实例
-            SharedPreferences.Editor editor = loginMessage.edit();
-            String id=loginMessage.getString("Id","");
-            int userId=0;
-            /**
-             * 如果当前本地没有存储id，先查询id并持久化
-             */
-            if("".equals(id))
-            {
-
-                userId=UserOperate.getId(loginMessage.getString("PhoneNumber",""),MyCenterActivity.this);
-                editor.putString("Id", String.valueOf(userId));
-                editor.apply();
-
-            }
-            /**
-             * 本地有id，则查询id
-             */
-            else{
-                userId=Integer.parseInt(id);
-        }
+            int userId=UserInfo.getid();
             /**
              * 获取关注数量
              */
