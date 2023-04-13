@@ -61,7 +61,7 @@ public class demo {
                 Log.d("PutObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
             }
         });
-        OSSClient oss= InitOS.getossclient();
+        OSSClient oss= InitOS.getOssClient();
         OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
             @Override
             public void onSuccess(PutObjectRequest request, PutObjectResult result) {
@@ -102,7 +102,7 @@ public class demo {
 // CreateBucketRequest.setBucketACL(CannedAccessControlList.Private);
 // 指定Bucket的存储类型。
 // CreateBucketRequest.setBucketStorageClass(StorageClass.Standard);
-        OSSClient oss=InitOS.getossclient();
+        OSSClient oss=InitOS.getOssClient();
 // 异步创建存储空间。
         OSSAsyncTask createTask = oss.asyncCreateBucket(createBucketRequest, new OSSCompletedCallback<CreateBucketRequest, CreateBucketResult>() {
             @Override
@@ -165,6 +165,84 @@ public class demo {
 //                i.setImageUrl(newUrl);
 //                System.out.println(newUrl+i.getImageUrl());
 //            }
+//        }
+
+    }
+
+    /**
+     * 下载图片并下载完成更新UI示例，放在主线程，复制被注释的代码至需要更新UI的地方，更换代码中更新UI的函数，和url地址
+     * @author 施立豪
+     * @time 2023/4/13
+     */
+    public void downLoadImageSync()
+    {
+//        /**
+//         * 异步更新头像,并实时更新
+//         */
+//        OSSClient oss= InitOS.getOssClient();
+//        /**
+//         * 获取oss路径
+//         */
+//        String url=partUserInfo.get(position).getImageUrl();
+//        /**
+//         * 获取本地保存路径
+//         */
+//        String newUrl=getSandBoxPath(context)+url;
+//        File f = new File(newUrl);
+//        if(!f.exists())
+//        {
+//            /**
+//             * 构建oss请求
+//             */
+//            GetObjectRequest get = new GetObjectRequest("cugerhuo", url);
+//            /**
+//             * 异步任务
+//             */
+//            oss.asyncGetObject(get, new OSSCompletedCallback<GetObjectRequest, GetObjectResult>() {
+//                /**
+//                 * 下载成功
+//                 * @param request
+//                 * @param result
+//                 */
+//                @Override
+//                public void onSuccess(GetObjectRequest request, GetObjectResult result) {
+//                    // 开始读取数据。
+//                    long length = result.getContentLength();
+//                    if (length > 0) {
+//                        byte[] buffer = new byte[(int) length];
+//                        int readCount = 0;
+//                        while (readCount < length) {
+//                            try{
+//                                readCount += result.getObjectContent().read(buffer, readCount, (int) length - readCount);
+//                            }catch (Exception e){
+//                                OSSLog.logInfo(e.toString());
+//                            }
+//                        }
+//                        // 将下载后的文件存放在指定的本地路径，例如D:\\localpath\\exampleobject.jpg。
+//                        try {
+//                            FileOutputStream fout = new FileOutputStream(newUrl);
+//                            fout.write(buffer);
+//                            fout.close();
+//                            /**
+//                             * 下载完成，填写更新逻辑
+//                             */
+//                            holder.user_concern_img.setImageURI(Uri.fromFile(new File(newUrl)));
+//                        } catch (Exception e) {
+//                            OSSLog.logInfo(e.toString());
+//                        }
+//                    }
+//                }
+//                @Override
+//                public void onFailure(GetObjectRequest request, ClientException clientException,
+//                                      ServiceException serviceException)  {
+//                    Log.e(TAG,"oss下载文件失败");
+//                }
+//            });
+//        }
+//        else
+//        {
+//            holder.user_concern_img.setImageURI(Uri.fromFile(new File(newUrl)));
+//
 //        }
 
     }

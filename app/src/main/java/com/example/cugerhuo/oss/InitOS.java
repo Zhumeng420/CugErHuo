@@ -44,7 +44,29 @@ public class InitOS {
 
         return instance;
     }
-    public static OSSClient getossclient()
+
+    public static String getEnd()
+    {
+        return "oss-cn-beijing.aliyuncs.com";
+    }
+    public static String  getK()
+
+    {
+        return instance.accessKeyId;
+    }
+    public static String getS()
+    {
+        return instance.accessKeySecret;
+    }
+    public static String getT()
+    {
+        return instance.securityToken;
+    }
+    /**
+     * 获取异步对象
+     * @return
+     */
+    public static OSSClient getOssClient()
     {
 
         return instance.oss;
@@ -72,4 +94,5 @@ public class InitOS {
      */
 
     OSSClient oss = null;
+
 }

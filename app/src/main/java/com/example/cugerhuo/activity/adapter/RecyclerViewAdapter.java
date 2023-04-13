@@ -1,9 +1,13 @@
 package com.example.cugerhuo.activity.adapter;
 
+import static android.content.ContentValues.TAG;
+import static com.example.cugerhuo.access.SetGlobalIDandUrl.getSandBoxPath;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +16,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.sdk.android.oss.ClientException;
+import com.alibaba.sdk.android.oss.OSSClient;
+import com.alibaba.sdk.android.oss.ServiceException;
+import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
+import com.alibaba.sdk.android.oss.common.OSSLog;
+import com.alibaba.sdk.android.oss.model.GetObjectRequest;
+import com.alibaba.sdk.android.oss.model.GetObjectResult;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.activity.OtherPeopleActivity;
+import com.example.cugerhuo.oss.InitOS;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 /**
@@ -84,11 +96,75 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.user_concern_name.setText(partUserInfo.get(position).getUserName());
         holder.user_concern_sign.setText(partUserInfo.get(position).getSignature());
 
-        if (!"".equals(partUserInfo.get(position).getImageUrl())&&partUserInfo.get(position).getImageUrl()!=null)
+        /**@time 2023/4/13
+         * @author 施立豪
+         * 异步更新头像,并实时更新
+         */
+        OSSClient oss= InitOS.getOssClient();
+        /**
+         * 获取oss路径
+         */
+        String url=partUserInfo.get(position).getImageUrl();
+        /**
+         * 获取本地保存路径
+         */
+        String newUrl=getSandBoxPath(context)+url;
+        File f = new File(newUrl);
+        if(!f.exists())
         {
-            holder.user_concern_img.setImageURI(Uri.fromFile(new File(partUserInfo.get(position).getImageUrl())));
+            /**
+             * 构建oss请求
+             */
+            GetObjectRequest get = new GetObjectRequest("cugerhuo", url);
+            /**
+             * 异步任务
+             */
+            oss.asyncGetObject(get, new OSSCompletedCallback<GetObjectRequest, GetObjectResult>() {
+                /**
+                 * 下载成功
+                 * @param request
+                 * @param result
+                 */
+                @Override
+                public void onSuccess(GetObjectRequest request, GetObjectResult result) {
+                    // 开始读取数据。
+                    long length = result.getContentLength();
+                    if (length > 0) {
+                        byte[] buffer = new byte[(int) length];
+                        int readCount = 0;
+                        while (readCount < length) {
+                            try{
+                                readCount += result.getObjectContent().read(buffer, readCount, (int) length - readCount);
+                            }catch (Exception e){
+                                OSSLog.logInfo(e.toString());
+                            }
+                        }
+                        // 将下载后的文件存放在指定的本地路径，例如D:\\localpath\\exampleobject.jpg。
+                        try {
+                            FileOutputStream fout = new FileOutputStream(newUrl);
+                            fout.write(buffer);
+                            fout.close();
+                            /**
+                             * 下载完成，填写更新逻辑
+                             */
+                            holder.user_concern_img.setImageURI(Uri.fromFile(new File(newUrl)));
+                        } catch (Exception e) {
+                            OSSLog.logInfo(e.toString());
+                        }
+                    }
+                }
+                @Override
+                public void onFailure(GetObjectRequest request, ClientException clientException,
+                                      ServiceException serviceException)  {
+                    Log.e(TAG,"oss下载文件失败");
+                }
+            });
         }
+        else
+        {
+            holder.user_concern_img.setImageURI(Uri.fromFile(new File(newUrl)));
 
+        }
 
         holder.user_concern.setOnClickListener(new View.OnClickListener() {
             /**
@@ -110,7 +186,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.btn_concerned.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               mClickListener.onItemClick(view,position);
+                mClickListener.onItemClick(view,position);
 
             }
 

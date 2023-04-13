@@ -7,6 +7,7 @@ repositories {
     }
 }
 android {
+
     compileSdk 32
     // 支持 JDK 1.8
     compileOptions {
@@ -42,6 +43,20 @@ android {
 
     }
     signingConfigs {
+        debug {
+            storeFile file("C:\\Users\\施立豪\\CUGERHUOSHA.jks")
+            storePassword "CUGerhuo444"
+            keyAlias "key0"
+            keyPassword "CUGerhuo444"
+        }
+        //发布版的keystore
+        release {
+            storeFile file("C:\\Users\\施立豪\\CUGERHUOSHA.jks")
+            storePassword "CUGerhuo444"
+            keyAlias "key0"
+            keyPassword "CUGerhuo444"
+        }
+
         debug {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
@@ -90,6 +105,8 @@ repositories {
 
 
 dependencies {
+
+
     implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
     // PictureSelector basic (Necessary)
     implementation 'io.github.lucksiege:pictureselector:v3.10.8'
@@ -155,6 +172,12 @@ dependencies {
     implementation 'com.github.donkingliang:ConsecutiveScroller:4.6.4'
     //redis连接
     implementation 'io.lettuce:lettuce-core:6.2.3.RELEASE'
+    //定位
+    implementation 'com.amap.api:location:latest.integration'
+
+    //2D地图
+    implementation 'com.amap.api:map2d:latest.integration'
+
 
 
 }

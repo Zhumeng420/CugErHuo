@@ -55,7 +55,7 @@ public class OssOperate {
                 Log.d("PutObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
             }
         });
-        OSSClient oss= InitOS.getossclient();
+        OSSClient oss= InitOS.getOssClient();
         OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
             @Override
             public void onSuccess(PutObjectRequest request, PutObjectResult result) {
@@ -86,7 +86,6 @@ public class OssOperate {
         });
         return myResult[0];
     }
-
     /**
      * oss下载文件到本地
      * @param filePath  oss存储路径
@@ -101,7 +100,8 @@ public class OssOperate {
         /**
          * 获取oss实例
          */
-        OSSClient oss= InitOS.getossclient();
+        OSSClient oss= InitOS.getOssClient();
+
         /**
          * 接收结果变量
          */
@@ -139,8 +139,66 @@ public class OssOperate {
             Log.e(TAG,"oss下载文件失败");
             }
         });
-        return isDownloaded[0];
+        return true;
     }
+    /**
+     * oss下载文件到本地
+     * @param filePath  oss存储路径
+     * @param outPutPath  下载到本地的位置
+     * @return      是否下载成功
+     */
+//    public static boolean downLoadSync(String filePath, String outPutPath)
+//    {
+//        // 构造下载文件请求。
+//        // 依次填写Bucket名称（例如examplebucket）和Object完整路径，Object完整路径中不能包含Bucket名称。
+//        GetObjectRequest get = new GetObjectRequest("cugerhuo", filePath);
+//        /**
+//         * 获取oss实例
+//         */
+//        OSSClient oss= InitOS.getOssClient();
+//        OSS oss1=new OSSClientBuilder().build(InitOS.getEnd(),InitOS.getK(), InitOS.getT());
+//
+//        oss1.getObject(new com.aliyun.oss.model.GetObjectRequest("cugerhuo",filePath), new File(outPutPath));
+//
+//        /**
+//         * 接收结果变量
+//         */
+////        final boolean[] isDownloaded = {false};
+////        oss.asyncGetObject(get, new OSSCompletedCallback<GetObjectRequest, GetObjectResult>() {
+////            @Override
+////            public void onSuccess(GetObjectRequest request, GetObjectResult result) {
+////                // 开始读取数据。
+////                long length = result.getContentLength();
+////                if (length > 0) {
+////                    byte[] buffer = new byte[(int) length];
+////                    int readCount = 0;
+////                    while (readCount < length) {
+////                        try{
+////                            readCount += result.getObjectContent().read(buffer, readCount, (int) length - readCount);
+////                        }catch (Exception e){
+////                            OSSLog.logInfo(e.toString());
+////                        }
+////                    }
+////                    // 将下载后的文件存放在指定的本地路径，例如D:\\localpath\\exampleobject.jpg。
+////                    try {
+////                        FileOutputStream fout = new FileOutputStream(outPutPath);
+////                        fout.write(buffer);
+////                        fout.close();
+////                        isDownloaded[0] =true;
+////                    } catch (Exception e) {
+////                        OSSLog.logInfo(e.toString());
+////                    }
+////                }
+////            }
+////
+////            @Override
+////            public void onFailure(GetObjectRequest request, ClientException clientException,
+////                                  ServiceException serviceException)  {
+////            Log.e(TAG,"oss下载文件失败");
+////            }
+////        });
+//        return true;
+//    }
 
     /**
      * 获取头像列表

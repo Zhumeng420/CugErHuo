@@ -38,7 +38,24 @@
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.VIBRATE" /> <!-- 8.0+系统需要 -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
+    <!--用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <!--用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <!--用于获取运营商信息，用于支持提供运营商信息相关的接口-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <!--用于访问wifi网络信息，wifi信息会用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+    <!--用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+    <!--用于访问网络，网络定位需要上网-->
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <!--用于读取手机当前的状态-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+    <!--用于写入缓存数据到扩展存储卡-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <!--用于申请调用A-GPS模块-->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"></uses-permission>
     <queries>
         <package android:name="com.tencent.mobileqq" />
         <package android:name="com.tencent.tim" />
@@ -61,6 +78,10 @@
         android:theme="@style/Theme.CugErHuo"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="9f769df4a1a71a366247dc9da243750b">
+
+        </meta-data>
+
         <activity
             android:name=".activity.SearchActivity"
             android:exported="false">
@@ -74,6 +95,22 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+        </activity>
+        <activity
+            android:name=".activity.LocationWebActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+
+        </activity>
+        <activity
+            android:name=".activity.LocationMapActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+
         </activity>
         <activity
             android:name=".activity.imessage.ChatActivity"
@@ -159,6 +196,7 @@
         <activity
             android:name=".activity.post.ChoosePostActivity"
             android:exported="false" />
+        <!--高德地图 -->
 
         <meta-data
             android:name="com.google.android.actions"
@@ -276,9 +314,11 @@
  云信APP key, 可以在这里设置，也可以在 SDKOptions 中提供。
             如果 SDKOptions 中提供了，则取 SDKOptions 中的值。
         -->
+        <service android:name="com.amap.api.location.APSService"></service> <!-- 高德地图服务 -->
         <meta-data
             android:name="com.netease.nim.appKey"
             android:value="c45d8e893b6e4d7b2fab77a68dfe8ad8" /> <!-- 云信后台服务，请使用独立进程。 -->
+
         <service
             android:name="com.netease.nimlib.service.NimService"
             android:process=":core" /> <!-- 云信后台辅助服务 -->

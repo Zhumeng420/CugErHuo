@@ -1,9 +1,6 @@
 package com.example.cugerhuo.activity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,10 +14,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.cugerhuo.activity.imessage.MessageActivity;
+import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.user.UserOperate;
-import com.example.cugerhuo.R;
+import com.example.cugerhuo.activity.imessage.MessageActivity;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
@@ -90,34 +87,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
             Message msg = Message.obtain();
             msg.arg1 = 2;
             int fansNum;
-            /**
-             * 查询本地存储
-             * @author 施立豪
-             * @time 2023/3/27
-             */
-            SharedPreferences loginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
-            //获得Editor 实例
-            SharedPreferences.Editor editor = loginMessage.edit();
-            String id=loginMessage.getString("Id","");
-            int id1;
-            /**
-             * 如果当前本地没有存储id，先查询id并持久化
-             */
-            if("".equals(id))
-            {
-
-                id1=UserOperate.getId(loginMessage.getString("PhoneNumber",""),MyCenterActivity.this);
-                editor.putString("Id", String.valueOf(id1));
-                editor.apply();
-
-            }
-            /**
-             * 本地有id，则查询id
-             */
-            else{
-                id1=Integer.parseInt(id);
-
-            }
+            int id1=UserInfo.getid();
             fansNum=UserOperate.getFansNum(id1,MyCenterActivity.this);
             msg.arg2=fansNum;
             //4、发送消息
@@ -195,17 +165,17 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public  void onActivityResult(int requestCode,int resultCode,Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-            if(requestCode==0x0001)
+        if(requestCode==0x0001)
+        {
+            String imagpath=UserInfo.getUrl();
+            if(!"".equals(imagpath)&&imagpath!=null)
             {
-                String imagpath=UserInfo.getUrl();
-                if(!"".equals(imagpath))
-                {
-                    userImage.setImageURI(Uri.fromFile(new File(imagpath)));
-                }
+                userImage.setImageURI(Uri.fromFile(new File(imagpath)));
             }
-            else if(requestCode==0x0002){
-                userFocus.setText(""+focusNum);
-            }
+        }
+        else if(requestCode==0x0002){
+            userFocus.setText(""+focusNum);
+        }
     }
     /**
      * 底部导航栏点击事件
