@@ -1,5 +1,7 @@
 package com.example.cugerhuo.activity;
 
+import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,9 +11,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.access.user.PartUserInfo;
+import com.example.cugerhuo.access.user.UserInfoOperate;
+import com.example.cugerhuo.access.user.XuanShangInfo;
+import com.example.cugerhuo.activity.adapter.RecyclerViewAdapter;
+import com.example.cugerhuo.activity.adapter.RecyclerViewXuanShangAdapter;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class XuanShangActivity extends AppCompatActivity implements View.OnClickListener{
     /**
@@ -25,6 +37,8 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
     private LinearLayout ll_tab_three;
     private LinearLayout ll_tab_four;
     private LinearLayout ll_tab_five;
+    private RecyclerView recyclerView;
+    private List<XuanShangInfo> test=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +63,16 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
         ll_tab_five.setOnClickListener(this);
         iv_tab_three = (ImageView) findViewById(R.id.iv_tab_three);
         iv_tab_three.setOnClickListener(this);
+        recyclerView = findViewById(R.id.recyclerView_xuanhsang);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        for(int i=0;i<6;i++){
+            XuanShangInfo part= new XuanShangInfo();
+            test.add(part);
+        }
+
+        RecyclerViewXuanShangAdapter adapter = new RecyclerViewXuanShangAdapter(getActivity(),test);
+        recyclerView.setAdapter(adapter);
     }
     /**
      * 重写finish方法，去掉出场动画
