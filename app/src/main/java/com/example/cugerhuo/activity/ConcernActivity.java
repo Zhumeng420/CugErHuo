@@ -100,7 +100,7 @@ public class ConcernActivity extends AppCompatActivity {
                 System.out.println("关注关注关注关注-------"+part.getImageUrl());
             }
             /**
-             * 关闭连接
+             * 关闭连接啊
              */
             lettuce.close();
 
