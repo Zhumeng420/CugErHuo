@@ -1,13 +1,18 @@
 package com.example.cugerhuo.activity;
 
 import static com.example.cugerhuo.access.SetGlobalIDandUrl.getSandBoxPath;
+import static com.example.cugerhuo.activity.MyCenterActivity.focusNum;
 import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,6 +25,7 @@ import com.example.cugerhuo.access.user.UserOperate;
 import com.example.cugerhuo.activity.adapter.RecyclerViewAdapter;
 import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.example.cugerhuo.tools.OssOperate;
+import com.example.cugerhuo.views.ConcernDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,17 +39,35 @@ import io.lettuce.core.api.sync.RedisCommands;
  */
 public class ConcernActivity extends AppCompatActivity {
 
+    /**
+     * recyclerView2 关注列表
+     */
     private  RecyclerView recyclerView2;
+    /**
+     * getFocusInfo 关注列表用户信息
+     */
     private List<PartUserInfo> getFocusInfo=new ArrayList<>();
     private final ConcernActivity.mHandler mHandler=new mHandler();
+    /**
+     * positionClick  记录目前点击的item位置
+     */
+    private int positionClick;
+    /**
+     * 判断是否取消关注成功
+     */
+    private boolean isCancelSuccess=false;
+    /**
+     * 用户id
+     */
+    private  int id1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_concern);
-
-        //concern是自定义的存储关注列表的用户信息的类
-
+        /**
+         * 初始化控件
+         */
         recyclerView2 = findViewById(R.id.recyclerView2);
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
 
@@ -66,7 +90,7 @@ public class ConcernActivity extends AppCompatActivity {
             //获得Editor 实例
             SharedPreferences.Editor editor = loginMessage.edit();
             String id=loginMessage.getString("Id","");
-            int id1;
+
             /**
              * 如果当前本地没有存储id，先查询id并持久化
              */
@@ -135,6 +159,9 @@ public class ConcernActivity extends AppCompatActivity {
             //4、发送消息
             mHandler.sendMessage(msg);
         }).start();
+
+
+
     }
 
     /**
@@ -153,10 +180,52 @@ public class ConcernActivity extends AppCompatActivity {
                 case 1:
                     RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity(),getFocusInfo);
                     recyclerView2.setAdapter(adapter);
+                    adapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            positionClick=position;
+                            /**
+                             * 点击已关注实现弹窗
+                             */
+                            ConcernDialog concernDialog=new ConcernDialog(getActivity());
+                            /**
+                             * 确定按钮回调
+                             */
+                            concernDialog.setConfirmListener(new ConcernDialog.ConfirmListener() {
+                                @Override
+                                public void onConfirmClick() {
+                                    /**
+                                     * 点击确定按钮后判断是否取消成功
+                                     */
+                                    System.out.println("issuccess"+isCancelSuccess);
+                                    new Thread(new ConcernActivity.MyRunnableConcernOperate()).start();
+                                    adapter.notifyItemChanged(position,"true");
+                                    focusNum--;
+                                }
+                            });
+                            concernDialog.show();
+                        }
+                    });
                     break;
                 default:
                     break;
             }
+        }
+    }
+
+    /**
+     * 开启线程
+     * @author 唐小莉
+     * @time 2023/4/13
+     */
+    class MyRunnableConcernOperate implements  Runnable{
+        @Override
+        public void run() {
+            /**
+             *
+             */
+            isCancelSuccess=UserOperate.getIfDeleteConcern(id1,getFocusInfo.get(positionClick).getId(),getActivity());
+            System.out.println("issuccess"+isCancelSuccess);
         }
     }
 }

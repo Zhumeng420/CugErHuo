@@ -21,6 +21,8 @@
     <string name="GetUserImage">user-info/getimage</string>
     <string name="GetPartUserInfo">user-info/getpartinfo</string>
     <string name="InsertUserInfo">user-info/insertuser</string>
+    <string name="DeleteFocusUser">/focus</string>
+
 
 
     <string name="GetOss">secret/oos</string>
@@ -42,6 +44,9 @@
     <string name="ImageUrl">imageUrl</string>
     <string name="UserId">userId</string>
     <string name="RedisPWD">CUGerhuo333</string>
+    <string name="startId">startId</string>
+    <string name="endId">endId</string>
+    
 
 
 

@@ -1,5 +1,6 @@
 package com.example.cugerhuo.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,6 +48,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
     private LinearLayout llTabFour;
     private LinearLayout llTabFive;
     private LinearLayout userConcern;
+    public static int focusNum;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +69,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         new Thread(() -> {
             Message msg = Message.obtain();
             msg.arg1 = 1;
-            int focusNum;
+
             int userId=UserInfo.getid();
             /**
              * 获取关注数量
@@ -143,8 +145,15 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         userConcern =findViewById(R.id.concern);
     }
 
+    /**
+     * 点击关注按钮跳转至关注界面
+     * @param view
+     * @author 唐小莉
+     * @time 2023/4/13
+     */
     public void userConcernClick(View view){
-        startActivity(new Intent(getApplicationContext(),ConcernActivity.class));
+        Intent intent=new Intent(getApplicationContext(),ConcernActivity.class);
+        startActivityForResult(intent,0x0002);
 
     }
 
@@ -186,14 +195,17 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public  void onActivityResult(int requestCode,int resultCode,Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==0x0001)
-        {
-            String imagpath=UserInfo.getUrl();
-            if(!"".equals(imagpath))
+            if(requestCode==0x0001)
             {
-                userImage.setImageURI(Uri.fromFile(new File(imagpath)));
+                String imagpath=UserInfo.getUrl();
+                if(!"".equals(imagpath))
+                {
+                    userImage.setImageURI(Uri.fromFile(new File(imagpath)));
+                }
             }
-        }
+            else if(requestCode==0x0002){
+                userFocus.setText(""+focusNum);
+            }
     }
     /**
      * 底部导航栏点击事件

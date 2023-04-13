@@ -2,6 +2,7 @@ package com.example.cugerhuo.activity.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
@@ -39,6 +40,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Context context;
     private List<PartUserInfo> partUserInfo;
     private int count;
+
+    private OnItemClickListener mClickListener;
 
     public RecyclerViewAdapter(Context context, List<PartUserInfo>partUserInfo) {
         this.context = context;
@@ -89,10 +92,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         holder.user_concern.setOnClickListener(new View.OnClickListener() {
             /**
-             * 点击每个RecyclerView子组件进行相应的响应事件
+             * 点击每个RecyclerView子组件进行相应的响应事件,点击跳转至个人主页
              * @param v
-             * @author
-             * @Time
+             * @author 唐小莉
+             * @Time 2023/4/13
              */
             @Override
             public void onClick(View v) {
@@ -103,16 +106,45 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 context.startActivity(intent);
             }
         });
+
         holder.btn_concerned.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               Toast.makeText(context,"已关注",Toast.LENGTH_SHORT).show();
+               mClickListener.onItemClick(view,position);
 
             }
+
         });
-
-
     }
+
+    /**
+     * 用于响应获取取消关注成功后进行样式的改变
+     * @param holder
+     * @param position
+     * @param payloads
+     * @author 唐小莉
+     * @time 2023/4/13
+     */
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, final int position,@NonNull List<Object> payloads){
+        System.out.println(">>>>>payloads"+payloads);
+        if(payloads.isEmpty()){
+            super.onBindViewHolder(holder,position,payloads);
+            return;
+        }
+        for(Object payload:payloads){
+            switch (String.valueOf(payload)){
+                case "true":
+                    holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_cancel_concern);
+                    holder.btn_concerned.setText("关注");
+                    holder.btn_concerned.setTextColor(Color.RED);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
 
     /**
      * 寻找到对应控件的id
@@ -129,6 +161,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView user_concern_sign;
         Button btn_concerned;
         LinearLayout user_concern;
+        private OnItemClickListener mListener;// 声明自定义的接口
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -139,5 +172,25 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             user_concern=itemView.findViewById(R.id.user_concern);
         }
     }
+
+    /**
+     * item点击响应函数
+     * @param listener 监听click
+     * @author 唐小莉
+     * @time 2023/4/13
+     */
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mClickListener = listener;
+    }
+    /**
+     * 定义RecyclerView选项单击事件的回调接口
+     * @author 唐小莉
+     * @time 2023/4/13
+     */
+    public interface OnItemClickListener {
+        //参数（父组件，当前单击的View,单击的View的位置，数据）
+        public void onItemClick(View view, int position);
+    }
+
 
 }
