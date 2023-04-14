@@ -95,23 +95,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         //进行item对应控件部分的内容设置
         holder.user_concern_name.setText(partUserInfo.get(position).getUserName());
         holder.user_concern_sign.setText(partUserInfo.get(position).getSignature());
-
-        /**@time 2023/4/13
-         * @author 施立豪
-         * 异步更新头像,并实时更新
-         */
-        OSSClient oss= InitOS.getOssClient();
         /**
          * 获取oss路径
          */
-        String url=partUserInfo.get(position).getImageUrl();
+        String url = partUserInfo.get(position).getImageUrl();
+        /**
+         * 当url不为空设置头像
+         * @author 施立豪
+         * @time 2023/4/14
+         */
+        if(url!=null&&!"".equals(url))
+        { /**@time 2023/4/13
+         * @author 施立豪
+         * 异步更新头像,并实时更新
+         */
+        OSSClient oss = InitOS.getOssClient();
+
         /**
          * 获取本地保存路径
          */
-        String newUrl=getSandBoxPath(context)+url;
+
+        String newUrl = getSandBoxPath(context) + url;
         File f = new File(newUrl);
-        if(!f.exists())
-        {
+        if (!f.exists()) {
             /**
              * 构建oss请求
              */
@@ -122,6 +128,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             oss.asyncGetObject(get, new OSSCompletedCallback<GetObjectRequest, GetObjectResult>() {
                 /**
                  * 下载成功
+                 *
                  * @param request
                  * @param result
                  */
@@ -133,9 +140,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         byte[] buffer = new byte[(int) length];
                         int readCount = 0;
                         while (readCount < length) {
-                            try{
+                            try {
                                 readCount += result.getObjectContent().read(buffer, readCount, (int) length - readCount);
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 OSSLog.logInfo(e.toString());
                             }
                         }
@@ -153,19 +160,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         }
                     }
                 }
+
                 @Override
                 public void onFailure(GetObjectRequest request, ClientException clientException,
-                                      ServiceException serviceException)  {
-                    Log.e(TAG,"oss下载文件失败");
+                                      ServiceException serviceException) {
+                    Log.e(TAG, "oss下载文件失败");
                 }
             });
-        }
-        else
-        {
+        } else {
             holder.user_concern_img.setImageURI(Uri.fromFile(new File(newUrl)));
 
         }
-
+    }
         holder.user_concern.setOnClickListener(new View.OnClickListener() {
             /**
              * 点击每个RecyclerView子组件进行相应的响应事件,点击跳转至个人主页
