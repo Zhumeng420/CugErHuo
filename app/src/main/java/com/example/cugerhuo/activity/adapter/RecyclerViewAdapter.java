@@ -100,9 +100,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
          */
         String url = partUserInfo.get(position).getImageUrl();
         /**
-         * 当url不为空设置头像
-         * @author 施立豪
-         * @time 2023/4/14
+         *  判断头像是否为空，如果为空则使用默认的头像进行显示
          */
         if(url!=null&&!"".equals(url))
         { /**@time 2023/4/13
@@ -114,7 +112,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         /**
          * 获取本地保存路径
          */
-
         String newUrl = getSandBoxPath(context) + url;
         File f = new File(newUrl);
         if (!f.exists()) {
@@ -128,7 +125,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             oss.asyncGetObject(get, new OSSCompletedCallback<GetObjectRequest, GetObjectResult>() {
                 /**
                  * 下载成功
-                 *
                  * @param request
                  * @param result
                  */
@@ -160,7 +156,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         }
                     }
                 }
-
                 @Override
                 public void onFailure(GetObjectRequest request, ClientException clientException,
                                       ServiceException serviceException) {
