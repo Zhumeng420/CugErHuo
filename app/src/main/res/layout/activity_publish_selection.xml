@@ -7,8 +7,6 @@
     android:clipChildren="false"
     tools:context=".activity.PublishSelectionActivity">
 
-
-
     <LinearLayout
         android:id="@+id/ll_tab_three"
         android:layout_width="match_parent"
