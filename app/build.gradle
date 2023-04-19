@@ -179,6 +179,5 @@ dependencies {
     implementation 'com.amap.api:map2d:latest.integration'
 
 
-
 }
 

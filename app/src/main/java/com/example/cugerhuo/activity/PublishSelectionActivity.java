@@ -27,6 +27,7 @@ public class PublishSelectionActivity extends AppCompatActivity implements View.
     private ImageView iv_tab_three;
     private AlphaAnimation alphaAniShow, alphaAniHide;
     private LinearLayout AlphaShow;
+    //跳转买卖
     private LinearLayout postBuy,postSell;
     private TranslateAnimation translateAniShow, translateAniHide;
 

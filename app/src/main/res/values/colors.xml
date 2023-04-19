@@ -15,4 +15,5 @@
     <color name="white">#ffffffff</color>
     <color name="navColor">#ff026ED2</color>
     <color name="gray">#b8b8b8</color>
+    <color name="ic_default_bg_color">#33000000</color>
 </resources>
