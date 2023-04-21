@@ -88,18 +88,7 @@ public class StartSplashActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                /**
-                 * test
-                 */
-                try {
-                    List<String> a=Nlp.getNlpCatrgory("这是一个手机壳",StartSplashActivity.this);
-                    for(String i:a)
-                    {
-                        System.out.println("catr"+i);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+
                 /**
                  * 对象存储初始化1
                  */
