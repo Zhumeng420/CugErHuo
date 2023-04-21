@@ -110,7 +110,6 @@ public class ConcernActivity extends AppCompatActivity {
         }).start();
 
     }
-
     /**
      * 消息发送接收，异步更新UI
      * @author 唐小莉

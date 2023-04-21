@@ -17,18 +17,21 @@
     <string name="GetIdByPhone">user/getidbyphone</string>
     <string name="GetIdByQq">user/getidbyqq</string>
 
+
     <string name="SetUserImage">user-info/changeimage</string>
     <string name="GetUserImage">user-info/getimage</string>
     <string name="GetPartUserInfo">user-info/getpartinfo</string>
     <string name="InsertUserInfo">user-info/insertuser</string>
     <string name="DeleteFocusUser">/focus</string>
 
-
+    <string name="GetCommodity">commodity/get</string>
+    <string name="InsertCommodity">commodity/insert</string>
 
     <string name="GetOss">secret/oos</string>
 
     <string name="GetWord">nlp/categorys</string>
     <string name="GetClass">nlp/class</string>
+    <string name="GetBrand">nlp/brand</string>
 
     <string name="Text">text</string>
 
@@ -46,10 +49,10 @@
     <string name="RedisPWD">CUGerhuo333</string>
     <string name="startId">startId</string>
     <string name="endId">endId</string>
-    
+    <string name="ID">id</string>
+    <string name="ProductId">productId</string>
 
-
-
+<string name="InsertCommodityTu">sell/sellproduuct</string>
     <string name="Token">token</string>
     <string name="PublicKey">publicKey</string>
 </resources>

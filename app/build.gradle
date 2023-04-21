@@ -177,7 +177,8 @@ dependencies {
 
     //2D地图
     implementation 'com.amap.api:map2d:latest.integration'
-
+    //图片选择
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
 
 
 }

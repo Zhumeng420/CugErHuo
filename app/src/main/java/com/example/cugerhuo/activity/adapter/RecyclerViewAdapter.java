@@ -42,7 +42,6 @@ import java.util.List;
  * @Date 2023/4/4 22：13
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-
     /**
      * partUserInfo 关注的用户信息
      * count 关注列表的Item个数

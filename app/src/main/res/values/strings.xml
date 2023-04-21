@@ -4,5 +4,12 @@
     <string name="custom_title">自定义标题</string>
     <string name="custom_slogan">自定义Slogan</string>
     <string name="custom_toast">同意服务条款才可以登录</string>
-
+    <string name="app_category">分类</string>
+    <string name="app_brand">品牌</string>
+    <string name="app_new_old">成色</string>
+    <string name="app_location">选择定位</string>
+    <string name="app_drag_delete">拖动到此处删除</string>
+    <string name="app_let_go_drag_delete">松手即可删除</string>
+    <string name="app_wechat_send">发送</string>
+    <string name="app_wechat_send_num">发送(%1$d/%2$d)</string>
 </resources>

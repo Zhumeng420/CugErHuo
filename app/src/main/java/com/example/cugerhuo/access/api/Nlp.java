@@ -71,4 +71,29 @@ public class Nlp {
             e.printStackTrace();
         }return result;
     }
+    /**
+     * 商品品牌获取接口
+     */
+    public static List<String> getNlpBrand(String text1, Context context) throws JSONException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.ip);
+        String router=context.getString(R.string.GetBrand);
+        String text=context.getString(R.string.Text);
+        /**
+         * 发送请求
+         */
+        String url="http://"+ip+"/"+router+"?"+text+"="+text1;
+        Request request = new Request.Builder().url(url).get().build();
+        Response response = null;
+        List<String> result=new ArrayList<>();
+        try {
+            response = okHttpClient.newCall(request).execute();
+            result= JSONArray.parseArray(response.body().string(),String.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }return result;
+    }
 }

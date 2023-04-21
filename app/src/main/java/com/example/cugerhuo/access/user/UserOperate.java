@@ -376,7 +376,6 @@ public class UserOperate {
     public static boolean insertUserToTu(String username, int id, Context context)
     {
         OkHttpClient okHttpClient = new OkHttpClient();
-
         /**
          * 获取XML文本
          */

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <View
+        android:layout_width="10dp"
+        android:layout_height="50dp"/>
+    <TextView
+        android:id="@+id/new_old"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="ceshi"
+        android:textSize="15sp"
+        />
+    <View
+        android:layout_width="10dp"
+        android:layout_height="50dp"/>
+</LinearLayout>

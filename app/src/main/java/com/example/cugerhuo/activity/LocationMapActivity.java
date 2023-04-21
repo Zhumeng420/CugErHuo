@@ -15,10 +15,6 @@ import com.example.cugerhuo.R;
  * @time 2023/4/12
  */
 public class LocationMapActivity extends AppCompatActivity  {
-
-
-
-
     MapView mMapView = null;
     @SuppressLint("MissingInflatedId")
     @Override
@@ -29,8 +25,7 @@ public class LocationMapActivity extends AppCompatActivity  {
         mMapView = (MapView) findViewById(R.id.map);
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
         mMapView.onCreate(savedInstanceState);
-
-//初始化地图控制器对象
+        //初始化地图控制器对象
         AMap aMap = null;
         if (aMap == null) {
             aMap =mMapView.getMap();
