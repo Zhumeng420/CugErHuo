@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SimpleAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,9 +23,13 @@ import com.example.cugerhuo.access.user.XuanShangInfo;
 import com.example.cugerhuo.activity.adapter.RecyclerViewAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewXuanShangAdapter;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
+import com.example.cugerhuo.views.MyCustomImageLayout;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class XuanShangActivity extends AppCompatActivity implements View.OnClickListener{
     /**
@@ -39,6 +45,7 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
     private LinearLayout ll_tab_five;
     private RecyclerView recyclerView;
     private List<XuanShangInfo> test=new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +73,16 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
         recyclerView = findViewById(R.id.recyclerView_xuanhsang);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        for(int i=0;i<6;i++){
+        for(int i=0;i<12;i++){
             XuanShangInfo part= new XuanShangInfo();
             test.add(part);
         }
 
         RecyclerViewXuanShangAdapter adapter = new RecyclerViewXuanShangAdapter(getActivity(),test);
         recyclerView.setAdapter(adapter);
+
+
+
     }
     /**
      * 重写finish方法，去掉出场动画
@@ -143,4 +153,7 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
         }
 
     }
+
+
+
 }

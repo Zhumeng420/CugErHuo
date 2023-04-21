@@ -3,8 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginBottom="5dp"
     android:orientation="vertical"
+    android:id="@+id/cl"
     android:clipChildren="false">
 
     <LinearLayout
@@ -51,8 +53,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="75dp">
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -60,7 +62,37 @@
             android:layout_marginRight="20dp"
             android:text="啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦"
             android:textSize="16sp"/>
+        <com.example.cugerhuo.views.MyCustomImageLayout
+            android:id="@+id/image_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="20dp"
+            tools:ignore="MissingConstraints" />
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/comment_xuanshang"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="22dp"
+            android:layout_gravity="right"
+            android:src="@drawable/icon_comment"></ImageView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:id="@+id/num_comments"
+            android:textSize="16sp"
+            android:layout_marginRight="5dp"
+            android:text="165"/>
+    </LinearLayout>
 </LinearLayout>

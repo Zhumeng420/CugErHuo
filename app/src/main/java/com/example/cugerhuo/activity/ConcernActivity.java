@@ -3,9 +3,12 @@ package com.example.cugerhuo.activity;
 import static com.example.cugerhuo.activity.MyCenterActivity.focusNum;
 import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +24,7 @@ import com.example.cugerhuo.activity.adapter.RecyclerViewAdapter;
 import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.example.cugerhuo.views.ConcernDialog;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +59,7 @@ public class ConcernActivity extends AppCompatActivity {
      */
     private  int id1;
 
+    private  RecyclerViewAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +102,7 @@ public class ConcernActivity extends AppCompatActivity {
                 System.out.println("关注idididdididi"+part.getUserName());
                 System.out.println("简介简介简介简介"+part.getSignature());
                 getFocusInfo.add(part);
+                getFocusInfo.get(i).setConcern(true);
                 System.out.println("关注关注关注关注-------"+part.getImageUrl());
             }
             /**
@@ -124,7 +130,7 @@ public class ConcernActivity extends AppCompatActivity {
                  * 获取关注列表
                  */
                 case 1:
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity(),getFocusInfo);
+                    adapter = new RecyclerViewAdapter(getActivity(),getFocusInfo);
                     recyclerView2.setAdapter(adapter);
                     adapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
                         @Override
@@ -143,13 +149,33 @@ public class ConcernActivity extends AppCompatActivity {
                                     /**
                                      * 点击确定按钮后判断是否取消成功
                                      */
-                                    System.out.println("issuccess"+isCancelSuccess);
-                                    new Thread(new ConcernActivity.MyRunnableConcernOperate()).start();
-                                    adapter.notifyItemChanged(position,"true");
-                                    focusNum--;
+                                   if(getFocusInfo.get(position).getConcern()){
+                                       System.out.println("issuccess"+isCancelSuccess);
+                                       new Thread(new ConcernActivity.MyRunnableDeleteConcernOperate()).start();
+                                       adapter.notifyItemChanged(position,"true");
+                                       focusNum--;
+                                   }
+                                   else{
+                                       new Thread(new ConcernActivity.MyRunnableConcernOperate()).start();
+                                       adapter.notifyItemChanged(position,"false");
+                                       focusNum++;
+                                   }
                                 }
                             });
                             concernDialog.show();
+                        }
+                    });
+                    /**
+                     * 点击关注item进行跳转并传值过去
+                     */
+                    adapter.setOnItemUserClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            Intent intent=new Intent(getActivity(), OtherPeopleActivity.class);
+                            intent.putExtra("concernUser",getFocusInfo.get(position));
+                            intent.putExtra("focusNum",focusNum);
+                            //startActivity(intent);
+                            startActivityForResult(intent,1);
                         }
                     });
                     break;
@@ -160,18 +186,48 @@ public class ConcernActivity extends AppCompatActivity {
     }
 
     /**
+     * 获取上个页面返回的数据并进行页面响应
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public  void onActivityResult(int requestCode,int resultCode,Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1)
+        {
+            boolean data1 = data.getBooleanExtra("isConcern",true);
+            getFocusInfo.get(positionClick).setConcern(data1);
+            adapter.setPartUserInfoPosition(positionClick,data1);
+            if(data1){
+                adapter.notifyItemChanged(positionClick,false);
+            }
+            else{
+                adapter.notifyItemChanged(positionClick,true);
+            }
+            System.out.println("hello concernActivity"+data1);
+        }
+    }
+    /**
      * 开启线程
      * @author 唐小莉
      * @time 2023/4/13
      */
-    class MyRunnableConcernOperate implements  Runnable{
+    class MyRunnableDeleteConcernOperate implements  Runnable{
         @Override
         public void run() {
-            /**
-             *
-             */
             isCancelSuccess=UserOperate.getIfDeleteConcern(id1,getFocusInfo.get(positionClick).getId(),getActivity());
             System.out.println("issuccess"+isCancelSuccess);
         }
     }
+
+    class MyRunnableConcernOperate implements Runnable{
+        @Override
+        public void run() {
+            boolean su=UserOperate.setConcern(id1,getFocusInfo.get(positionClick).getId(),getActivity());
+            System.out.println("concernhhhhh success"+su);
+        }
+    }
+
+
 }

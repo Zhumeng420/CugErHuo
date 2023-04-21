@@ -23,6 +23,7 @@
     <string name="GetPartUserInfo">user-info/getpartinfo</string>
     <string name="InsertUserInfo">user-info/insertuser</string>
     <string name="DeleteFocusUser">/focus</string>
+    <string name="setFocusUser">focus/focususer</string>
 
     <string name="GetCommodity">commodity/get</string>
     <string name="InsertCommodity">commodity/insert</string>

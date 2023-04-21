@@ -1,7 +1,9 @@
 package com.example.cugerhuo.activity.adapter;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
 import static com.example.cugerhuo.access.SetGlobalIDandUrl.getSandBoxPath;
+import static com.nirvana.tools.core.SupportJarUtils.startActivityForResult;
 
 import android.content.Context;
 import android.content.Intent;
@@ -51,13 +53,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Context context;
     private List<PartUserInfo> partUserInfo;
     private int count;
-
     private OnItemClickListener mClickListener;
+    private OnItemClickListener mClickUserListener;
 
-    public RecyclerViewAdapter(Context context, List<PartUserInfo>partUserInfo) {
+    public RecyclerViewAdapter(Context context, List<PartUserInfo>PartUserInfo) {
         this.context = context;
-        this.partUserInfo=partUserInfo;
+        partUserInfo=PartUserInfo;
         count=partUserInfo.size();
+    }
+
+    public void setPartUserInfoPosition(int p,boolean concern){
+        partUserInfo.get(p).setConcern(concern);
     }
 
     /**
@@ -94,6 +100,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         //进行item对应控件部分的内容设置
         holder.user_concern_name.setText(partUserInfo.get(position).getUserName());
         holder.user_concern_sign.setText(partUserInfo.get(position).getSignature());
+        if(!partUserInfo.get(position).getConcern()){
+            holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_cancel_concern);
+            holder.btn_concerned.setText("关注");
+            holder.btn_concerned.setTextColor(Color.RED);
+            partUserInfo.get(position).setConcern(false);
+        }
+        else{
+            holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_concern);
+            holder.btn_concerned.setText("已关注");
+            holder.btn_concerned.setTextColor(Color.parseColor("#9C9898"));
+            partUserInfo.get(position).setConcern(true);
+        }
         /**
          * 获取oss路径
          */
@@ -111,7 +129,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         /**
          * 获取本地保存路径
          */
-        String newUrl = getSandBoxPath(context) + url;
+        String newUrl= getSandBoxPath(context) + url;
+        partUserInfo.get(position).setImageUrl(newUrl);
+        System.out.println("newUrlhhhh"+newUrl);
         File f = new File(newUrl);
         if (!f.exists()) {
             /**
@@ -175,11 +195,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
              */
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,holder.user_concern_name.getText().toString(),Toast.LENGTH_SHORT).show();
-                Intent intent=new Intent(context, OtherPeopleActivity.class);
-                intent.putExtra("concernUser",partUserInfo.get(position));
-                System.out.println("hhhhhhhhhhhhhhh"+partUserInfo.get(position).getId());
-                context.startActivity(intent);
+                mClickUserListener.onItemClick(v,position);
             }
         });
 
@@ -187,7 +203,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View view) {
                 mClickListener.onItemClick(view,position);
-
             }
 
         });
@@ -214,7 +229,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_cancel_concern);
                     holder.btn_concerned.setText("关注");
                     holder.btn_concerned.setTextColor(Color.RED);
+                    partUserInfo.get(position).setConcern(false);
                     break;
+                case "false":
+                    holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_concern);
+                    holder.btn_concerned.setText("已关注");
+                    holder.btn_concerned.setTextColor(Color.parseColor("#9C9898"));
+                    partUserInfo.get(position).setConcern(true);
                 default:
                     break;
             }
@@ -257,6 +278,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
      */
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mClickListener = listener;
+    }
+
+    public void setOnItemUserClickListener(OnItemClickListener listener) {
+        this.mClickUserListener = listener;
     }
     /**
      * 定义RecyclerView选项单击事件的回调接口

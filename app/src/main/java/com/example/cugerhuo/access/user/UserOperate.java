@@ -573,4 +573,49 @@ public class UserOperate {
         return true;
     }
 
+    /**
+     * 关注用户
+     * @param startId1 本用户id
+     * @param endId1 被关注用户id
+     * @param context 获取映射文件
+     * @return 返回是否关注成功
+     * @author 唐小莉
+     * @time 2023/4/１９
+     */
+    public static Boolean setConcern(int startId1, int endId1, Context context){
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.Tuip);
+        String router=context.getString(R.string.setFocusUser);
+        String startId=context.getString(R.string.startId);
+        String endId=context.getString(R.string.endId);
+
+        String url="http://"+ip+"/"+router;
+        /** 循环form表单，将表单内容添加到form builder中
+         * 构建formBody，将其传入Request请求中
+         */
+
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add(startId, String.valueOf(startId1));
+        builder.add(endId,String.valueOf(endId1));
+        /**
+         * 循环form表单，将表单内容添加到form builder中
+         * 构建formBody，将其传入Request请求中
+         */
+        FormBody body = builder.build();
+        Request request = new Request.Builder().url(url).post(body).build();
+        Response response = null;
+        try {
+            response = okHttpClient.newCall(request).execute();
+            response.body();
+            System.out.println("hhhhhhhhhhhhhhgggggggg"+response.body().string());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
 }

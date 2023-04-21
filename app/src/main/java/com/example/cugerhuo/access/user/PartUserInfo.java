@@ -13,11 +13,13 @@ public class PartUserInfo implements Serializable {
      * imageUrl 头像url
      * signature 简介
      * username 昵称
+     * isConcern 判断是否关注
      */
     private int id;
     private String imageUrl;
     private String signature;
     private String userName;
+    private boolean isConcern;
 
     public int getId() {
         return id;
@@ -49,6 +51,13 @@ public class PartUserInfo implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public boolean getConcern(){
+        return isConcern;
+    }
+    public void setConcern(boolean concern){
+        this.isConcern=concern;
     }
 
 

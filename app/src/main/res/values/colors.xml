@@ -33,4 +33,5 @@
     <color name="app_color_red">#FF0000</color>
     <color name="app_color_cc_red">#CCFF0000</color>
 
+    <color name="ic_default_bg_color">#33000000</color>
 </resources>

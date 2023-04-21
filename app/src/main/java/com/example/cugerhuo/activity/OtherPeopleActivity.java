@@ -1,5 +1,8 @@
 package com.example.cugerhuo.activity;
 
+import static com.example.cugerhuo.activity.MyCenterActivity.focusNum;
+import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,8 +24,10 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.user.PartUserInfo;
+import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.user.UserOperate;
 import com.example.cugerhuo.activity.adapter.ViewPagerAdapter;
+import com.example.cugerhuo.activity.imessage.ChatActivity;
 import com.example.cugerhuo.fragment.MyFragment;
 import com.example.cugerhuo.views.MyScrollView;
 import com.google.android.material.tabs.TabLayout;
@@ -104,10 +109,8 @@ public class OtherPeopleActivity extends AppCompatActivity {
      * 用户自我介绍
      */
     private TextView introduction;
-    /**
-     * 用户头像
-     */
-    private ImageView other_user_img;
+
+    private boolean isConcern;
 
     /**
      * 用户信息类
@@ -122,7 +125,12 @@ public class OtherPeopleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_other_people);
         init();
         initFragment();
+        initIntendInfo();
 
+        Intent intent = new Intent();
+        intent.putExtra("isConcern",isConcern);
+        System.out.println("xinaccchhhhhhhhaaaaa"+isConcern);
+        setResult(1,intent);
         /**
          *  给viewPager重置高度
          */
@@ -211,20 +219,9 @@ public class OtherPeopleActivity extends AppCompatActivity {
                 }
             }
         });
-        /**
-         * 直接获取上个界面传递的用户信息
-         */
-        Intent intent =getIntent();
-        partUserInfo= (PartUserInfo) intent.getSerializableExtra("concernUser");
-        /**
-         * 将用户信息进行加载显示
-         */
-        username.setText(partUserInfo.getUserName());
-        introduction.setText(partUserInfo.getSignature());
-        if (!"".equals(partUserInfo.getImageUrl())&&partUserInfo.getImageUrl()!=null)
-        {
-            other_user_img.setImageURI(Uri.fromFile(new File(partUserInfo.getImageUrl())));
-        }
+        isFollowed.setOnClickListener(this::onClickFollowed);
+        popFollowed.setOnClickListener(this::onClickFollowed);
+        isF.setOnClickListener(this::onClickFollowedPop);
 
         // 5、开启线程
         new Thread(() -> {
@@ -253,6 +250,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
             //4、发送消息
             mHandler.sendMessage(msg);
         }).start();
+
     }
 
     /**
@@ -280,7 +278,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
         userConcernNum=findViewById(R.id.user_concern);
         userFansNum=findViewById(R.id.user_fans);
         introduction=findViewById(R.id.introduction);
-        other_user_img=findViewById(R.id.other_user_img);
+
     }
 
     /**
@@ -302,7 +300,6 @@ public class OtherPeopleActivity extends AppCompatActivity {
             isFollowed.setBackgroundResource(R.drawable.not_followed);
             popFollowed.setBackgroundResource(R.drawable.not_followed);
             isF.setImageResource(R.drawable.icon_chat);
-
         }
     }
 
@@ -330,6 +327,78 @@ public class OtherPeopleActivity extends AppCompatActivity {
         /**设置固定的tab*/
         move.setTabMode(TabLayout.MODE_FIXED);
         stop.setTabMode(TabLayout.MODE_FIXED);
+    }
+
+    /**
+     * 获取上个页面传递过来的信息
+     * @author 唐小莉
+     * @time 2023/4/19
+     */
+    public void initIntendInfo(){
+        /**
+         * 直接获取上个界面传递的用户信息
+         */
+        Intent intent =getIntent();
+        partUserInfo= (PartUserInfo) intent.getSerializableExtra("concernUser");
+        isConcern=partUserInfo.getConcern();
+        /**
+         * 将用户信息进行加载显示
+         */
+        username.setText(partUserInfo.getUserName());
+        introduction.setText(partUserInfo.getSignature());
+        if (!"".equals(partUserInfo.getImageUrl())&&partUserInfo.getImageUrl()!=null)
+        {
+            userImg.setImageURI(Uri.fromFile(new File(partUserInfo.getImageUrl())));
+            popImg.setImageURI(Uri.fromFile(new File(partUserInfo.getImageUrl())));
+        }
+        isFollowed(partUserInfo.getConcern());
+
+    }
+
+    public void onClickFollowed(View view){
+        /**
+         * 如果已经关注，点击进入聊天页面
+         */
+        if(partUserInfo.getConcern()){
+            Intent intent=new Intent(OtherPeopleActivity.this, ChatActivity.class);
+            startActivity(intent);
+        }
+        /**
+         * 如果是没有关注，点击进行关注
+         */
+        else{
+            new Thread(() -> {
+                Message msg = Message.obtain();
+                msg.arg1 = 3;
+                UserOperate.setConcern(UserInfo.getid(),partUserInfo.getId(),getActivity());
+                //isConcern=true;
+                //4、发送消息
+                mHandler.sendMessage(msg);
+
+            }).start();
+        }
+
+    }
+
+    public void onClickFollowedPop(View view){
+        /**
+         * 如果没有关注，点击进入聊天页面
+         */
+        if(!partUserInfo.getConcern()){
+            Intent intent=new Intent(OtherPeopleActivity.this, ChatActivity.class);
+            startActivity(intent);
+        }
+        else{
+            new Thread(() -> {
+                Message msg = Message.obtain();
+                msg.arg1 = 4;
+                UserOperate.getIfDeleteConcern(UserInfo.getid(),partUserInfo.getId(),getActivity());
+                //isConcern=true;
+                //4、发送消息
+                mHandler.sendMessage(msg);
+
+            }).start();
+        }
     }
 
     /**
@@ -395,6 +464,30 @@ public class OtherPeopleActivity extends AppCompatActivity {
                  */
                 case 2:
                     userFansNum.setText(String.valueOf(msg.arg2));
+                    break;
+                /**
+                 * 点击关注按钮
+                 */
+                case 3:
+                    isFollowed(true);
+                    isConcern=true;
+                    partUserInfo.setConcern(true);
+                    Intent intent = new Intent();
+                    intent.putExtra("isConcern",isConcern);
+                    System.out.println("xinaccchhhhhhhhaaaaa"+isConcern);
+                    setResult(1,intent);
+                    System.out.println("guanzhuuuanzhu");
+                    focusNum++;
+                    break;
+                case 4:
+                    isFollowed(false);
+                    isConcern=false;
+                    partUserInfo.setConcern(false);
+                    Intent intent1 = new Intent();
+                    intent1.putExtra("isConcern",isConcern);
+                    System.out.println("xinaccchhhhhhhhaaaaa"+isConcern);
+                    setResult(1,intent1);
+                    focusNum--;
                     break;
                 default:
                     break;

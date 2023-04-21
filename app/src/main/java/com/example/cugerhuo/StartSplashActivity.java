@@ -14,14 +14,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
 import com.example.cugerhuo.access.SetGlobalIDandUrl;
+import com.example.cugerhuo.access.api.Nlp;
 import com.example.cugerhuo.activity.ErHuoActivity;
 import com.example.cugerhuo.login.login.OneKeyLoginActivity;
 import com.example.cugerhuo.oss.InitOS;
+
+import org.json.JSONException;
 
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import io.jaegertracing.Configuration;
 import io.opentracing.util.GlobalTracer;
@@ -65,8 +69,9 @@ public class StartSplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         //
-//        Intent i1=new Intent(getApplicationContext(), PostSellActivity.class);
+//        Intent i1=new Intent(getApplicationContext(), QqLoginActivity.class);
 //        startActivity(i1);
 //        finish();
         /**
@@ -84,8 +89,6 @@ public class StartSplashActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-//                Commodity a=CommodityOperate.getCommodity(1,StartSplashActivity.this);
-//                int c=1;
                 /**
                  * 对象存储初始化1
                  */
@@ -100,8 +103,7 @@ public class StartSplashActivity extends AppCompatActivity {
                 sender.withEndpoint("http://tracing-analysis-dc-hz.aliyuncs.com/adapt_f6yah647nw@42a790d7a35fc27_f6yah647nw@53df7ad2afe8301/api/traces");
                 config.withSampler(new Configuration.SamplerConfiguration().withType("const").withParam(1));
                 config.withReporter(new Configuration.ReporterConfiguration().withSender(sender).withMaxQueueSize(10000));
-                if(!GlobalTracer.isRegistered())
-                {GlobalTracer.register(config.getTracer());}
+                if(GlobalTracer.isRegistered()){GlobalTracer.register(config.getTracer());}
                 return;
             }
         }).start();

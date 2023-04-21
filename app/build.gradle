@@ -180,6 +180,5 @@ dependencies {
     //图片选择
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
 
-
 }
 
