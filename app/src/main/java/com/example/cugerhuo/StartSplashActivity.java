@@ -14,18 +14,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
 import com.example.cugerhuo.access.SetGlobalIDandUrl;
-import com.example.cugerhuo.access.api.Nlp;
 import com.example.cugerhuo.activity.ErHuoActivity;
 import com.example.cugerhuo.login.login.OneKeyLoginActivity;
 import com.example.cugerhuo.oss.InitOS;
-
-import org.json.JSONException;
 
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import io.jaegertracing.Configuration;
 import io.opentracing.util.GlobalTracer;
@@ -159,57 +155,57 @@ public class StartSplashActivity extends AppCompatActivity {
                 /**
                  * 登录信息，存储了手机号，手机号登陆日期；qqopen id(唯一)，qq号登陆日期
                  */
-                SharedPreferences LoginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
+                SharedPreferences loginMessage = getSharedPreferences("LoginMessage", Context.MODE_PRIVATE);
                 //获得Editor 实例
-                SharedPreferences.Editor editor = LoginMessage.edit();
-                String LastData=""; //手机号登陆日期
-                String QqLastData=""; //qq登录日期
+                SharedPreferences.Editor editor = loginMessage.edit();
+                String lastData=""; //手机号登陆日期
+                String qqLastData=""; //qq登录日期
                 //以key-value形式保存数据
 
-               LastData= LoginMessage.getString("LoginData","");
+               lastData= loginMessage.getString("LoginData","");
 
-               QqLastData= LoginMessage.getString("QqLoginData","");
+               qqLastData= loginMessage.getString("QqLoginData","");
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 //当前日期
                 Date date=new Date();
-                if(!LastData.equals("")||!QqLastData.equals("")){
+                if(!lastData.equals("")||!qqLastData.equals("")){
                     /**
                      * 日期转换,求上次与这次登录的时间差
                      */
                     /**
                      * 计算时间差，单位天
                      */
-                    double DayNum=10;   //手机
+                    double dayNum=10;   //手机
 
-                    double QqDayNum=10;//qq
+                    double qqDayNum=10;//qq
                     try {
                         /**
                          * 判断是否为空
                          */
-                        if(!LastData.equals("")){
-                            DayNum= (date.getTime() - format.parse(LastData).getTime()) / (24 * 60 * 60 * 1000);}
-                        if(!QqLastData.equals("")){
-                            QqDayNum= (date.getTime() - format.parse(QqLastData).getTime()) / (24 * 60 * 60 * 1000);}
+                        if(!lastData.equals("")){
+                            dayNum= (date.getTime() - format.parse(lastData).getTime()) / (24 * 60 * 60 * 1000);}
+                        if(!qqLastData.equals("")){
+                            qqDayNum= (date.getTime() - format.parse(qqLastData).getTime()) / (24 * 60 * 60 * 1000);}
                     } catch ( ParseException e) {
                         e.printStackTrace();
                     }
                     /**
                      * 时间差小于7天，直接进主页，更新日期
                      */
-                    if(DayNum<=7||QqDayNum<=7)
+                    if(dayNum<=7||qqDayNum<=7)
                     {
                         System.out.println("newdate"+format.format(date));
-                        String Time = format.format(date);
-                        if(QqDayNum<=DayNum)
+                        String time = format.format(date);
+                        if(qqDayNum<=dayNum)
                         {
                             /**
                              * 更新登录时间
                              */
-                            editor.putString("QqLoginData",Time);
+                            editor.putString("QqLoginData",time);
                             /**
                              * 初始化全局变量
                              */
-                            String qqId=LoginMessage.getString("QqId","");
+                            String qqId=loginMessage.getString("QqId","");
                 SetGlobalIDandUrl.setByQq(qqId,StartSplashActivity.this);
 //                            new Thread(new Runnable() {
 //                                @Override
@@ -315,13 +311,13 @@ public class StartSplashActivity extends AppCompatActivity {
                             /**
                              * 更新登录时间
                              */
-                            editor.putString("LoginData",Time);
+                            editor.putString("LoginData",time);
                             /**
                              * 初始化全局变量
                              * @author 施立豪
                              * @time 2023/4/9
                              */
-                            String phoneNumber=LoginMessage.getString("PhoneNumber","");
+                            String phoneNumber=loginMessage.getString("PhoneNumber","");
                             SetGlobalIDandUrl.setByPhone(phoneNumber,StartSplashActivity.this);
 //                            new Thread(new Runnable() {
 //                                @Override

@@ -172,9 +172,9 @@ import top.zibin.luban.OnNewCompressListener;
 import top.zibin.luban.OnRenameListener;
 
 /**
- * @author：luck
- * @data：2019/12/20 晚上 23:12
- * @描述: Demo
+ * @author：施立豪
+ * @data：2023/4/21
+ * @描述: 发布页面
  */
 
 public class PostSellActivity extends AppCompatActivity implements IBridgePictureBehavior, View.OnClickListener,
@@ -267,7 +267,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
     /**
      * 消息发送函数
      */
-    private final  PostSellActivity.mHandler mHandler=new PostSellActivity.mHandler();
+    private final MyHandler MyHandler =new MyHandler();
     /**
      * 定位
      */
@@ -372,7 +372,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                         location=amapLocation.getAoiName();//获取当前定位点的AOI信息
                         Message msg = Message.obtain();
                         msg.arg1 = 2;
-                        mHandler.sendMessage(msg);
+                        MyHandler.sendMessage(msg);
                     }
                     else {
                         //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
@@ -461,7 +461,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                                 }
                                     saveInList(allCategory,cate);
                                     category=cate[0][0];
-                                mHandler.sendMessage(msg);
+                                MyHandler.sendMessage(msg);
                             }
                             }
                             catch (Exception e) {
@@ -716,7 +716,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
      * @author 施立豪
      * @time 2023/4/19
      */
-    private class mHandler extends Handler {
+    private class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -740,7 +740,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                                        bran[0]= Nlp.getNlpBrand(category, PostSellActivity.this).toArray(new String[0]);
                                         Message msg = Message.obtain();
                                         msg.arg1 = 5;
-                                        mHandler.sendMessage(msg);
+                                        MyHandler.sendMessage(msg);
 
                                     } catch (Exception e) {
                                         TracingHelper.onError(e, span);
@@ -1077,7 +1077,7 @@ postText="";
                                      */
                                     Message msg = Message.obtain();
                                     msg.arg1 = 4;
-                                    mHandler.sendMessage(msg);
+                                    MyHandler.sendMessage(msg);
                                 }
                                 else
                                 {
@@ -1134,7 +1134,7 @@ postText="";
                                     bran[0]= Nlp.getNlpBrand(category, PostSellActivity.this).toArray(new String[0]);
                                     Message msg = Message.obtain();
                                     msg.arg1 = 5;
-                                    mHandler.sendMessage(msg);
+                                    MyHandler.sendMessage(msg);
                                 } catch (Exception e) {
                                     TracingHelper.onError(e, span);
                                     throw e;} finally {

@@ -3,9 +3,7 @@ package com.example.cugerhuo.activity;
 import static com.example.cugerhuo.activity.MyCenterActivity.focusNum;
 import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -116,7 +114,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
      * 用户信息类
      */
     private  PartUserInfo partUserInfo=new PartUserInfo();
-    private final OtherPeopleActivity.mHandler mHandler=new mHandler();
+    private final MyHandler MyHandler =new MyHandler();
 
 
     @Override
@@ -235,7 +233,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
 
             msg.arg2=focusNum;
             //4、发送消息
-            mHandler.sendMessage(msg);
+            MyHandler.sendMessage(msg);
         }).start();
         // 5、开启线程
         new Thread(() -> {
@@ -248,7 +246,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
             fansNum=UserOperate.getFansNum(partUserInfo.getId(),OtherPeopleActivity.this);
             msg.arg2=fansNum;
             //4、发送消息
-            mHandler.sendMessage(msg);
+            MyHandler.sendMessage(msg);
         }).start();
 
     }
@@ -373,7 +371,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
                 UserOperate.setConcern(UserInfo.getid(),partUserInfo.getId(),getActivity());
                 //isConcern=true;
                 //4、发送消息
-                mHandler.sendMessage(msg);
+                MyHandler.sendMessage(msg);
 
             }).start();
         }
@@ -395,7 +393,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
                 UserOperate.getIfDeleteConcern(UserInfo.getid(),partUserInfo.getId(),getActivity());
                 //isConcern=true;
                 //4、发送消息
-                mHandler.sendMessage(msg);
+                MyHandler.sendMessage(msg);
 
             }).start();
         }
@@ -447,7 +445,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
      * @author 施立豪
      * @time 2023/3/26
      */
-    private class mHandler extends Handler {
+    private class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);

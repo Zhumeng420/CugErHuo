@@ -39,7 +39,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
     private ImageView ivTabThree;
     private TextView userFocus;
     private TextView userFans;
-    private final mHandler mHandler = new mHandler();
+    private final MyHandler MyHandler = new MyHandler();
     private LinearLayout llTabOne;
     private LinearLayout llTabTwo;
     private LinearLayout llTabFour;
@@ -74,7 +74,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
             focusNum=UserOperate.getFocusNum(userId,MyCenterActivity.this);
             msg.arg2=focusNum;
             //4、发送消息
-            mHandler.sendMessage(msg);
+            MyHandler.sendMessage(msg);
         }).start();
         /**
          * 获取粉丝数量
@@ -91,7 +91,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
             fansNum=UserOperate.getFansNum(id1,MyCenterActivity.this);
             msg.arg2=fansNum;
             //4、发送消息
-            mHandler.sendMessage(msg);
+            MyHandler.sendMessage(msg);
         }).start();
     }
     /**
@@ -241,7 +241,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
      * @author 施立豪
      * @time 2023/3/26
      */
-    private class mHandler extends Handler {
+    private class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);

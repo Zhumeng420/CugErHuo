@@ -4,11 +4,9 @@ import static com.example.cugerhuo.activity.MyCenterActivity.focusNum;
 import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +22,6 @@ import com.example.cugerhuo.activity.adapter.RecyclerViewAdapter;
 import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.example.cugerhuo.views.ConcernDialog;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +42,7 @@ public class ConcernActivity extends AppCompatActivity {
      * getFocusInfo 关注列表用户信息
      */
     private List<PartUserInfo> getFocusInfo=new ArrayList<>();
-    private final ConcernActivity.mHandler mHandler=new mHandler();
+    private final MyHandler MyHandler =new MyHandler();
     /**
      * positionClick  记录目前点击的item位置
      */
@@ -112,7 +109,7 @@ public class ConcernActivity extends AppCompatActivity {
 
 //            msg.arg2=fansNum;
             //4、发送消息
-            mHandler.sendMessage(msg);
+            MyHandler.sendMessage(msg);
         }).start();
 
     }
@@ -121,7 +118,7 @@ public class ConcernActivity extends AppCompatActivity {
      * @author 唐小莉
      * @time 2023/4/11
      */
-    private class mHandler extends Handler {
+    private class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
