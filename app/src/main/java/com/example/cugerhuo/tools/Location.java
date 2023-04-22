@@ -111,16 +111,13 @@ public class Location {
         if(null != mLocationClient){
             mLocationClient.setLocationOption(option);
             mLocationClient.stopLocation();
-//            //设置场景模式后最好调用一次stop，再调用start以保证场景模式生效
-//           mLocationClient.stopLocation();
-//            mLocationClient.startLocation();
         }
 
 //设置定位模式为AMapLocationMode.Battery_Saving，低功耗模式。
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
 
 //给定位客户端对象设置定位参数
-        mLocationClient.setLocationOption(mLocationOption);
+     //   mLocationClient.setLocationOption(mLocationOption);
 //启动定位
         mLocationClient.startLocation();
 
