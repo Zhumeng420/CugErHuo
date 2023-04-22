@@ -1,14 +1,21 @@
 package com.example.cugerhuo.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.user.UserInfo;
+import com.example.cugerhuo.activity.imessage.MessageActivity;
 import com.example.cugerhuo.tools.MyToast;
+import com.example.cugerhuo.views.SlideSwitch;
 
 import java.io.File;
 
@@ -17,19 +24,20 @@ import java.io.File;
  * @Author: 李柏睿
  * @Time: 2023/3/22 16:40
  */
-public class SettingActivity extends AppCompatActivity {
+public class SettingActivity extends AppCompatActivity implements View.OnClickListener{
     /**
      * 清除缓存按钮
      * @author 施立豪
      * @time 2023/4/18
      */
-    private TextView clearCatch;
+    private LinearLayout clearCatch;
+    private LinearLayout settingLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         init();
-        clearCatch.setOnClickListener(this::setClearCatch);
+
     }
     /**
      * 初始化界面
@@ -38,7 +46,40 @@ public class SettingActivity extends AppCompatActivity {
      */
     public void init()
     {
-        clearCatch =findViewById(R.id.clearCatch);
+        clearCatch =findViewById(R.id.setting_clear_layout);
+        clearCatch.setOnClickListener(this);
+        settingLayout = findViewById(R.id.setting_address_layout);
+        settingLayout.setOnClickListener(this);
+    }
+    /**
+     * 点击事件函数
+     * @Author: 李柏睿
+     * @Time: 2023/4/22 17:14
+     */
+    @Override
+    public void onClick(View view){
+        switch (view.getId()) {
+            /**
+             * 地址管理
+             * @Author: 李柏睿
+             * @Time: 2023/4/22 17:16
+             */
+            case R.id.setting_address_layout:
+                startActivity(new Intent(getApplicationContext(), AddressManageActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+                break;
+            /**
+             * 清除缓存
+             * @Author: 李柏睿
+             * @Time: 2023/4/22 17:18
+             */
+            case R.id.setting_clear_layout:
+                setClearCatch(view);
+                break;
+            default:
+                break;
+        }
     }
     /**
      * 清除缓存功能

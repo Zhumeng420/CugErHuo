@@ -26,7 +26,7 @@ import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.user.UserOperate;
 import com.example.cugerhuo.activity.adapter.ViewPagerAdapter;
 import com.example.cugerhuo.activity.imessage.ChatActivity;
-import com.example.cugerhuo.fragment.MyFragment;
+import com.example.cugerhuo.Fragment.MyFragment;
 import com.example.cugerhuo.views.MyScrollView;
 import com.google.android.material.tabs.TabLayout;
 

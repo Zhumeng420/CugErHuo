@@ -187,10 +187,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 }
             });
         } else {
-            holder.user_concern_img.setImageURI(Uri.fromFile(new File(newUrl)));
-
-        }
-    }
+            holder.user_concern_img.setImageURI(Uri.fromFile(new File(newUrl)));}}
         holder.user_concern.setOnClickListener(new View.OnClickListener() {
             /**
              * 点击每个RecyclerView子组件进行相应的响应事件,点击跳转至个人主页

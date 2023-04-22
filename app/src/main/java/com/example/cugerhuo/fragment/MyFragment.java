@@ -1,4 +1,4 @@
-package com.example.cugerhuo.fragment;
+package com.example.cugerhuo.Fragment;
 
 import android.content.Context;
 import android.os.Bundle;

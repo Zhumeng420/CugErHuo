@@ -7,29 +7,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SimpleAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
-import com.example.cugerhuo.access.user.PartUserInfo;
-import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.access.user.XuanShangInfo;
-import com.example.cugerhuo.activity.adapter.RecyclerViewAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewXuanShangAdapter;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
-import com.example.cugerhuo.views.MyCustomImageLayout;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class XuanShangActivity extends AppCompatActivity implements View.OnClickListener{
     /**
@@ -44,7 +35,7 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
     private LinearLayout ll_tab_four;
     private LinearLayout ll_tab_five;
     private RecyclerView recyclerView;
-    private List<XuanShangInfo> test=new ArrayList<>();
+    private List<XuanShangInfo> xuanShangInfos =new ArrayList<>();
 
 
     @Override
@@ -75,14 +66,11 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
 
         for(int i=0;i<12;i++){
             XuanShangInfo part= new XuanShangInfo();
-            test.add(part);
+            xuanShangInfos.add(part);
         }
 
-        RecyclerViewXuanShangAdapter adapter = new RecyclerViewXuanShangAdapter(getActivity(),test);
+        RecyclerViewXuanShangAdapter adapter = new RecyclerViewXuanShangAdapter(XuanShangActivity.this, xuanShangInfos);
         recyclerView.setAdapter(adapter);
-
-
-
     }
     /**
      * 重写finish方法，去掉出场动画
