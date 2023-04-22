@@ -17,7 +17,6 @@ import com.example.cugerhuo.access.SetGlobalIDandUrl;
 import com.example.cugerhuo.activity.ErHuoActivity;
 import com.example.cugerhuo.login.login.OneKeyLoginActivity;
 import com.example.cugerhuo.oss.InitOS;
-import com.example.cugerhuo.tools.TextAudit;
 
 import java.io.File;
 import java.text.ParseException;
@@ -85,7 +84,6 @@ public class StartSplashActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                TextAudit.textAudit(StartSplashActivity.this);
                 /**
                  * 对象存储初始化1
                  */

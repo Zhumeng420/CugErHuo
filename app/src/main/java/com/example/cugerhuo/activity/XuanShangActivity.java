@@ -1,35 +1,24 @@
 package com.example.cugerhuo.activity;
 
-import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SimpleAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
-import com.example.cugerhuo.access.user.PartUserInfo;
-import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.access.user.XuanShangInfo;
-import com.example.cugerhuo.activity.adapter.RecyclerViewAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewXuanShangAdapter;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
-import com.example.cugerhuo.views.MyCustomImageLayout;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class XuanShangActivity extends AppCompatActivity implements View.OnClickListener{
     /**
@@ -78,7 +67,7 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
             test.add(part);
         }
 
-        RecyclerViewXuanShangAdapter adapter = new RecyclerViewXuanShangAdapter(getActivity(),test);
+        RecyclerViewXuanShangAdapter adapter = new RecyclerViewXuanShangAdapter(XuanShangActivity.this,test);
         recyclerView.setAdapter(adapter);
 
 
