@@ -118,7 +118,7 @@ public class SlideSwitch extends View{
         /**限制滑动范围*/
         curX = curX > lineEnd?lineEnd:curX;
         curX = curX < lineStart?lineStart:curX;
-        if(flag == 1){curX = lineEnd;}
+        if(flag == 1){curX = lineEnd;flag=0;}
         /**划线*/
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(lineWidth);
