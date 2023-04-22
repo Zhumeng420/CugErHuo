@@ -95,6 +95,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return new ViewHolder(view);
     }
 
+    /**
+     * Item响应事件
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         //进行item对应控件部分的内容设置

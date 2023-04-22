@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginRight="5dp"
+    android:layout_marginLeft="5dp"
+    android:background="@drawable/border_radius">
+
+    <LinearLayout
+        android:layout_width="190dp"
+        android:layout_height="240dp">
+        <ImageView
+            android:id="@+id/good_item_img"
+            android:scaleType="fitXY"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/icon_iphone"/>
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/good_item_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:maxLines="2"
+        android:text="手机二手便宜平价出"
+        android:layout_marginBottom="5dp"
+
+        android:textColor="#333"/>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="  ¥"
+        android:textColor="@color/app_color_red"
+        android:textSize="12dp"
+        />
+    <TextView
+        android:id="@+id/goods_item_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1300"
+        android:textColor="@color/app_color_red"
+        />
+</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/default_avatar_2"
+            app:riv_oval="true"
+            android:id="@+id/good_item_user_img" />
+        <!--昵称区域-->
+        <TextView
+            android:id="@+id/good_item_username"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="阿呆"
+            android:textSize="12sp"
+
+            android:textColor="#706E6E"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

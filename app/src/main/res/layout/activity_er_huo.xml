@@ -22,6 +22,7 @@
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorColor="@null"
             tools:ignore="SpeakableTextPresentCheck" />
+
         <!--        app:tabTextColor="@color/md_grey_700"-->
         <!--        app:tabSelectedTextColor="@color/orange"-->
         <!--        app:tabIndicatorColor="@color/orange"-->
@@ -108,6 +109,7 @@
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             app:layout_constraintTop_toBottomOf="@id/move"
             tools:ignore="SpeakableTextPresentCheck" />
     </LinearLayout>
