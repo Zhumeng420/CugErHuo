@@ -27,7 +27,7 @@ public class SuggestFragment extends Fragment {
      */
     private String title;
     private RecyclerViewGoodsDisplayAdapter adapter;
-    RecyclerView goodsRecyclerView;
+    private RecyclerView goodsRecyclerView;
 
     /**
      * 构造函数

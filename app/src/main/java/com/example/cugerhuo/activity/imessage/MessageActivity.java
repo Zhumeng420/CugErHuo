@@ -9,12 +9,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.activity.ErHuoActivity;
 import com.example.cugerhuo.activity.MyCenterActivity;
 import com.example.cugerhuo.activity.PublishSelectionActivity;
 import com.example.cugerhuo.activity.XuanShangActivity;
+import com.example.cugerhuo.activity.adapter.RecyclerViewChatAdapter;
+import com.example.cugerhuo.activity.adapter.RecyclerViewGoodsDisplayAdapter;
 
 /**
  * 消息主页
@@ -37,12 +41,17 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     private LinearLayout llTabFour;
     private LinearLayout llTabFive;
 
+    private RecyclerView chatRecyclerView;
+    private RecyclerViewChatAdapter recyclerViewChatAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
         initView();
-
+        recyclerViewChatAdapter=new RecyclerViewChatAdapter(this);
+        chatRecyclerView.setLayoutManager(new GridLayoutManager(this,1));
+        chatRecyclerView.setAdapter(recyclerViewChatAdapter);
     }
 
     /**
@@ -61,6 +70,8 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         llTabFive.setOnClickListener(this);
         ivTabThree = (ImageView) findViewById(R.id.iv_tab_three);
         ivTabThree.setOnClickListener(this);
+
+        chatRecyclerView=findViewById(R.id.re_chat);
     }
     /**
      * 重写finish方法，去掉出场动画

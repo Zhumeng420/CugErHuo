@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,11 +19,12 @@ import com.example.cugerhuo.R;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 /**
- * 首页商品展示recyclerView适配器
+ * 聊天界面recycler适配器重写
  * @author carollkarry
  * @time 2023/4/22
  */
-public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<RecyclerViewGoodsDisplayAdapter.ViewHolder> {
+public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewChatAdapter.ViewHolder>{
+
     /**
      * context 获取映射文件
      * count item数量
@@ -36,7 +38,7 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
      * @author 唐小莉
      * @time 2023/4/22
      */
-    public RecyclerViewGoodsDisplayAdapter(Context context){
+    public RecyclerViewChatAdapter(Context context){
         this.context=context;
     }
 
@@ -51,7 +53,7 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_display_good, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_chat, parent, false);
         return new ViewHolder(view);
     }
 
@@ -67,10 +69,10 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
         /**
          * 设置商品图片圆角30度
          */
-        RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(30));
-        Glide.with(context).load(R.drawable.icon_iphone)
-                .apply(options)
-                .into(holder.goodItemImg);
+//        RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(30));
+//        Glide.with(context).load(R.drawable.icon_iphone)
+//                .apply(options)
+//                .into(holder.goodItemImg);
     }
 
     /**
@@ -89,39 +91,19 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
      * @time 2023/4/22
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView goodItemImg;
-        TextView goodItemTitle;
-        TextView goodsItemPrice;
-        RoundedImageView goodItemUserImg;
-        TextView goodItemUsername;
-
+       LinearLayout userChat;
+       RoundedImageView userChatImg;
+       TextView userChatName;
+       TextView userChatInfo;
+       TextView userChatTime;
         public ViewHolder(View itemView) {
             super(itemView);
-            goodItemImg=itemView.findViewById(R.id.good_item_img);
-            goodItemTitle=itemView.findViewById(R.id.good_item_title);
-            goodsItemPrice=itemView.findViewById(R.id.goods_item_price);
-            goodItemUserImg=itemView.findViewById(R.id.good_item_user_img);
-            goodItemUsername=itemView.findViewById(R.id.good_item_username);
 
+            userChat =itemView.findViewById(R.id.userChat);
+            userChatImg =itemView.findViewById(R.id.userChatImg);
+            userChatName =itemView.findViewById(R.id.userChatName);
+            userChatInfo =itemView.findViewById(R.id.userChatInfo);
+            userChatTime =itemView.findViewById(R.id.userChatTime);
         }
     }
-
-    /**
-     * 设置item的间距
-     * @author carollkarry
-     * @time 2023/4/22
-     */
-    public static class spaceItem extends RecyclerView.ItemDecoration{
-        //设置item的间距
-        private int space=5;
-        public spaceItem(int space){
-            this.space=space;
-        }
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state){
-            outRect.bottom=space;
-            outRect.top=space;
-        }
-    }
-
 }
