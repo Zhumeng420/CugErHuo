@@ -179,6 +179,7 @@ dependencies {
     implementation 'com.amap.api:map2d:latest.integration'
     //图片选择
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
-
+    //文本审核
+    implementation 'com.qcloud.cos:cos-android:5.9.+'
 }
 

@@ -17,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Spannable;
@@ -24,6 +25,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -71,6 +73,7 @@ import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.api.Nlp;
 import com.example.cugerhuo.access.commodity.CommodityOperate;
+import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.activity.adapter.GridImageAdapter;
 import com.example.cugerhuo.activity.listener.DragListener;
 import com.example.cugerhuo.activity.listener.OnItemLongClickListener;
@@ -145,6 +148,22 @@ import com.luck.picture.lib.utils.SdkVersionUtils;
 import com.luck.picture.lib.utils.StyleUtils;
 import com.luck.picture.lib.utils.ToastUtils;
 import com.luck.picture.lib.widget.MediumBoldTextView;
+import com.tencent.cos.xml.CIService;
+import com.tencent.cos.xml.CosXmlServiceConfig;
+import com.tencent.cos.xml.exception.CosXmlClientException;
+import com.tencent.cos.xml.exception.CosXmlServiceException;
+import com.tencent.cos.xml.listener.CosXmlResultListener;
+import com.tencent.cos.xml.model.CosXmlRequest;
+import com.tencent.cos.xml.model.CosXmlResult;
+import com.tencent.cos.xml.model.ci.audit.GetTextAuditRequest;
+import com.tencent.cos.xml.model.ci.audit.PostTextAuditRequest;
+import com.tencent.cos.xml.model.ci.audit.TextAuditResult;
+import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
+import com.tencent.qcloud.core.auth.QCloudSelfSigner;
+import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
+import com.tencent.qcloud.core.common.QCloudClientException;
+import com.tencent.qcloud.core.http.HttpConstants;
+import com.tencent.qcloud.core.http.QCloudHttpRequest;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropImageEngine;
 
@@ -155,11 +174,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import io.opentracing.Scope;
 import io.opentracing.Span;
@@ -178,7 +201,7 @@ import top.zibin.luban.OnRenameListener;
  */
 
 public class PostSellActivity extends AppCompatActivity implements IBridgePictureBehavior, View.OnClickListener,
-        RadioGroup.OnCheckedChangeListener, CompoundButton.OnCheckedChangeListener {
+        RadioGroup.OnCheckedChangeListener, CompoundButton.OnCheckedChangeListener{
     private final static String[] new_old_list=new String[]{"全新","几乎全新","轻微使用痕迹/磕碰划痕","明显使用痕迹/磕碰划痕"};
     private final static String TAG = "PictureSelectorTag";
     private final static String TAG_EXPLAIN_VIEW = "TAG_EXPLAIN_VIEW";
@@ -204,6 +227,10 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
     private ImageEngine imageEngine;
     private VideoPlayerEngine videoPlayerEngine;
     private TextView locationText;
+    /**
+     * 线程池
+     */
+    private ThreadPoolExecutor executor = null;
     /**
      * 存放图片视频路径
      */
@@ -267,7 +294,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
     /**
      * 消息发送函数
      */
-    private final MyHandler MyHandler =new MyHandler();
+    private final MyHandler MyHandler =new MyHandler(Looper.getMainLooper());
     /**
      * 定位
      */
@@ -287,6 +314,22 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
         super.onCreate(savedInstanceState);
         requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION), 100);
         paths=new ArrayList<String>();
+        /**
+         * 创建线程池
+         */
+        executor=new ThreadPoolExecutor(
+                //核心线程数
+                0,
+                //最大线程数
+                2,
+                //等待时间
+                1L,
+                //时间单位
+                TimeUnit.SECONDS,
+                //最大任务数
+                new ArrayBlockingQueue<>(10),
+                //饱和策略
+                new ThreadPoolExecutor.CallerRunsPolicy());
         setContentView(R.layout.activity_post_sell);
         if (savedInstanceState != null && savedInstanceState.getParcelableArrayList("selectorList") != null) {
             mData.clear();
@@ -326,10 +369,257 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
         }
         return false;
     }
+
+    /**
+     * 执行发布任务线程
+     */
+    public class PublishTask implements Runnable
+{
+    private int id;
+    private Commodity commodity;
+
+    /**
+     * 发布构造，传参
+     * @param commodity  商品信息
+     * @param userId    用户id
+     */
+    public PublishTask(Commodity commodity,int userId)
+    {
+        this.commodity=commodity;
+        id=userId;
+    }
+    @Override
+    public void run() {
+        {
+            Tracer tracer = GlobalTracer.get();
+            int result =0;
+            // 创建spann
+            Span span = tracer.buildSpan("发布流程").withTag("onBtnClickedListener：", "子踪").start();
+            try (Scope ignored = tracer.scopeManager().activate(span,true)) {
+                // 插入mysql并获取id
+                result=CommodityOperate.insertCommodity(commodity,PostSellActivity.this);
+                if(result>0)
+                {
+                    Log.i(TAG,"插入商品至mysql成功");
+                    //插入图数据库
+                    boolean result1=false;
+                    String temp;
+                    if(name==null||name.length==0)
+                    {
+                        temp=category;
+                    }
+                    else
+                    {temp=name[0];}
+                    result1=CommodityOperate.insertUserToTu(id,result,temp,PostSellActivity.this);
+                    if(result1)
+                    {
+                        Log.i(TAG,"插入商品至图数据库成功");
+                        /**
+                         * 上传商品信息
+                         */
+                        for(int i=0;i< paths.size();++i)
+                        {
+                            {
+                                String fileName = "specific_"+ paths.get(i);
+                                boolean isUped=false;
+                                Span span1 = tracer.buildSpan("上传头像到oss流程").withTag("onChangeImage函数：", "子追踪").start();
+                                try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
+                                    // 业务逻辑写这里
+                                    isUped= OssOperate.up(fileName, Uri.fromFile(new File((String) paths.get(i))));
+                                    if(isUped) {
+                                        Log.i(TAG, "修改头像oss上传成功");
+                                    }
+                                    else{
+                                        Log.e(TAG,"修改头像oss上传失败");
+                                    }
+                                    //UserInfo.setUrl(fileName);
+                                } catch (Exception e) {
+                                    TracingHelper.onError(e, span);
+                                    throw e;
+                                } finally {
+                                    span.finish();
+                                }
+                            }
+                        }
+                        /**
+                         * 通知UI发生提醒
+                         */
+                        Message msg = Message.obtain();
+                        msg.arg1 = 4;
+                        MyHandler.sendMessage(msg);
+
+                    }
+                    else
+                    {
+                        Log.e(TAG,"插入商品至图数据库失败");
+                    }
+                }
+                else
+                {
+                    Log.e(TAG,"插入商品至mysql失败");
+                }
+                //插入图数据库
+
+            } catch (Exception e) {
+                TracingHelper.onError(e, span);
+
+            } finally {
+                span.finish();
+            }
+            if(result>0)
+            {
+                Log.i(TAG,"发布成功");
+            }else
+            {
+                Log.e(TAG,"发布失败");
+            }
+        }
+
+    }
+}
+
+    /**
+     * 执行文本审核线程
+     * @author 施立豪
+     */
+    public class AuditTask implements Runnable {
+
+        //private PublishTask publish;
+        /**
+         * 待审核文本
+         */
+        private String text;
+
+        /**
+         * 构造函数传参
+         * @param text  审核文本
+         */
+        public AuditTask(String text) {
+    this.text=text;
+        }
+        @Override
+        public void run() {
+            String secretId = "AKIDZzNl3Dv33zjW9iF4vkoihXGn7FI7g4GH"; //用户的 SecretId，建议使用子账号密钥，授权遵循最小权限指引，降低使用风险。子账号密钥获取可参见 https://cloud.tencent.com/document/product/598/37140
+            String secretKey = "PgmiWAduzwqWH3FLHQSIsCKK6eyH9b0T"; //用户的 SecretKey，建议使用子账号密钥，授权遵循最小权限指引，降低使用风险。子账号密钥获取可参见 https://cloud.tencent.com/document/product/598/37140
+// keyDuration 为请求中的密钥有效期，单位为秒
+            QCloudCredentialProvider myCredentialProvider =
+                    new ShortTimeCredentialProvider(secretId, secretKey, 300);
+            QCloudSelfSigner myQCloudSelfSigner = new QCloudSelfSigner() {
+                /**
+                 * 对请求进行签名
+                 *
+                 * @param request 需要签名的请求
+                 * @throws QCloudClientException 客户端异常
+                 */
+                @Override
+                public void sign(QCloudHttpRequest request) throws QCloudClientException {
+                    // 1. 把 request 的请求参数传给服务端计算签名
+                    String auth = "get auth from server";
+                    // 2. 给请求添加签名
+                    request.addHeader(HttpConstants.Header.AUTHORIZATION, auth);
+                }
+            };
+            // 存储桶所在地域简称，例如广州地区是 ap-guangzhou
+            String region = "ap-beijing";
+// 创建 CosXmlServiceConfig 对象，根据需要修改默认的配置参数
+            CosXmlServiceConfig serviceConfig = new CosXmlServiceConfig.Builder()
+                    .setRegion(region)
+                    .isHttps(true) // 使用 HTTPS 请求, 默认为 HTTP 请求
+                    .builder();
+            CIService ciService=new CIService(PostSellActivity.this,serviceConfig,myCredentialProvider);
+            // 存储桶名称，格式为 BucketName-APPID
+            String bucket = "cug-erhuo-1314485188";
+            // 对象键，是对象在 COS 上的完整路径，如果带目录的话，格式为 "dir1/object1"
+            String cosPath = "exampleobject.txt";
+            //文本的链接地址,Object 和 Url 只能选择其中一种
+            String url = "https://myqcloud.com/%205text.txt";
+            //当传入的内容为纯文本信息，需要先经过 base64 编码，文本编码前的原文长度不能超过10000个 utf8 编码字符。若超出长度限制，接口将会报错。
+            String content = Base64.encodeToString((text).getBytes(Charset.forName("UTF-8")), Base64.NO_WRAP);
+            PostTextAuditRequest request = new PostTextAuditRequest(bucket);
+            request.setObject(cosPath);
+            request.setUrl(url);
+            request.setContent(content);
+            //设置原始内容，长度限制为512字节，该字段会在响应中原样返回
+            request.setDataId("DataId");
+            //回调地址，以http://或者https://开头的地址。
+            request.setCallback("https://github.com");
+            //回调内容的结构，有效值：Simple（回调内容包含基本信息）、Detail（回调内容包含详细信息）。默认为 Simple。
+            request.setCallbackVersion("Detail");
+            //审核的场景类型，有效值：Porn（涉黄）、Ads（广告），可以传入多种类型，不同类型以逗号分隔，例如：Porn,Ads。
+            request.setDetectType("Porn,Ads");
+            // CIService 是 CosXmlService 的子类，初始化方法和 CosXmlService 一致
+            ciService.postTextAuditAsync(request, new CosXmlResultListener() {
+                @Override
+                public void onSuccess(CosXmlRequest request, CosXmlResult cosResult) {
+                    // result 提交文本审核任务的结果
+                    // 详细字段请查看api文档或者SDK源码
+                    TextAuditResult result = (TextAuditResult) cosResult;
+                    String jobId ;
+                    jobId= result.textAuditJobResponse.jobsDetail.jobId;
+                    System.out.println(jobId);
+                    GetTextAuditRequest request1 = new GetTextAuditRequest(bucket, jobId);
+                    // CIService 是 CosXmlService 的子类，初始化方法和 CosXmlService 一致
+                    ciService.getTextAuditAsync(request1, new CosXmlResultListener() {
+                        @Override
+                        public void onSuccess(CosXmlRequest request, CosXmlResult cosResult) {
+                            // result 查询文本审核任务的结果
+                            // 详细字段请查看 API 文档或者 SDK 源码
+                            TextAuditResult result = (TextAuditResult) cosResult;
+                            Message msg =new Message();
+                            msg.arg1=6;
+                            /**
+                             * 判断审核结果是否正确
+                             */
+                            switch (result.textAuditJobResponse.jobsDetail.label)
+                            {
+                                case "Normal":
+                                    msg.arg2=0;
+                                    break;
+                                case "Porn":
+                                    msg.arg2=1;
+                                    break;
+                                case "Ads":
+                                    msg.arg2=2;
+                                    break;
+                                default:
+                                    msg.arg2=3;
+                                    break;
+                            };
+                            MyHandler.sendMessage(msg);
+
+                        }
+                        @Override
+                        public void onFail(CosXmlRequest request, CosXmlClientException clientException, CosXmlServiceException serviceException) {
+                            Message msg =new Message();
+                            msg.arg1=7;
+                            MyHandler.sendMessage(msg);
+                            if (clientException != null) {
+                                clientException.printStackTrace();
+                            } else {
+                                serviceException.printStackTrace();
+                            }
+                        }
+                    });
+                }
+                @Override
+                public void onFail(CosXmlRequest request, CosXmlClientException clientException, CosXmlServiceException serviceException) {
+                    Message msg =new Message();
+                    msg.arg1=7;
+                    MyHandler.sendMessage(msg);
+                    if (clientException != null) {
+                        clientException.printStackTrace();
+                    } else {
+                        serviceException.printStackTrace();
+                    }
+                }
+            });
+        }
+
+    }
+
     /**
      * 请求权限回调结果
      */
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -369,10 +659,21 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                 if (amapLocation != null) {
                     if (amapLocation.getErrorCode() == 0)
                     {
-                        location=amapLocation.getAoiName();//获取当前定位点的AOI信息
-                        Message msg = Message.obtain();
-                        msg.arg1 = 2;
-                        MyHandler.sendMessage(msg);
+                        if (location == null || "".equals(location)) {
+                            location = amapLocation.getAoiName();//获取当前定位点的AOI信息
+                            Message msg = Message.obtain();
+                            msg.arg1 = 2;
+                            MyHandler.sendMessage(msg);
+                            mLocationClient.stopLocation();
+                        }
+                        else {
+                            String now = amapLocation.getAoiName();
+                            if(!location.equals(now)){
+                                Message msg = Message.obtain();
+                                msg.arg1 = 2;
+                                MyHandler.sendMessage(msg);
+                            }
+                        }
                     }
                     else {
                         //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
@@ -395,9 +696,10 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
         /**
          * 设置定位场景，目前支持三种场景（签到、出行、运动，默认无场景）
          */
-        option.setLocationPurpose(AMapLocationClientOption.AMapLocationPurpose.SignIn);
 //设置定位模式为AMapLocationMode.Battery_Saving，低功耗模式。
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
+            mLocationOption.setOnceLocation(true);
+
 //给定位客户端对象设置定位参数
         mLocationClient.setLocationOption(mLocationOption);
 //启动定位
@@ -418,7 +720,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
         publishBtn.setOnClickListener(this::onBtnClickedListener);
     price=0;
     originalPrice=0;
-        //监听器添加
+        //监听点击描述文本框之外的部分，文本框更新则调用接口函数
         postInput.setOnFocusChangeListener(new android.view.View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -462,6 +764,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                                     saveInList(allCategory,cate);
                                     category=cate[0][0];
                                 MyHandler.sendMessage(msg);
+                                    System.out.println("weq");
                             }
                             }
                             catch (Exception e) {
@@ -717,6 +1020,10 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
      * @time 2023/4/19
      */
     private class MyHandler extends Handler {
+        public MyHandler(Looper mainLooper) {
+
+        }
+
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -777,7 +1084,31 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                     break;
                 case 5:
                     adapt(bran[0],(LinearLayout) findViewById(R.id.brand_id),categoryInflater,R.layout.brand_item,R.id.brand);
-                default:
+                    break;
+                    case 6:
+                    //TODO 处理发布
+                    switch (msg.arg2)
+                    {
+                        case 0:
+                            MyToast.toast(PostSellActivity.this,"正在上传",2);
+                            PublishTask publishTask=new PublishTask(commodity,UserInfo.getid());
+                            executor.execute(publishTask);
+                            break;
+                        case 1:
+                            MyToast.toast(PostSellActivity.this,"您的输入存在色情内容，禁止发布",0);
+                            break;
+                        case 2:
+                            MyToast.toast(PostSellActivity.this,"您的输入中检测到广告，禁止发布",0);
+                            break;
+                        default:
+                            MyToast.toast(PostSellActivity.this,"抱歉,未知错误",1);
+                            break;
+                    }
+
+                    break;
+                case 7:
+                    MyToast.toast(PostSellActivity.this,"抱歉,文本审核功能遇到了问题！",0);
+                    default:
                         break;
             }
         }
@@ -910,9 +1241,10 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
         switch (view.getId())
         {
             case R.id.saveDraft:
+
                 if(postText==null||postText.length()==0)
                 {
-postText="";
+                     postText="";
                 }
                 if(category!=null){
                     StringBuilder tempC= new StringBuilder(category);
@@ -965,6 +1297,7 @@ postText="";
                 editor.putString("brand",branHistory);
                 editor.apply();
                 Log.i(TAG,"保存成功");
+                MyToast.toast(PostSellActivity.this,"正在保存",2);
                 MyToast.toast(PostSellActivity.this,"保存成功",3);
                 break;
             case R.id.publishGoods:
@@ -972,6 +1305,10 @@ postText="";
                 {
                     MyToast.toast(PostSellActivity.this,"请填写商品描述",0);
                     break;
+                }
+                else
+                {
+
                 }
                 if(category!=null){
                 StringBuilder tempC= new StringBuilder(category);
@@ -1017,94 +1354,98 @@ postText="";
                     MyToast.toast(PostSellActivity.this,"请选择成色",1);
                     break;
                 }
-                commodity.setUserId(1);
+                commodity.setUserId(UserInfo.getid());
                 commodity.setId(0);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Tracer tracer = GlobalTracer.get();
-                        int result =0;
-                        // 创建spann
-                        Span span = tracer.buildSpan("发布流程").withTag("onBtnClickedListener：", "子踪").start();
-                        try (Scope ignored = tracer.scopeManager().activate(span,true)) {
-                            // 插入mysql并获取id
-                            result=CommodityOperate.insertCommodity(commodity,PostSellActivity.this);
-                            if(result>0)
-                            {
-                                Log.i(TAG,"插入商品至mysql成功");
-                                //插入图数据库
-                                boolean result1=false;
-                                String temp;
-                                if(name==null||name.length==0)
-                                {
-                                    temp=category;
-                                }
-                                else
-                                {temp=name[0];}
-                                result1=CommodityOperate.insertUserToTu(1,result,temp,PostSellActivity.this);
-                                if(result1)
-                                {
-                                    Log.i(TAG,"插入商品至图数据库成功");
-                                    /**
-                                     * 上传商品信息
-                                     */
-                                    for(int i=0;i< paths.size();++i)
-                                    {
-                                        {
-                                            String fileName = "specific_"+ paths.get(i);
-                                            boolean isUped=false;
-                                            Span span1 = tracer.buildSpan("上传头像到oss流程").withTag("onChangeImage函数：", "子追踪").start();
-                                            try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
-                                                // 业务逻辑写这里
-                                                isUped= OssOperate.up(fileName, Uri.fromFile(new File((String) paths.get(i))));
-                                                if(isUped) {
-                                                    Log.i(TAG, "修改头像oss上传成功");
-                                                }
-                                                else{
-                                                    Log.e(TAG,"修改头像oss上传失败");
-                                                }
-                                                //UserInfo.setUrl(fileName);
-                                            } catch (Exception e) {
-                                                TracingHelper.onError(e, span);
-                                                throw e;
-                                            } finally {
-                                                span.finish();
-                                            }
-                                        }
-                                    }
-                                    /**
-                                     * 通知UI发生提醒
-                                     */
-                                    Message msg = Message.obtain();
-                                    msg.arg1 = 4;
-                                    MyHandler.sendMessage(msg);
-                                }
-                                else
-                                {
-                                    Log.e(TAG,"插入商品至图数据库失败");
-                                }
-                            }
-                            else
-                            {
-                                Log.e(TAG,"插入商品至mysql失败");
-                            }
-                            //插入图数据库
-
-                        } catch (Exception e) {
-                            TracingHelper.onError(e, span);
-
-                        } finally {
-                            span.finish();
-                        }
-                        if(result>0)
-                        {
-                            Log.i(TAG,"发布成功");
-                        }else
-                        {
-                            Log.e(TAG,"发布失败");
-                        }
-                    }
-                }).start();
+                postText=  postInput.getText().toString();
+                MyToast.toast(PostSellActivity.this,"正在审核",2);
+                AuditTask auditTask=new AuditTask(postText);
+                executor.execute(auditTask);
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Tracer tracer = GlobalTracer.get();
+//                        int result =0;
+//                        // 创建spann
+//                        Span span = tracer.buildSpan("发布流程").withTag("onBtnClickedListener：", "子踪").start();
+//                        try (Scope ignored = tracer.scopeManager().activate(span,true)) {
+//                            // 插入mysql并获取id
+//                            result=CommodityOperate.insertCommodity(commodity,PostSellActivity.this);
+//                            if(result>0)
+//                            {
+//                                Log.i(TAG,"插入商品至mysql成功");
+//                                //插入图数据库
+//                                boolean result1=false;
+//                                String temp;
+//                                if(name==null||name.length==0)
+//                                {
+//                                    temp=category;
+//                                }
+//                                else
+//                                {temp=name[0];}
+//                                result1=CommodityOperate.insertUserToTu(UserInfo.getid(),result,temp,PostSellActivity.this);
+//                                if(result1)
+//                                {
+//                                    Log.i(TAG,"插入商品至图数据库成功");
+//                                    /**
+//                                     * 上传商品信息
+//                                     */
+//                                    for(int i=0;i< paths.size();++i)
+//                                    {
+//                                        {
+//                                            String fileName = "specific_"+ paths.get(i);
+//                                            boolean isUped=false;
+//                                            Span span1 = tracer.buildSpan("上传头像到oss流程").withTag("onChangeImage函数：", "子追踪").start();
+//                                            try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
+//                                                // 业务逻辑写这里
+//                                                isUped= OssOperate.up(fileName, Uri.fromFile(new File((String) paths.get(i))));
+//                                                if(isUped) {
+//                                                    Log.i(TAG, "修改头像oss上传成功");
+//                                                }
+//                                                else{
+//                                                    Log.e(TAG,"修改头像oss上传失败");
+//                                                }
+//                                                //UserInfo.setUrl(fileName);
+//                                            } catch (Exception e) {
+//                                                TracingHelper.onError(e, span);
+//                                                throw e;
+//                                            } finally {
+//                                                span.finish();
+//                                            }
+//                                        }
+//                                    }
+//                                    /**
+//                                     * 通知UI发生提醒
+//                                     */
+//                                    Message msg = Message.obtain();
+//                                    msg.arg1 = 4;
+//                                    MyHandler.sendMessage(msg);
+//                                }
+//                                else
+//                                {
+//                                    Log.e(TAG,"插入商品至图数据库失败");
+//                                }
+//                            }
+//                            else
+//                            {
+//                                Log.e(TAG,"插入商品至mysql失败");
+//                            }
+//                            //插入图数据库
+//
+//                        } catch (Exception e) {
+//                            TracingHelper.onError(e, span);
+//
+//                        } finally {
+//                            span.finish();
+//                        }
+//                        if(result>0)
+//                        {
+//                            Log.i(TAG,"发布成功");
+//                        }else
+//                        {
+//                            Log.e(TAG,"发布失败");
+//                        }
+//                    }
+//                }).start();
                 break;
             default:
                 break;
