@@ -1,5 +1,7 @@
 package com.example.cugerhuo.activity;
 
+import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -33,7 +35,7 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
     private LinearLayout ll_tab_four;
     private LinearLayout ll_tab_five;
     private RecyclerView recyclerView;
-    private List<XuanShangInfo> test=new ArrayList<>();
+    private List<XuanShangInfo> xuanShangInfos =new ArrayList<>();
 
 
     @Override
@@ -64,14 +66,11 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
 
         for(int i=0;i<12;i++){
             XuanShangInfo part= new XuanShangInfo();
-            test.add(part);
+            xuanShangInfos.add(part);
         }
 
-        RecyclerViewXuanShangAdapter adapter = new RecyclerViewXuanShangAdapter(XuanShangActivity.this,test);
+        RecyclerViewXuanShangAdapter adapter = new RecyclerViewXuanShangAdapter(XuanShangActivity.this, xuanShangInfos);
         recyclerView.setAdapter(adapter);
-
-
-
     }
     /**
      * 重写finish方法，去掉出场动画

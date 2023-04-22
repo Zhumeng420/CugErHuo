@@ -30,7 +30,6 @@ public class RecyclerViewXuanShangAdapter extends RecyclerView.Adapter<RecyclerV
     public RecyclerViewXuanShangAdapter(Context context, List<XuanShangInfo> partUserInfo) {
         this.context = context;
         count=partUserInfo.size();
-        System.out.println("hhhhhhh"+count);
     }
 
     /**

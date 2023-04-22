@@ -35,7 +35,7 @@
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:src="@drawable/icon_phone"/>
+                            android:src="@drawable/icon_iphone"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -221,11 +221,19 @@
                             android:text="家电"/>
                     </LinearLayout>
                 </LinearLayout>
-                <TextView
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-                    android:textSize="80sp"></TextView>
+                    android:descendantFocusability="blocksDescendants">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/display_good_block"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:layout_weight="1"/>
+                </RelativeLayout>
+
+
             </LinearLayout>
 
         </LinearLayout>

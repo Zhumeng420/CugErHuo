@@ -11,14 +11,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.cugerhuo.activity.adapter.ViewAdapter;
 import com.example.cugerhuo.activity.adapter.ViewPagerAdapter;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.fragment.ConcernFragment;
+import com.example.cugerhuo.fragment.ReginFragment;
+import com.example.cugerhuo.fragment.SuggestFragment;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 底部带悬浮球导航栏：
@@ -74,8 +80,8 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
     private LinearLayout llTabFive;
     private LinearLayout llSearch;
     ViewPager viewPager;
-    ArrayList<com.example.cugerhuo.fragment.MyFragment> fragments;
-    ViewPagerAdapter adapter;
+    List<Fragment> fragments = new ArrayList<Fragment>();
+    ViewAdapter adapter;
     TabLayout tabLayout;
 
 
@@ -180,16 +186,16 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
      */
     public void initFragment(){
         /**初始化数据*/
-        fragments = new ArrayList<>();
-        fragments.add(new com.example.cugerhuo.fragment.MyFragment("关注",null,R.layout.fragment_concern));
-        fragments.add(new com.example.cugerhuo.fragment.MyFragment("推荐",null,R.layout.fragment_suggest));
-        fragments.add(new com.example.cugerhuo.fragment.MyFragment("地区",null,R.layout.fragment_regin));
+        fragments.add(new ConcernFragment("关注"));
+        fragments.add(new SuggestFragment("推荐"));
+        fragments.add(new ReginFragment("地区"));
 
         /**设置ViewPager适配器*/
-        adapter = new ViewPagerAdapter(getSupportFragmentManager(),fragments);
+        adapter = new ViewAdapter(getSupportFragmentManager(),fragments);
         viewPager.setAdapter(adapter);
         /**设置初始fragment*/
         viewPager.setCurrentItem(1,false);
+
 
         /**
          * @param
