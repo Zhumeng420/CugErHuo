@@ -720,7 +720,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
         publishBtn.setOnClickListener(this::onBtnClickedListener);
     price=0;
     originalPrice=0;
-        //监听点击描述文本框之外的部分，文本框更新则调用接口函数
+        //监听点击描述文本框之外的部分，文本框更新则调用获取分类接口函数
         postInput.setOnFocusChangeListener(new android.view.View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -733,10 +733,14 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                         return;
                     }
                     postText=temp;
+                    if(category!=null&&brand!=null){return;}
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
                             try {
+                                /**
+                                 * 获取分类，并通知UI更新界面
+                                 */
                                 Message msg = Message.obtain();
                                 msg.arg1 = 1;
                                 Tracer tracer = GlobalTracer.get();
