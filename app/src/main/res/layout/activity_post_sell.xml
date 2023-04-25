@@ -110,170 +110,215 @@
 <!--                android:layout_width="match_parent"-->
 <!--                android:layout_height="wrap_content"-->
 <!--                android:text="打开/关闭"-->
-<!--                android:textSize="40dp"-->
+<!--                android:textSize="17dp"-->
 <!--                android:gravity="center"-->
 <!--                android:background="#ddd"/>-->
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:id="@+id/open_close"
                 android:layout_below="@+id/ll_location"
-                android:id="@+id/cate"
-                android:scrollbars="none">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:orientation="horizontal">
-                    <TextView
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginLeft="15dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_postsell_design" />
+
+                <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:text="@string/app_category"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:textSize="16sp"
-                    android:gravity="center"
-                    android:padding="8dp"/>
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="分类/品牌/成色" />
 
-                    <HorizontalScrollView
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_gravity="center"
-                        android:scrollbars="none"
-                        tools:ignore="SpeakableTextPresentCheck">
+                <ImageView
+                    android:id="@+id/arrow"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_arrow"/>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/up"
+                android:layout_below="@+id/open_close"
+                android:clipChildren="true"
+                android:clipToPadding="true"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/linearlayout_id"
+                    android:orientation="vertical"
+                    android:layout_below="@+id/open_close"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/open_close"
+                        android:id="@+id/cate"
+                        android:layout_marginLeft="30dp"
+                        android:scrollbars="none">
                         <LinearLayout
-                            android:id="@+id/category_id"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"></LinearLayout>
-                    </HorizontalScrollView>
-                </LinearLayout>
-            </ScrollView>
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/cate"
-                android:id="@+id/bran"
-                android:scrollbars="none">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="130dp"
-                    android:layout_marginLeft="5dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:text="@string/app_brand"
-                        android:textSize="16sp"
-                        android:gravity="center"
-                        android:padding="8dp"/>
-                    <HorizontalScrollView
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="50dp"
+                                android:text="@string/app_category"
+                                android:textSize="14sp"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:gravity="center"
+                                android:padding="8dp"/>
+
+                            <HorizontalScrollView
+                                android:layout_width="wrap_content"
+                                android:layout_height="50dp"
+                                android:layout_marginLeft="15dp"
+                                android:layout_gravity="center"
+                                android:scrollbars="none"
+                                tools:ignore="SpeakableTextPresentCheck">
+
+                                <LinearLayout
+                                    android:id="@+id/category_id"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"></LinearLayout>
+                            </HorizontalScrollView>
+                        </LinearLayout>
+                    </ScrollView>
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/cate"
+                        android:layout_marginLeft="30dp"
+                        android:id="@+id/bran"
                         android:scrollbars="none">
                         <LinearLayout
-                            android:id="@+id/brand_id"
-                            android:layout_width="wrap_content"
-                            android:layout_height="50dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:layout_marginLeft="5dp"
                             android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="50dp"
+                                android:text="@string/app_brand"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:textSize="14sp"
+                                android:gravity="center"
+                                android:padding="8dp"/>
+                            <HorizontalScrollView
+                                android:layout_width="wrap_content"
+                                android:layout_height="50dp"
+                                android:layout_marginLeft="15dp"
+                                android:layout_gravity="center"
+                                android:scrollbars="none">
+                                <LinearLayout
+                                    android:id="@+id/brand_id"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="50dp"
+                                    android:orientation="horizontal">
+                                </LinearLayout>
+                            </HorizontalScrollView>
                         </LinearLayout>
-                    </HorizontalScrollView>
-                </LinearLayout>
-            </ScrollView>
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/bran"
-                android:id="@+id/new_ol"
-                android:scrollbars="none">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="130dp"
-                    android:layout_marginLeft="5dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:text="@string/app_new_old"
-                        android:textSize="16sp"
-                        android:gravity="center"
-                        android:padding="8dp"/>
-                    <HorizontalScrollView
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_gravity="center"
+                    </ScrollView>
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/bran"
+                        android:layout_marginLeft="30dp"
+                        android:id="@+id/new_ol"
                         android:scrollbars="none">
                         <LinearLayout
-                            android:id="@+id/new_old_id"
-                            android:layout_width="wrap_content"
-                            android:layout_height="50dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:layout_marginLeft="5dp"
                             android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="50dp"
+                                android:text="@string/app_new_old"
+                                android:textSize="14sp"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:gravity="center"
+                                android:padding="8dp"/>
+                            <HorizontalScrollView
+                                android:layout_width="wrap_content"
+                                android:layout_height="50dp"
+                                android:layout_marginLeft="15dp"
+                                android:layout_gravity="center"
+                                android:scrollbars="none">
+                                <LinearLayout
+                                    android:id="@+id/new_old_id"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="50dp"
+                                    android:orientation="horizontal">
+                                </LinearLayout>
+                            </HorizontalScrollView>
                         </LinearLayout>
-                    </HorizontalScrollView>
+                    </ScrollView>
+
                 </LinearLayout>
-            </ScrollView>
+                <include layout="@drawable/bottom_border" />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/ll_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/new_ol"
+                android:layout_below="@+id/up"
                 android:background="#fff"
-                android:orientation="horizontal"
-                android:weightSum="10">
+                android:layout_marginLeft="15dp"
+                android:orientation="horizontal">
+
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_postsell_money" />
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="6"
-                    android:padding="16dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:textSize="16sp"
-                    android:text="价格"/>
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="价格" />
 
                 <TextView
                     android:id="@+id/tv_price"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:layout_weight="4"
                     android:padding="16dp"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/app_color_cc_red"
                     android:text="￥0.00"/>
             </LinearLayout>
-
-
-
-<!--            <LinearLayout-->
-<!--                android:id="@+id/ll_price"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:layout_below="@+id/new_ol"-->
-<!--                android:weightSum="10">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="3"-->
-<!--                    android:padding="15dp"-->
-<!--                    android:text="价格"/>-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/tv_price"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="7"-->
-<!--                    android:padding="16dp"-->
-<!--                    android:text="￥0.00"/>-->
-
-<!--            </LinearLayout>-->
-
-
 
             <TextView
                 android:id="@+id/tv_delete_text"
@@ -364,10 +409,7 @@
                 android:layout_width="100dp"
                 android:layout_height="35dp"
                 android:src="@drawable/kawayi"/>
-
         </LinearLayout>
-
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -396,71 +438,7 @@
                 android:layout_weight="3"
                 android:background="@null"
                 android:hint="￥0.00"/>
-
-<!--            <View-->
-<!--                android:layout_width="1px"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:background="#bbbbbb"/>-->
-
-<!--            <TextView-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="2"-->
-<!--                android:padding="16dp"-->
-<!--                android:text="原价"/>-->
-
-<!--            <EditText-->
-<!--                android:textCursorDrawable="@drawable/cursor_color"-->
-<!--                android:id="@+id/et_orginal_price"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginRight="8dp"-->
-<!--                android:layout_weight="3"-->
-<!--                android:background="@null"-->
-<!--                android:hint="￥0.00"/>-->
         </LinearLayout>
-
-<!--        <View-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="1px"-->
-<!--            android:background="#bbbbbb"/>-->
-
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:background="#fff"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:weightSum="10">-->
-
-<!--            <TextView-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="2"-->
-<!--                android:padding="16dp"-->
-<!--                android:text="运费"/>-->
-
-<!--            <EditText-->
-<!--                android:textCursorDrawable="@drawable/cursor_color"-->
-<!--                android:textSelectHandle="@null"-->
-<!--                android:id="@+id/et_freight"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginRight="8dp"-->
-<!--                android:layout_weight="3"-->
-<!--                android:background="@null"-->
-<!--                android:hint="￥0.00"/>-->
-
-<!--            <CheckBox-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginLeft="8dp"-->
-<!--                android:layout_weight="5"-->
-<!--                android:padding="8dp"-->
-<!--                android:text="智能运费"/>-->
-<!--        </LinearLayout>-->
-
         <include layout="@layout/include_keyboardview"/>
     </LinearLayout>
 

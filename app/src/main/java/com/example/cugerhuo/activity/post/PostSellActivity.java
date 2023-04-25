@@ -33,7 +33,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -42,6 +46,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -318,6 +323,12 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
     EditText et_price;
     MyKeyBoardView keyboard_view;
     LinearLayout ll_price_select;
+
+    private LinearLayout linearlayout_id;
+    private LinearLayout open_close;
+    private int height;
+    private ScrollView cateView,brandView,oldNewView;
+    private ImageView arrowImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -730,6 +741,14 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
         et_price = findViewById(R.id.et_price);
         keyboard_view = findViewById(R.id.keyboard_view);
         ll_price_select = findViewById(R.id.ll_price_select);
+        linearlayout_id = (LinearLayout) findViewById(R.id.linearlayout_id);
+        open_close = (LinearLayout) findViewById(R.id.open_close);
+        arrowImage = findViewById(R.id.arrow);
+        cateView= findViewById(R.id.cate);
+        brandView= findViewById(R.id.bran);
+        oldNewView= findViewById(R.id.new_ol);
+        //获取组件高度
+        initOnPreDrawListener();
         saveBtn.setOnClickListener(this::onBtnClickedListener);
         publishBtn.setOnClickListener(this::onBtnClickedListener);
         price=0;
@@ -738,6 +757,10 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
         postInput.setOnFocusChangeListener(new android.view.View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+
+//                if(postInput.getText().toString().equals("")){
+//                    open_close.setVisibility(View.GONE);
+//                }
                 if(!hasFocus)
                 {
 
@@ -1046,6 +1069,16 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                 ll_price_select.setVisibility(View.VISIBLE);
             }
         });
+        open_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (linearlayout_id.getVisibility() == View.GONE) {
+                    start();
+                } else {
+                    end();
+                }
+            }
+        });
 
         et_price.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -1081,6 +1114,101 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
         } else {
             super.onBackPressed();
         }
+    }
+
+    /*
+     * 功能：初始化viewTreeObserver事件监听,重写OnPreDrawListener获取组件高度
+     */
+    private void initOnPreDrawListener() {
+
+        final ViewTreeObserver viewTreeObserver = this.getWindow().getDecorView().getViewTreeObserver();
+        viewTreeObserver.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+
+            @Override
+            public boolean onPreDraw() {
+                height = linearlayout_id.getMeasuredHeight();
+                // 移除OnPreDrawListener事件监听
+                PostSellActivity.this.getWindow().getDecorView().getViewTreeObserver().removeOnPreDrawListener(this);
+                //获取完高度后隐藏控件
+                linearlayout_id.setVisibility(View.GONE);
+
+                return true;
+            }
+        });
+
+    }
+
+    private void start() {
+        // 显示控件
+        linearlayout_id.setVisibility(View.VISIBLE);
+        //开启平移动画
+        TranslateAnimation startTranslateAnim = new TranslateAnimation(0, 0, -height, 0);
+        startTranslateAnim.setDuration(500);
+        /**控件开始动画*/
+        final RotateAnimation animationx = new RotateAnimation(0.0f, 45.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        animationx.setDuration( 500 );
+        arrowImage.startAnimation( animationx );
+        arrowImage.setRotation(90);
+        //开启动画的监听
+        startTranslateAnim.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                //动画开始调用
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //动画结束时调用
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                //动画重复时调用
+            }
+        });
+
+    }
+
+    private void end() {
+
+        /**隐藏控件*/
+        linearlayout_id.setVisibility(View.GONE);
+
+        /**关闭平移动画*/
+        TranslateAnimation endTranslateAnim = new TranslateAnimation(0, 0, 0, -height);
+        endTranslateAnim.setDuration(500);
+
+        /**控件开始动画*/
+        arrowImage.setRotation(90);
+        final RotateAnimation animationx = new RotateAnimation(0.0f, -45.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        animationx.setDuration( 500 );
+        arrowImage.startAnimation( animationx );
+        arrowImage.setRotation(0);
+
+        /**关闭动画的监听*/
+        endTranslateAnim.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                //动画开始调用
+
+            }
+
+            @Override
+
+            public void onAnimationEnd(Animation animation) {
+                /**动画结束时调用*/
+                linearlayout_id.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                //动画重复时调用
+            }
+        });
     }
 
     /**

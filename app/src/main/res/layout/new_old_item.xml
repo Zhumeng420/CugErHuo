@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:text="ceshi"
             android:textColor="#535353"
-            android:textSize="15sp"
+            android:textSize="14sp"
             />
     </LinearLayout>
 
