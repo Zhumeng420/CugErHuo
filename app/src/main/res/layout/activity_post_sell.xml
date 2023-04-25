@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,16 +7,16 @@
     android:orientation="vertical"
     tools:context=".activity.post.PostSellActivity"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:background="@color/white">
 
     <LinearLayout
+        android:id="@+id/top_zone"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
-
         <TextView
-
             android:layout_width="wrap_content"
             android:layout_marginRight="15dp"
             android:layout_height="wrap_content"
@@ -28,25 +28,28 @@
             android:textColor="#000000" />
 
         <Button
+            android:id="@+id/saveDraft"
             android:layout_width="70dp"
             android:layout_height="35dp"
             android:layout_marginRight="15dp"
-            android:id="@+id/saveDraft"
             android:background="@drawable/btn_radius_white_decoration"
             android:text="存草稿"
-            android:textColor="#707070"></Button>
+            android:textColor="#707070"
+            tools:ignore="TouchTargetSizeCheck"></Button>
 
         <Button
+            android:id="@+id/publishGoods"
             android:layout_width="70dp"
             android:layout_height="35dp"
             android:layout_marginRight="15dp"
-            android:id="@+id/publishGoods"
             android:background="@drawable/btn_radius_orange_decoration"
             android:text="发布"
-            android:textColor="#DCDCDC"></Button>
-
+            android:textColor="#F3F3F3"
+            tools:ignore="TouchTargetSizeCheck"></Button>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/edit"
+        android:layout_below="@+id/top_zone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -67,25 +70,12 @@
             android:singleLine="false"
             android:scrollbars="vertical"
             />
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"/>
-        <TextView
-            android:id="@+id/location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxEms="11"
-            android:text="@string/app_location"
-            android:textSize="14sp" />
-
 
     </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/edit"
         android:background="@color/white"
         >
         <ImageView
@@ -99,7 +89,6 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_centerHorizontal="true"
             android:ellipsize="end"
             android:gravity="center"
@@ -114,36 +103,49 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:clickable="true">
+
+<!--            <TextView-->
+<!--                android:id="@+id/open_close"-->
+<!--                android:layout_below="@+id/ll_location"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="打开/关闭"-->
+<!--                android:textSize="40dp"-->
+<!--                android:gravity="center"-->
+<!--                android:background="#ddd"/>-->
+
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/recycler"
+                android:layout_below="@+id/ll_location"
                 android:id="@+id/cate"
                 android:scrollbars="none">
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="130dp"
-                    android:layout_marginLeft="3dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:orientation="horizontal">
-                <TextView
+                    <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:text="@string/app_category"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
+                    android:gravity="center"
                     android:padding="8dp"/>
+
                     <HorizontalScrollView
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
-                        android:padding="15dp"
-                        android:scrollbars="none">
-                    <LinearLayout
-                        android:id="@+id/category_id"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_marginLeft="15dp"
+                        android:layout_gravity="center"
+                        android:scrollbars="none"
+                        tools:ignore="SpeakableTextPresentCheck">
 
-                    </LinearLayout>
-
+                        <LinearLayout
+                            android:id="@+id/category_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"></LinearLayout>
                     </HorizontalScrollView>
                 </LinearLayout>
             </ScrollView>
@@ -156,27 +158,27 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="130dp"
-                    android:layout_marginLeft="3dp"
+                    android:layout_marginLeft="5dp"
                     android:orientation="horizontal">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
                         android:text="@string/app_brand"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
+                        android:gravity="center"
                         android:padding="8dp"/>
                     <HorizontalScrollView
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
-                        android:padding="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_gravity="center"
                         android:scrollbars="none">
                         <LinearLayout
                             android:id="@+id/brand_id"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="50dp"
                             android:orientation="horizontal">
-
                         </LinearLayout>
-
                     </HorizontalScrollView>
                 </LinearLayout>
             </ScrollView>
@@ -189,29 +191,88 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="130dp"
-                    android:layout_marginLeft="3dp"
+                    android:layout_marginLeft="5dp"
                     android:orientation="horizontal">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
                         android:text="@string/app_new_old"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
+                        android:gravity="center"
                         android:padding="8dp"/>
                     <HorizontalScrollView
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
-                        android:padding="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_gravity="center"
                         android:scrollbars="none">
                         <LinearLayout
                             android:id="@+id/new_old_id"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="50dp"
                             android:orientation="horizontal">
                         </LinearLayout>
-
                     </HorizontalScrollView>
                 </LinearLayout>
             </ScrollView>
+
+            <LinearLayout
+                android:id="@+id/ll_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/new_ol"
+                android:background="#fff"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="6"
+                    android:padding="16dp"
+                    android:textSize="16sp"
+                    android:text="价格"/>
+
+                <TextView
+                    android:id="@+id/tv_price"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:layout_weight="4"
+                    android:padding="16dp"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/app_color_cc_red"
+                    android:text="￥0.00"/>
+            </LinearLayout>
+
+
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/ll_price"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:layout_below="@+id/new_ol"-->
+<!--                android:weightSum="10">-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="3"-->
+<!--                    android:padding="15dp"-->
+<!--                    android:text="价格"/>-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/tv_price"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="7"-->
+<!--                    android:padding="16dp"-->
+<!--                    android:text="￥0.00"/>-->
+
+<!--            </LinearLayout>-->
+
 
 
             <TextView
@@ -229,30 +290,180 @@
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 tools:alpha="1" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignTop="@+id/recycler"
-                android:layout_alignBottom="@+id/recycler"
-                android:background="@color/white" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
             </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:overScrollMode="never" />
 
-        </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/ll_location"
+                android:layout_below="@+id/recycler"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/btn_radius_lightgrey_decoration"
+                android:padding="3dp">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/icon_locate"
+                    android:layout_marginRight="5dp"/>
 
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginRight="5dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxEms="11"
+                    android:text="@string/app_location"
+                    android:textColor="#515151"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </RelativeLayout>
 
     </RelativeLayout>
 
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_price_select"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:weightSum="1">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#66000000"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="#66000000">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:src="@drawable/kawayi"/>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="#fff"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:padding="16dp"
+                android:text="价格"/>
+
+            <EditText
+                android:textCursorDrawable="@drawable/cursor_color"
+                android:id="@+id/et_price"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_weight="3"
+                android:background="@null"
+                android:hint="￥0.00"/>
+
+<!--            <View-->
+<!--                android:layout_width="1px"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:background="#bbbbbb"/>-->
+
+<!--            <TextView-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="2"-->
+<!--                android:padding="16dp"-->
+<!--                android:text="原价"/>-->
+
+<!--            <EditText-->
+<!--                android:textCursorDrawable="@drawable/cursor_color"-->
+<!--                android:id="@+id/et_orginal_price"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginRight="8dp"-->
+<!--                android:layout_weight="3"-->
+<!--                android:background="@null"-->
+<!--                android:hint="￥0.00"/>-->
+        </LinearLayout>
+
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="1px"-->
+<!--            android:background="#bbbbbb"/>-->
+
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:background="#fff"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:weightSum="10">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="2"-->
+<!--                android:padding="16dp"-->
+<!--                android:text="运费"/>-->
+
+<!--            <EditText-->
+<!--                android:textCursorDrawable="@drawable/cursor_color"-->
+<!--                android:textSelectHandle="@null"-->
+<!--                android:id="@+id/et_freight"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginRight="8dp"-->
+<!--                android:layout_weight="3"-->
+<!--                android:background="@null"-->
+<!--                android:hint="￥0.00"/>-->
+
+<!--            <CheckBox-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="8dp"-->
+<!--                android:layout_weight="5"-->
+<!--                android:padding="8dp"-->
+<!--                android:text="智能运费"/>-->
+<!--        </LinearLayout>-->
+
+        <include layout="@layout/include_keyboardview"/>
+    </LinearLayout>
+
+
+
+</RelativeLayout>

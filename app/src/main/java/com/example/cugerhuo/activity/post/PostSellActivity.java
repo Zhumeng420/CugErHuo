@@ -5,6 +5,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -85,6 +87,8 @@ import com.example.cugerhuo.tools.photoselect.GlideEngine;
 import com.example.cugerhuo.tools.photoselect.ImageLoaderUtils;
 import com.example.cugerhuo.tools.select.CustomPreviewFragment;
 import com.example.cugerhuo.tools.select.FullyGridLayoutManager;
+import com.example.cugerhuo.views.KeyboardUtil;
+import com.example.cugerhuo.views.MyKeyBoardView;
 import com.luck.lib.camerax.CameraImageEngine;
 import com.luck.lib.camerax.SimpleCameraX;
 import com.luck.picture.lib.PictureSelectorPreviewFragment;
@@ -199,7 +203,6 @@ import top.zibin.luban.OnRenameListener;
  * @data：2023/4/21
  * @描述: 发布页面
  */
-
 public class PostSellActivity extends AppCompatActivity implements IBridgePictureBehavior, View.OnClickListener,
         RadioGroup.OnCheckedChangeListener, CompoundButton.OnCheckedChangeListener{
     private final static String[] new_old_list=new String[]{"全新","几乎全新","轻微使用痕迹/磕碰划痕","明显使用痕迹/磕碰划痕"};
@@ -309,10 +312,16 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
     //声明AMapLocationClient类对象
     AMapLocationClient mLocationClient = null;
     private LayoutInflater categoryInflater;
+
+    TextView tv_price;
+    LinearLayout ll_price;
+    EditText et_price;
+    MyKeyBoardView keyboard_view;
+    LinearLayout ll_price_select;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION), 100);
+        requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 100);
         paths=new ArrayList<String>();
         /**
          * 创建线程池
@@ -625,7 +634,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode){//响应Code
             case 100:
-                if (grantResults[1]!=0) {
+                if (grantResults[1]!=0&&grantResults[0]!=0) {
                     for(int i = 0; i < grantResults.length; i++){
                         if(grantResults[i] != PackageManager.PERMISSION_GRANTED){
                             Toast.makeText(PostSellActivity.this,"未拥有相应权限",Toast.LENGTH_LONG).show();
@@ -650,8 +659,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
      */
     void getLocation() throws Exception {
         //如果具有权限，则执行获取定位接口
-        if(!lacksPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION})||!lacksPermission(new String[]{
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION})){
+        if(!lacksPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION})){
         //声明定位回调监听器
          AMapLocationListener mLocationListener = new AMapLocationListener() {
             @Override
@@ -710,16 +718,22 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
      * @author 施立豪
      * @time 2023/4/19
      */
-    void initView()
-    {   commodity=new Commodity();
+    @SuppressLint("ClickableViewAccessibility")
+    void initView() {
+        commodity=new Commodity();
         locationText=findViewById(R.id.location);
         postInput=findViewById(R.id.post_reason);
         saveBtn=findViewById(R.id.saveDraft);
         publishBtn=findViewById(R.id.publishGoods);
+        tv_price = findViewById(R.id.tv_price);
+        ll_price = findViewById(R.id.ll_price);
+        et_price = findViewById(R.id.et_price);
+        keyboard_view = findViewById(R.id.keyboard_view);
+        ll_price_select = findViewById(R.id.ll_price_select);
         saveBtn.setOnClickListener(this::onBtnClickedListener);
         publishBtn.setOnClickListener(this::onBtnClickedListener);
-    price=0;
-    originalPrice=0;
+        price=0;
+        originalPrice=0;
         //监听点击描述文本框之外的部分，文本框更新则调用获取分类接口函数
         postInput.setOnFocusChangeListener(new android.view.View.OnFocusChangeListener() {
             @Override
@@ -781,7 +795,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
             }
         });
         categoryInflater = LayoutInflater.from(this);
-        adapt(new_old_list,(LinearLayout) findViewById(R.id.new_old_id),categoryInflater,R.layout.new_old_item,R.id.new_old);
+        adapt(new_old_list,(LinearLayout) findViewById(R.id.new_old_id),categoryInflater,R.layout.new_old_item,R.id.new_old,R.id.new_old_layout);
         selectorStyle = new PictureSelectorStyle();
 
         tvDeleteText = findViewById(R.id.tv_delete_text);
@@ -1003,7 +1017,72 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
 
         // 清除缓存
 //        clearCache();
+
+        /**数字键盘*/
+        final KeyboardUtil keyboardUtil = new KeyboardUtil(PostSellActivity.this);
+        keyboardUtil.setOnOkClick(new KeyboardUtil.OnOkClick() {
+            @Override
+            public void onOkClick() {
+                if (validate()) {
+                    ll_price_select.setVisibility(View.GONE);
+                    tv_price.setText(et_price.getText() + "/价格");
+                }
+            }
+        });
+        keyboardUtil.setOnCancelClick(new KeyboardUtil.onCancelClick() {
+            @Override
+            public void onCancellClick() {
+                ll_price_select.setVisibility(View.GONE);
+            }
+        });
+
+        ll_price.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                keyboardUtil.attachTo(et_price);
+                et_price.setFocusable(true);
+                et_price.setFocusableInTouchMode(true);
+                et_price.requestFocus();
+                ll_price_select.setVisibility(View.VISIBLE);
+            }
+        });
+
+        et_price.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                keyboardUtil.attachTo(et_price);
+                return false;
+            }
+        });
     }
+
+    /**
+     * 是否输入判断并弹窗提醒
+     * @author: 李柏睿
+     * @time: 2023/4/24 21:25
+     */
+    public boolean validate() {
+        if ("".equals(et_price.getText().toString())) {
+            Toast.makeText(getApplication(), "价格不能为空", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 键盘收起放下
+     * @Author: 李柏睿
+     * @Time: 2023/4/24 21:26
+     */
+    @Override
+    public void onBackPressed() {
+        if (ll_price_select.getVisibility() == View.VISIBLE) {
+            ll_price_select.setVisibility(View.GONE);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     /**
      * 更新三个
      */
@@ -1037,7 +1116,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                  */
                 case 1:
                     if(cate[0]!=null){
-                        adapt(cate[0],(LinearLayout) findViewById(R.id.category_id),categoryInflater,R.layout.category_item,R.id.category);
+                        adapt(cate[0],(LinearLayout) findViewById(R.id.category_id),categoryInflater,R.layout.category_item,R.id.category,R.id.category_layout);
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -1079,7 +1158,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                 case 3:
                     if(bran[0]!=null)
                     {
-                        adapt(bran[0],(LinearLayout) findViewById(R.id.brand_id),categoryInflater,R.layout.brand_item,R.id.brand);
+                        adapt(bran[0],(LinearLayout) findViewById(R.id.brand_id),categoryInflater,R.layout.brand_item,R.id.brand,R.id.brand_layout);
 
                     }
                     break;
@@ -1087,7 +1166,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                     MyToast.toast(PostSellActivity.this,"发布成功",3);
                     break;
                 case 5:
-                    adapt(bran[0],(LinearLayout) findViewById(R.id.brand_id),categoryInflater,R.layout.brand_item,R.id.brand);
+                    adapt(bran[0],(LinearLayout) findViewById(R.id.brand_id),categoryInflater,R.layout.brand_item,R.id.brand,R.id.brand_layout);
                     break;
                     case 6:
                     //TODO 处理发布
@@ -1200,7 +1279,7 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
             cates=cates.replace("[","");
             cates=cates.replace("]","");
             String[] strs = cates.split(",");
-            adapt(strs,(LinearLayout) findViewById(R.id.category_id),categoryInflater,R.layout.category_item,R.id.category);
+            adapt(strs,(LinearLayout) findViewById(R.id.category_id),categoryInflater,R.layout.category_item,R.id.category,R.id.category_layout);
             for(String i:strs)
             {
                 System.out.println(i);
@@ -1214,7 +1293,7 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
             cates=cates.replace("]","");
             String[] strs = cates.split(",");
 
-            adapt(strs,(LinearLayout) findViewById(R.id.brand_id),categoryInflater,R.layout.brand_item,R.id.brand);
+            adapt(strs,(LinearLayout) findViewById(R.id.brand_id),categoryInflater,R.layout.brand_item,R.id.brand,R.id.brand_layout);
             for(String i:strs)
             {
                 System.out.println(i);
@@ -1455,6 +1534,7 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
                 break;
         }
     }
+
     /**
      * 选项选择更新函数
      */
@@ -1465,6 +1545,17 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
              * 选择某个分类
              */
             case R.id.category:
+                onClickNumber = (String)((TextView)view).getText();
+                SharedPreferences draftMessage = getSharedPreferences("Draft", Context.MODE_PRIVATE);
+                String cates=draftMessage.getString("category","");
+                if(cates!=null&&!"".equals(cates)&&!"null".equals(cates)){
+                    cates=cates.replace("[","");
+                    cates=cates.replace("]","");
+                    String[] strs = cates.split(",");
+                    adapt(strs,(LinearLayout) findViewById(R.id.category_id),categoryInflater,R.layout.category_item,R.id.category,R.id.category_layout);
+                }else{
+                    adapt(cate[0],(LinearLayout) findViewById(R.id.category_id),categoryInflater,R.layout.category_item,R.id.category,R.id.category_layout);
+                }
                 category= (String)((TextView)view).getText();
                 new Thread(new Runnable() {
                     @Override
@@ -1493,6 +1584,9 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
              * 选中某个品牌
              */
             case R.id.brand:
+                onClickNumber = (String)((TextView)view).getText();
+                adapt(bran[0],(LinearLayout) findViewById(R.id.brand_id),categoryInflater,R.layout.brand_item,R.id.brand,R.id.brand_layout);
+                view.setBackgroundColor(Color.YELLOW);
                 brand= (String)((TextView)view).getText();
                 Log.i(TAG,"所选品牌"+brand);
                 break;
@@ -1500,13 +1594,14 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
              * 选中某个成色
              */
             case R.id.new_old:
+                onClickNumber = (String)((TextView)view).getText();
+                adapt(new_old_list,(LinearLayout) findViewById(R.id.new_old_id),categoryInflater,R.layout.new_old_item,R.id.new_old,R.id.new_old_layout);
                 newOld= (String)((TextView)view).getText();
                 Log.i(TAG,"所选成色"+newOld);
                 break;
 
             default:
                 break;
-
     }}
     /**
      * 横向滚轴适配文本
@@ -1518,14 +1613,21 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
      * @author 施立豪
      * @time 2023/4/19
      */
-    public void adapt(String[] text,LinearLayout mLinearLayout,LayoutInflater mLayoutInflater,int layoutId,int textViewId)
+    String onClickNumber = "";
+    public void adapt(String[] text,LinearLayout mLinearLayout,LayoutInflater mLayoutInflater,int layoutId,int textViewId,int lineViewId)
     {
         mLinearLayout.removeAllViews();
         for (int i = 0; i < text.length; i++) {
             View view = mLayoutInflater.inflate(layoutId,
                     mLinearLayout, false);
             TextView txt = view.findViewById(textViewId);
+            LinearLayout line = view.findViewById(lineViewId);
             txt.setText(text[i]);
+            if(text[i].equals(onClickNumber)){
+                line.setBackgroundResource(R.drawable.corner_orange_d25);
+                txt.setTextColor(Color.parseColor("#E0FF6100"));
+                txt.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            }
             txt.setOnClickListener(this::onItemClickedListener);
             mLinearLayout.addView(view);
         }

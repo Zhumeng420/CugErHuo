@@ -1,4 +1,4 @@
-package com.example.cugerhuo.fragment;
+package com.example.cugerhuo.Fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

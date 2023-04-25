@@ -228,6 +228,9 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
              * @time 2023/3/20 16:28
              */
             case R.id.ll_tab_two:
+                startActivity(new Intent(getApplicationContext(), XuanShangActivity.class));
+                overridePendingTransition(0,0);
+                finish();
                 break;
             /**
              * 点击中间加号按钮跳转选择界面+跳转动画
