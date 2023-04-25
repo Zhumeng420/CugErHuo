@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import io.lettuce.core.api.sync.RedisCommands;
 import okhttp3.OkHttpClient;
@@ -138,6 +139,7 @@ public class UserInfoOperate
 
         return result;
     }
+
     /**
      * 取用户名，头像，个签，id从mysql
      * @param id   用户id
@@ -146,7 +148,6 @@ public class UserInfoOperate
      */
     public static PartUserInfo getInfoFromMysql(int id, Context context)
     {
-
         OkHttpClient okHttpClient = new OkHttpClient();
         /**
          * 获取XML文本
@@ -171,7 +172,6 @@ public class UserInfoOperate
         }
         return user;
     }
-
 
     /**
      * 获取用户名，头像，个签，id
@@ -208,4 +208,6 @@ public class UserInfoOperate
     {
         connection.hdel("UserInfo",String.valueOf(id));
     }
+
+
 }

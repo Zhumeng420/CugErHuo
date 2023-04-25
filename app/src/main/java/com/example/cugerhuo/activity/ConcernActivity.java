@@ -19,6 +19,7 @@ import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.access.user.UserOperate;
 import com.example.cugerhuo.activity.adapter.RecyclerViewAdapter;
+import com.example.cugerhuo.activity.adapter.RecyclerViewRecommenduser;
 import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.example.cugerhuo.views.ConcernDialog;
 
@@ -38,6 +39,8 @@ public class ConcernActivity extends AppCompatActivity {
      * recyclerView2 关注列表
      */
     private  RecyclerView recyclerView2;
+
+    private RecyclerView revUser;
     /**
      * getFocusInfo 关注列表用户信息
      */
@@ -55,6 +58,14 @@ public class ConcernActivity extends AppCompatActivity {
      * 用户id
      */
     private  int id1;
+    /**
+     * 推荐用户id列表
+     */
+    private List<Integer> recommendId=new ArrayList<>();
+    /**
+     * 用于存储推荐关注用户的所有信息
+     */
+    private List<PartUserInfo> rePartUserInfo=new ArrayList<>();
 
     private  RecyclerViewAdapter adapter;
     @Override
@@ -67,22 +78,22 @@ public class ConcernActivity extends AppCompatActivity {
         recyclerView2 = findViewById(R.id.recyclerView2);
         recyclerView2.setLayoutManager(new LinearLayoutManager(this));
 
+        revUser=findViewById(R.id.rv_user);
+        revUser.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false));
+
+        id1= UserInfo.getid();
 
         // 5、开启线程
         new Thread(() -> {
-
             Message msg = Message.obtain();
             msg.arg1 = 1;
             //获取关注列表id
             List<Integer> getFocusIds=new ArrayList<>();
             //获取关注用户信息
-
-           id1= UserInfo.getid();
             /**
              * 获取关注列表id
              */
             getFocusIds=UserOperate.getConcernId(id1,ConcernActivity.this);
-
             /**
              * 建立连接对象
              */
@@ -91,27 +102,53 @@ public class ConcernActivity extends AppCompatActivity {
              * 获取连接
              */
             RedisCommands<String, String> con=lettuce.getSyncConnection();
+
             /**
              * 通过连接调用查询
              */
             for(int i=0;i<getFocusIds.size();i++){
                 PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,getFocusIds.get(i),ConcernActivity.this);
-                System.out.println("关注idididdididi"+part.getUserName());
-                System.out.println("简介简介简介简介"+part.getSignature());
                 getFocusInfo.add(part);
                 getFocusInfo.get(i).setConcern(true);
-                System.out.println("关注关注关注关注-------"+part.getImageUrl());
             }
-            /**
-             * 关闭连接啊
-             */
-            lettuce.close();
 
 //            msg.arg2=fansNum;
             //4、发送消息
             MyHandler.sendMessage(msg);
+            /**
+             * 关闭连接啊
+             */
+            lettuce.close();
         }).start();
 
+        /**
+         * 获取推荐关注用户信息
+         */
+        new Thread(() -> {
+            Message msg = Message.obtain();
+            msg.arg1 = 2;
+            UserOperate userOperate=new UserOperate();
+            recommendId=userOperate.getRecommend(id1,ConcernActivity.this);
+//            /**
+//             * 建立连接对象
+//             */
+//            LettuceBaseCase lettuce=new LettuceBaseCase();
+//            /**
+//             * 获取连接
+//             */
+//            RedisCommands<String, String> con=lettuce.getSyncConnection();
+            for(int i=0;i<recommendId.size();i++){
+                System.out.println("idididdidiiiidddd"+recommendId.get(i));
+               // PartUserInfo partUserInfo=UserInfoOperate.getInfoFromMysql(recommendId.get(i),ConcernActivity.this);
+               // System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"+partUserInfo.getId());
+               // rePartUserInfo.add(partUserInfo);
+            }
+            MyHandler.sendMessage(msg);
+            /**
+             * 关闭连接啊
+             */
+            //lettuce.close();
+        }).start();
     }
     /**
      * 消息发送接收，异步更新UI
@@ -133,33 +170,34 @@ public class ConcernActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(View view, int position) {
                             positionClick=position;
-                            /**
-                             * 点击已关注实现弹窗
-                             */
-                            ConcernDialog concernDialog=new ConcernDialog(getActivity());
-                            /**
-                             * 确定按钮回调
-                             */
-                            concernDialog.setConfirmListener(new ConcernDialog.ConfirmListener() {
-                                @Override
-                                public void onConfirmClick() {
-                                    /**
-                                     * 点击确定按钮后判断是否取消成功
-                                     */
-                                   if(getFocusInfo.get(position).getConcern()){
-                                       System.out.println("issuccess"+isCancelSuccess);
-                                       new Thread(new ConcernActivity.MyRunnableDeleteConcernOperate()).start();
-                                       adapter.notifyItemChanged(position,"true");
-                                       focusNum--;
-                                   }
-                                   else{
-                                       new Thread(new ConcernActivity.MyRunnableConcernOperate()).start();
-                                       adapter.notifyItemChanged(position,"false");
-                                       focusNum++;
-                                   }
-                                }
-                            });
-                            concernDialog.show();
+                            if(getFocusInfo.get(position).getConcern()){
+                                /**
+                                 * 点击已关注实现弹窗
+                                 */
+                                ConcernDialog concernDialog=new ConcernDialog(getActivity());
+                                /**
+                                 * 确定按钮回调
+                                 */
+                                concernDialog.setConfirmListener(new ConcernDialog.ConfirmListener() {
+                                    @Override
+                                    public void onConfirmClick() {
+                                        /**
+                                         * 点击确定按钮后判断是否取消成功
+                                         */
+                                            System.out.println("issuccess"+isCancelSuccess);
+                                            new Thread(new ConcernActivity.MyRunnableDeleteConcernOperate()).start();
+                                            adapter.notifyItemChanged(position,"true");
+                                            focusNum--;
+                                    }
+                                });
+                                concernDialog.show();
+                            }
+                            else {
+                                new Thread(new ConcernActivity.MyRunnableConcernOperate()).start();
+                                adapter.notifyItemChanged(position,"false");
+                                focusNum++;
+                            }
+
                         }
                     });
                     /**
@@ -175,6 +213,10 @@ public class ConcernActivity extends AppCompatActivity {
                             startActivityForResult(intent,1);
                         }
                     });
+                    break;
+                case 2:
+                    RecyclerViewRecommenduser adapter2=new RecyclerViewRecommenduser(getActivity());
+                    revUser.setAdapter(adapter2);
                     break;
                 default:
                     break;
@@ -206,7 +248,7 @@ public class ConcernActivity extends AppCompatActivity {
         }
     }
     /**
-     * 开启线程
+     * 开启线程,取消关注
      * @author 唐小莉
      * @time 2023/4/13
      */
@@ -217,7 +259,11 @@ public class ConcernActivity extends AppCompatActivity {
             System.out.println("issuccess"+isCancelSuccess);
         }
     }
-
+    /**
+     * 开启线程,关注
+     * @author 唐小莉
+     * @time 2023/4/13
+     */
     class MyRunnableConcernOperate implements Runnable{
         @Override
         public void run() {

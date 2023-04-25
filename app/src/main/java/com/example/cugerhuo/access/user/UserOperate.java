@@ -5,6 +5,9 @@ import android.content.Context;
 import com.alibaba.fastjson.JSONArray;
 import com.example.cugerhuo.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -562,15 +565,21 @@ public class UserOperate {
         FormBody body = builder.build();
         Request request = new Request.Builder().url(url).delete(body).build();
         Response response = null;
+        boolean isDelete=false;
         List<Integer> result=new ArrayList<>();
         try {
             response = okHttpClient.newCall(request).execute();
             response.body();
-            System.out.println("hhhhhhhhhhhhhhgggggggg"+response.body().string());
+            JSONObject obj=new JSONObject(response.body().string());
+            if("200".equals(obj.getString("code"))){
+                isDelete=true;
+            }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        return true;
+        return isDelete;
     }
 
     /**
@@ -616,6 +625,88 @@ public class UserOperate {
             e.printStackTrace();
         }
         return true;
+    }
+
+    /**
+     * 获取推荐关注用户的id列表
+     * @param id 用户id
+     * @param context 获取映射文件
+     * @return 返回推荐用户id列表
+     * @author 唐小莉
+     * @time 2023/4/25
+     */
+    public List<Integer> getRecommend(int id,Context context){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.Tuip);
+        String router=context.getString(R.string.UserRecommend);
+        String userId=context.getString(R.string.UserId);
+
+        String url="http://"+ip+"/"+router+"?"+userId+"="+id;
+        /** 循环form表单，将表单内容添加到form builder中
+         * 构建formBody，将其传入Request请求中
+         */
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add(userId, String.valueOf(id));
+
+        Request request = new Request.Builder().url(url).get().build();
+        Response response = null;
+        List<Integer> listId=new ArrayList<>();
+        try {
+            response = okHttpClient.newCall(request).execute();
+            response.body();
+            JSONObject obj=new JSONObject(response.body().string());
+            listId=JSONArray.parseArray(obj.getString("object"),Integer.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return listId;
+    }
+
+    /**
+     * 获取粉丝列表id
+     * @param id 用户id
+     * @param context 获取映射文件
+     * @return 返回粉丝id列表
+     * @author 唐小莉
+     * @time 2023/4/25
+     */
+    public static List<Integer> getFansId(int id,Context context){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.Tuip);
+        String router=context.getString(R.string.Fans);
+        String uid=context.getString(R.string.UserId);
+
+        String url="http://"+ip+"/"+router;
+        /** 循环form表单，将表单内容添加到form builder中
+         * 构建formBody，将其传入Request请求中
+         */
+
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add(uid, String.valueOf(id));
+        /**
+         * 循环form表单，将表单内容添加到form builder中
+         * 构建formBody，将其传入Request请求中
+         */
+
+        FormBody body = builder.build();
+        Request request = new Request.Builder().url(url).post(body).build();
+        Response response = null;
+        List<Integer> result=new ArrayList<>();
+        try {
+            response = okHttpClient.newCall(request).execute();
+            response.body();
+            result= JSONArray.parseArray(response.body().string(),Integer.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }return result;
     }
 
 }

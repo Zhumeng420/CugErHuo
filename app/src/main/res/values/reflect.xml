@@ -16,6 +16,8 @@
     <string name="IsQqBanedInBloom">bloomfilterofphone/isqqbaned</string>
     <string name="GetIdByPhone">user/getidbyphone</string>
     <string name="GetIdByQq">user/getidbyqq</string>
+    <string name="UpdateUsername">user/changeusername</string>
+    <string name="UserRecommend">user/recommenduser</string>
 
 
     <string name="SetUserImage">user-info/changeimage</string>
@@ -40,6 +42,7 @@
     <string name="FocusNum">focus/myfocusnum</string>
     <string name="FansNum">focus/myfansnum</string>
     <string name="Focus">/focus/myfocus</string>
+    <string name="Fans">/focus/myfans</string>
 
     <string name="Qq">qq</string>
     <string name="PhoneNumber">phone</string>

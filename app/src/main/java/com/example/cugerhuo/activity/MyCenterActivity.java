@@ -15,12 +15,17 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfo;
+import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.access.user.UserOperate;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
+import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
+
+import io.lettuce.core.api.sync.RedisCommands;
 
 
 /**
@@ -39,12 +44,14 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
     private ImageView ivTabThree;
     private TextView userFocus;
     private TextView userFans;
+    private TextView username;
     private final MyHandler MyHandler = new MyHandler();
     private LinearLayout llTabOne;
     private LinearLayout llTabTwo;
     private LinearLayout llTabFour;
     private LinearLayout llTabFive;
     private LinearLayout userConcern;
+    private LinearLayout leUserFans;
     public static int focusNum;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +59,24 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_my_center);
         initView();
         userConcern.setOnClickListener(this::userConcernClick);
+        leUserFans.setOnClickListener(this::userFansClick);
         userImage = findViewById(R.id.user_img);
         String imagpath = UserInfo.getUrl();
         if (!"".equals(imagpath)) {
             userImage.setImageURI(Uri.fromFile(new File(imagpath)));
         }
+        /**
+         * 建立连接对象
+         */
+        LettuceBaseCase lettuce=new LettuceBaseCase();
+
+        /**
+         * 获取连接
+         */
+        RedisCommands<String, String> con=lettuce.getSyncConnection();
+        PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,UserInfo.getid(),MyCenterActivity.this);
+        username.setText(part.getUserName());
+
         /**
          * 获取关注数量
          * @author 施立豪
@@ -113,6 +133,8 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         userFans =findViewById(R.id.user_fan);
         userFocus =findViewById(R.id.user_concern);
         userConcern =findViewById(R.id.concern);
+        username=findViewById(R.id.username);
+        leUserFans=findViewById(R.id.le_user_fans);
     }
 
     /**
@@ -125,6 +147,17 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         Intent intent=new Intent(getApplicationContext(),ConcernActivity.class);
         startActivityForResult(intent,0x0002);
 
+    }
+
+    /**
+     * 点击粉丝按钮跳转至粉丝界面
+     * @param view
+     * @author 唐小莉
+     * @time 2023/4/25
+     */
+    public void userFansClick(View view){
+        Intent intent=new Intent(getApplicationContext(),FansActivity.class);
+        startActivityForResult(intent,0x0003);
     }
 
     /**

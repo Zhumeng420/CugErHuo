@@ -5,6 +5,7 @@ import static com.luck.picture.lib.config.PictureSelectionConfig.selectorStyle;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -13,6 +14,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,10 +25,14 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.activity.settings.UpdateUserSignActivity;
+import com.example.cugerhuo.activity.settings.UpdateUsernameActivity;
 import com.example.cugerhuo.tools.GetFileNameUtil;
+import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.example.cugerhuo.tools.OssOperate;
 import com.example.cugerhuo.tools.TracingHelper;
 import com.example.cugerhuo.tools.photoselect.GlideEngine;
@@ -56,6 +63,7 @@ import com.yalantis.ucrop.UCropImageEngine;
 import java.io.File;
 import java.util.ArrayList;
 
+import io.lettuce.core.api.sync.RedisCommands;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
@@ -72,22 +80,63 @@ import top.zibin.luban.OnRenameListener;
 
 
 public class UserActivity extends AppCompatActivity {
+    /**
+     * userImage用户头像
+     * imagePath 用户头像地址
+     * username 用户昵称
+     * userIntroduce 用户简介
+     * userNameLayout 用户昵称线性布局
+     *
+     */
     private RoundedImageView userImage;
     private SharedPreferences imagePath;
+    private TextView username;
+    private TextView userIntroduce;
+    private LinearLayout userNameLayout;
+    private LinearLayout userIntroduceLayout;
     private Tracer  tracer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         imagePath=getSharedPreferences("ImagePath", Context.MODE_PRIVATE);
          tracer = GlobalTracer.get();
         setContentView(R.layout.activity_user);
-        userImage =findViewById(R.id.user_img);
+        init();
+
         userImage.setOnClickListener(this::onChangeImage);
         String imagpath=UserInfo.getUrl();
         if(!"".equals(imagpath))
         {
             userImage.setImageURI(Uri.fromFile(new File(imagpath)));
         }
+        /**
+         * 建立连接对象
+         */
+        LettuceBaseCase lettuce=new LettuceBaseCase();
+
+        /**
+         * 获取连接
+         */
+        RedisCommands<String, String> con=lettuce.getSyncConnection();
+        PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,UserInfo.getid(),UserActivity.this);
+        username.setText(part.getUserName());
+        userIntroduce.setText(part.getSignature());
+        userNameLayout.setOnClickListener(this::UserNameClick);
+        userIntroduceLayout.setOnClickListener(this::UserSignClick);
+    }
+
+    /**
+     * 初始化控件
+     * @author 唐小莉
+     * @time 2023/4/25
+     */
+    public void init(){
+        userImage =findViewById(R.id.user_img);
+        username=findViewById(R.id.user_name);
+        userIntroduce=findViewById(R.id.user_introduce);
+        userNameLayout=findViewById(R.id.user_name_layout);
+        userIntroduceLayout=findViewById(R.id.user_introduce_layout);
     }
     /**
      * 自定义沙盒文件处理
@@ -103,6 +152,26 @@ public class UserActivity extends AppCompatActivity {
     }
     public Context getContext() {
         return this;
+    }
+
+    /**
+     * 点击用户昵称跳转至用户昵称修改页
+     * @param view
+     * @author 唐小莉
+     * @time 2023/4/25
+     */
+    public void UserNameClick(View view){
+        startActivity(new Intent(UserActivity.this, UpdateUsernameActivity.class));
+
+    }
+    /**
+     * 点击用户个性签名跳转至用户个性签名修改页
+     * @param view
+     * @author 唐小莉
+     * @time 2023/4/25
+     */
+    public void UserSignClick(View view){
+        startActivity(new Intent(UserActivity.this, UpdateUserSignActivity.class));
     }
     /**
      * 创建自定义输出目录

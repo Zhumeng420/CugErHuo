@@ -74,32 +74,21 @@
 
     </LinearLayout>
 
-    <HorizontalScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="250dp"
         android:padding="15dp"
         android:layout_marginBottom="10dp">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"/>
 
-        <LinearLayout
-            android:layout_width="200dp"
-            android:layout_height="190dp"
-            android:background="@drawable/border_radius"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="150dp"
-                android:layout_height="100dp"
-                />
-        </LinearLayout>
-
-    </HorizontalScrollView>
-
-
-
+    </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
-
-
 </com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout>
