@@ -6,6 +6,7 @@ import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 
@@ -109,9 +110,19 @@ public class ConcernActivity extends AppCompatActivity {
             for(int i=0;i<getFocusIds.size();i++){
                 PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,getFocusIds.get(i),ConcernActivity.this);
                 getFocusInfo.add(part);
-                getFocusInfo.get(i).setConcern(true);
+                /**
+                 * 如果互关，则将值设为2
+                 */
+                if(UserOperate.isAllFocus(id1,getFocusIds.get(i),ConcernActivity.this)){
+                    getFocusInfo.get(i).setConcern(2);
+                }
+                /**
+                 * 没有互关，设为1
+                 */
+                else{
+                    getFocusInfo.get(i).setConcern(1);
+                }
             }
-
 //            msg.arg2=fansNum;
             //4、发送消息
             MyHandler.sendMessage(msg);
@@ -159,6 +170,7 @@ public class ConcernActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+
             switch (msg.arg1){
                 /**
                  * 获取关注列表
@@ -170,7 +182,8 @@ public class ConcernActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(View view, int position) {
                             positionClick=position;
-                            if(getFocusInfo.get(position).getConcern()){
+                            System.out.println("positiohhhhhhh"+positionClick);
+                            if(getFocusInfo.get(position).getConcern()==1||getFocusInfo.get(position).getConcern()==2){
                                 /**
                                  * 点击已关注实现弹窗
                                  */
@@ -186,18 +199,34 @@ public class ConcernActivity extends AppCompatActivity {
                                          */
                                             System.out.println("issuccess"+isCancelSuccess);
                                             new Thread(new ConcernActivity.MyRunnableDeleteConcernOperate()).start();
-                                            adapter.notifyItemChanged(position,"true");
+                                            if(getFocusInfo.get(position).getConcern()==1){
+                                                adapter.notifyItemChanged(position,"1");
+                                            }
+                                            else {
+                                                adapter.notifyItemChanged(position,"3");
+                                            }
                                             focusNum--;
                                     }
                                 });
                                 concernDialog.show();
                             }
-                            else {
+                            else{
                                 new Thread(new ConcernActivity.MyRunnableConcernOperate()).start();
-                                adapter.notifyItemChanged(position,"false");
+
+                                /**
+                                 * 如果此时属于未关注状态，且之前不是互相关注
+                                 */
+                                if(getFocusInfo.get(position).getConcern()==0){
+                                    adapter.notifyItemChanged(position,"0");
+                                }
+                                /**
+                                 * 互相关注
+                                 */
+                                else {
+                                    adapter.notifyItemChanged(position,"2");
+                                }
                                 focusNum++;
                             }
-
                         }
                     });
                     /**
@@ -206,6 +235,7 @@ public class ConcernActivity extends AppCompatActivity {
                     adapter.setOnItemUserClickListener(new RecyclerViewAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
+                            positionClick=position;
                             Intent intent=new Intent(getActivity(), OtherPeopleActivity.class);
                             intent.putExtra("concernUser",getFocusInfo.get(position));
                             intent.putExtra("focusNum",focusNum);
@@ -214,6 +244,11 @@ public class ConcernActivity extends AppCompatActivity {
                         }
                     });
                     break;
+                /**
+                 * 推荐列表
+                 * @author 唐小莉
+                 * @time 2023/4/26
+                 */
                 case 2:
                     RecyclerViewRecommenduser adapter2=new RecyclerViewRecommenduser(getActivity());
                     revUser.setAdapter(adapter2);
@@ -235,14 +270,32 @@ public class ConcernActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==1)
         {
-            boolean data1 = data.getBooleanExtra("isConcern",true);
+            int data1 = data.getIntExtra("isConcern",0);
             getFocusInfo.get(positionClick).setConcern(data1);
             adapter.setPartUserInfoPosition(positionClick,data1);
-            if(data1){
-                adapter.notifyItemChanged(positionClick,false);
+            /**
+             * 在他人界面点击了取消关注，且取消前不是互相关注状态
+             */
+            if(data1==0){
+                adapter.notifyItemChanged(positionClick,1);
             }
-            else{
-                adapter.notifyItemChanged(positionClick,true);
+            /**
+             * 在他人界面点击关注，且关注后为互相关注状态
+             */
+            else if(data1==2){
+                adapter.notifyItemChanged(positionClick,"2");
+            }
+            /**
+             * 在他人界面点击取消关注，且取消前是互相关注状态
+             */
+            else if(data1==3){
+                adapter.notifyItemChanged(positionClick,"3");
+            }
+            /**
+             * 在他人界面点击关注，且关注后不是互相关注状态
+             */
+            else {
+                adapter.notifyItemChanged(positionClick,0);
             }
             System.out.println("hello concernActivity"+data1);
         }
@@ -255,6 +308,7 @@ public class ConcernActivity extends AppCompatActivity {
     class MyRunnableDeleteConcernOperate implements  Runnable{
         @Override
         public void run() {
+
             isCancelSuccess=UserOperate.getIfDeleteConcern(id1,getFocusInfo.get(positionClick).getId(),getActivity());
             System.out.println("issuccess"+isCancelSuccess);
         }
@@ -271,6 +325,4 @@ public class ConcernActivity extends AppCompatActivity {
             System.out.println("concernhhhhh success"+su);
         }
     }
-
-
 }

@@ -62,8 +62,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         count=partUserInfo.size();
     }
 
-    public void setPartUserInfoPosition(int p,boolean concern){
+    public void setPartUserInfoPosition(int p,int concern){
         partUserInfo.get(p).setConcern(concern);
+
     }
 
     /**
@@ -105,17 +106,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         //进行item对应控件部分的内容设置
         holder.user_concern_name.setText(partUserInfo.get(position).getUserName());
         holder.user_concern_sign.setText(partUserInfo.get(position).getSignature());
-        if(!partUserInfo.get(position).getConcern()){
+        if(partUserInfo.get(position).getConcern()==0){
             holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_cancel_concern);
             holder.btn_concerned.setText("关注");
             holder.btn_concerned.setTextColor(Color.RED);
-            partUserInfo.get(position).setConcern(false);
+            partUserInfo.get(position).setConcern(0);
+        }
+        else if(partUserInfo.get(position).getConcern()==2){
+            holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_concern);
+            holder.btn_concerned.setText("互相关注");
+            holder.btn_concerned.setTextColor(Color.parseColor("#9C9898"));
+            partUserInfo.get(position).setConcern(2);
         }
         else{
             holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_concern);
             holder.btn_concerned.setText("已关注");
             holder.btn_concerned.setTextColor(Color.parseColor("#9C9898"));
-            partUserInfo.get(position).setConcern(true);
+            partUserInfo.get(position).setConcern(1);
         }
         /**
          * 获取oss路径
@@ -227,17 +234,42 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
         for(Object payload:payloads){
             switch (String.valueOf(payload)){
-                case "true":
+                /**
+                 * 初始为关注状态进行点击取消关注操作（此时非互相关注状态）
+                 */
+                case "1":
                     holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_cancel_concern);
                     holder.btn_concerned.setText("关注");
                     holder.btn_concerned.setTextColor(Color.RED);
-                    partUserInfo.get(position).setConcern(false);
+                    partUserInfo.get(position).setConcern(0);
                     break;
-                case "false":
+                /**
+                 * 点击关注后，两者变为互关状态
+                 */
+                case "2":
+                    holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_concern);
+                    holder.btn_concerned.setText("互相关注");
+                    holder.btn_concerned.setTextColor(Color.parseColor("#9C9898"));
+                    partUserInfo.get(position).setConcern(2);
+                    break;
+                /**
+                 * 两者不是互相关注状态，单方面关注点击
+                 */
+                case "0":
                     holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_concern);
                     holder.btn_concerned.setText("已关注");
                     holder.btn_concerned.setTextColor(Color.parseColor("#9C9898"));
-                    partUserInfo.get(position).setConcern(true);
+                    partUserInfo.get(position).setConcern(1);
+                    break;
+                /**
+                 * 初始为互相关注状态，点击取消关注
+                 */
+                case "3":
+                    holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_cancel_concern);
+                    holder.btn_concerned.setText("关注");
+                    holder.btn_concerned.setTextColor(Color.RED);
+                    partUserInfo.get(position).setConcern(3);
+                    break;
                 default:
                     break;
             }

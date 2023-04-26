@@ -43,6 +43,7 @@
     <string name="FansNum">focus/myfansnum</string>
     <string name="Focus">/focus/myfocus</string>
     <string name="Fans">/focus/myfans</string>
+    <string name="AllFocus">/focus</string>
 
     <string name="Qq">qq</string>
     <string name="PhoneNumber">phone</string>

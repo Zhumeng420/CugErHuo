@@ -49,6 +49,7 @@
             android:layout_height="26dp"
             android:background="@drawable/btn_radius_orange_decoration"
             android:text="关注"
+            android:textColor="@color/white"
             android:layout_gravity="center"/>
     </LinearLayout>
 

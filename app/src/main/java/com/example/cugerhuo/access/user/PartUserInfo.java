@@ -13,13 +13,13 @@ public class PartUserInfo implements Serializable {
      * imageUrl 头像url
      * signature 简介
      * username 昵称
-     * isConcern 判断是否关注
+     * isConcern 判断是否关注，其中0表示未关注，1表示已关注，2并表示互相关注，3表示未关注状态，但是关注后为互相关注
      */
     private int id;
     private String imageUrl;
     private String signature;
     private String userName;
-    private boolean isConcern;
+    private int isConcern;
 
     public int getId() {
         return id;
@@ -53,10 +53,10 @@ public class PartUserInfo implements Serializable {
         this.userName = userName;
     }
 
-    public boolean getConcern(){
+    public int getConcern(){
         return isConcern;
     }
-    public void setConcern(boolean concern){
+    public void setConcern(int concern){
         this.isConcern=concern;
     }
 

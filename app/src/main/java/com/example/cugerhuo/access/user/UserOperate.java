@@ -709,4 +709,49 @@ public class UserOperate {
         }return result;
     }
 
+    /**
+     * 判断是否互相关注
+     * @param id1
+     * @param id2
+     * @param context
+     * @return
+     * @author 唐小莉
+     * @time 2023/4/25
+     */
+    public static boolean isAllFocus(int id1,int id2,Context context){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.Tuip);
+        String router=context.getString(R.string.AllFocus);
+        String startId=context.getString(R.string.startId);
+        String endId=context.getString(R.string.endId);
+
+        String url="http://"+ip+"/"+router+"?"+startId+"="+id1+"&"+endId+"="+id2;
+        /** 循环form表单，将表单内容添加到form builder中
+         * 构建formBody，将其传入Request请求中
+         */
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add(startId, String.valueOf(id1));
+        builder.add(endId,String.valueOf(id2));
+
+        Request request = new Request.Builder().url(url).get().build();
+        Response response = null;
+        boolean isFocus=false;
+        List<Integer> result=new ArrayList<>();
+        try {
+            response = okHttpClient.newCall(request).execute();
+            response.body();
+            JSONObject obj=new JSONObject(response.body().string());
+            if("true".equals(obj.getString("object"))){
+                isFocus=true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return isFocus;
+    }
 }

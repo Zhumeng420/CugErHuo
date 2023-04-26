@@ -108,7 +108,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
      */
     private TextView introduction;
 
-    private boolean isConcern;
+    private int isConcern=0;
 
     /**
      * 用户信息类
@@ -230,7 +230,6 @@ public class OtherPeopleActivity extends AppCompatActivity {
              * 获取关注数量
              */
             focusNum=UserOperate.getFocusNum(partUserInfo.getId(),OtherPeopleActivity.this);
-
             msg.arg2=focusNum;
             //4、发送消息
             MyHandler.sendMessage(msg);
@@ -349,7 +348,8 @@ public class OtherPeopleActivity extends AppCompatActivity {
             userImg.setImageURI(Uri.fromFile(new File(partUserInfo.getImageUrl())));
             popImg.setImageURI(Uri.fromFile(new File(partUserInfo.getImageUrl())));
         }
-        isFollowed(partUserInfo.getConcern());
+        isFollowed(partUserInfo.getConcern() == 1 || partUserInfo.getConcern() == 2);
+
 
     }
 
@@ -357,7 +357,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
         /**
          * 如果已经关注，点击进入聊天页面
          */
-        if(partUserInfo.getConcern()){
+        if(partUserInfo.getConcern()==1||partUserInfo.getConcern()==2){
             Intent intent=new Intent(OtherPeopleActivity.this, ChatActivity.class);
             startActivity(intent);
         }
@@ -369,6 +369,12 @@ public class OtherPeopleActivity extends AppCompatActivity {
                 Message msg = Message.obtain();
                 msg.arg1 = 3;
                 UserOperate.setConcern(UserInfo.getid(),partUserInfo.getId(),getActivity());
+                if(UserOperate.isAllFocus(UserInfo.getid(),partUserInfo.getId(),getActivity())){
+                    isConcern=2;
+                }
+                else{
+                    isConcern=1;
+                }
                 //isConcern=true;
                 //4、发送消息
                 MyHandler.sendMessage(msg);
@@ -382,7 +388,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
         /**
          * 如果没有关注，点击进入聊天页面
          */
-        if(!partUserInfo.getConcern()){
+        if(partUserInfo.getConcern()==0||partUserInfo.getConcern()==3){
             Intent intent=new Intent(OtherPeopleActivity.this, ChatActivity.class);
             startActivity(intent);
         }
@@ -390,6 +396,12 @@ public class OtherPeopleActivity extends AppCompatActivity {
             new Thread(() -> {
                 Message msg = Message.obtain();
                 msg.arg1 = 4;
+                if(UserOperate.isAllFocus(UserInfo.getid(),partUserInfo.getId(),getActivity())){
+                    isConcern=3;
+                }
+                else {
+                    isConcern=0;
+                }
                 UserOperate.getIfDeleteConcern(UserInfo.getid(),partUserInfo.getId(),getActivity());
                 //isConcern=true;
                 //4、发送消息
@@ -468,8 +480,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
                  */
                 case 3:
                     isFollowed(true);
-                    isConcern=true;
-                    partUserInfo.setConcern(true);
+                    partUserInfo.setConcern(isConcern);
                     Intent intent = new Intent();
                     intent.putExtra("isConcern",isConcern);
                     System.out.println("xinaccchhhhhhhhaaaaa"+isConcern);
@@ -479,8 +490,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
                     break;
                 case 4:
                     isFollowed(false);
-                    isConcern=false;
-                    partUserInfo.setConcern(false);
+                    partUserInfo.setConcern(isConcern);
                     Intent intent1 = new Intent();
                     intent1.putExtra("isConcern",isConcern);
                     System.out.println("xinaccchhhhhhhhaaaaa"+isConcern);

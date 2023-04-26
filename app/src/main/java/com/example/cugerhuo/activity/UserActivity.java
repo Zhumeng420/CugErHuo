@@ -79,13 +79,14 @@ import top.zibin.luban.OnRenameListener;
  */
 
 
-public class UserActivity extends AppCompatActivity {
+public class UserActivity extends AppCompatActivity implements View.OnClickListener{
     /**
      * userImage用户头像
      * imagePath 用户头像地址
      * username 用户昵称
      * userIntroduce 用户简介
      * userNameLayout 用户昵称线性布局
+     * userIntroduceLayout 用户自我介绍布局
      *
      */
     private RoundedImageView userImage;
@@ -94,6 +95,8 @@ public class UserActivity extends AppCompatActivity {
     private TextView userIntroduce;
     private LinearLayout userNameLayout;
     private LinearLayout userIntroduceLayout;
+    private LinearLayout userSexLayout;
+    private LinearLayout userAgeLayout;
     private Tracer  tracer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,8 +125,6 @@ public class UserActivity extends AppCompatActivity {
         PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,UserInfo.getid(),UserActivity.this);
         username.setText(part.getUserName());
         userIntroduce.setText(part.getSignature());
-        userNameLayout.setOnClickListener(this::UserNameClick);
-        userIntroduceLayout.setOnClickListener(this::UserSignClick);
     }
 
     /**
@@ -136,8 +137,44 @@ public class UserActivity extends AppCompatActivity {
         username=findViewById(R.id.user_name);
         userIntroduce=findViewById(R.id.user_introduce);
         userNameLayout=findViewById(R.id.user_name_layout);
+        userNameLayout.setOnClickListener(this);
         userIntroduceLayout=findViewById(R.id.user_introduce_layout);
+        userIntroduceLayout.setOnClickListener(this);
+        userSexLayout=findViewById(R.id.user_sex_layout);
+        userAgeLayout=findViewById(R.id.user_age_layout);
     }
+
+
+    /**
+     * 点击事件函数
+     * @param view
+     * @author 唐小莉
+     * @time 2023/4/25
+     */
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            /**
+             * 点击用户昵称跳转至用户昵称修改页
+             * @author 唐小莉
+             * @time 2023/4/25
+             */
+            case R.id.user_name_layout:
+                startActivity(new Intent(UserActivity.this, UpdateUsernameActivity.class));
+                break;
+            /**
+             * 点击用户个性签名跳转至用户个性签名修改页
+             * @author 唐小莉
+             * @time 2023/4/25
+             */
+            case R.id.user_introduce_layout:
+                startActivity(new Intent(UserActivity.this, UpdateUserSignActivity.class));
+                break;
+            default:
+                break;
+        }
+    }
+
     /**
      * 自定义沙盒文件处理
      */
@@ -154,25 +191,6 @@ public class UserActivity extends AppCompatActivity {
         return this;
     }
 
-    /**
-     * 点击用户昵称跳转至用户昵称修改页
-     * @param view
-     * @author 唐小莉
-     * @time 2023/4/25
-     */
-    public void UserNameClick(View view){
-        startActivity(new Intent(UserActivity.this, UpdateUsernameActivity.class));
-
-    }
-    /**
-     * 点击用户个性签名跳转至用户个性签名修改页
-     * @param view
-     * @author 唐小莉
-     * @time 2023/4/25
-     */
-    public void UserSignClick(View view){
-        startActivity(new Intent(UserActivity.this, UpdateUserSignActivity.class));
-    }
     /**
      * 创建自定义输出目录
      *

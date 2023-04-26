@@ -32,6 +32,10 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
      */
     private LinearLayout clearCatch;
     private LinearLayout settingLayout;
+    /**
+     * 用户信息设置按钮
+     */
+    private LinearLayout settingUserLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +54,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         clearCatch.setOnClickListener(this);
         settingLayout = findViewById(R.id.setting_address_layout);
         settingLayout.setOnClickListener(this);
+        settingUserLayout=findViewById(R.id.setting_user_layout);
+        settingUserLayout.setOnClickListener(this);
+
     }
     /**
      * 点击事件函数
@@ -76,6 +83,16 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
              */
             case R.id.setting_clear_layout:
                 setClearCatch(view);
+                break;
+            /**
+             * 用户信息设置
+             * @author 唐小莉
+             * @time 2023/4/25
+             */
+            case R.id.setting_user_layout:
+                startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
                 break;
             default:
                 break;
