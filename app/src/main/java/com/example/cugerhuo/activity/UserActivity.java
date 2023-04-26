@@ -11,6 +11,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -62,6 +64,7 @@ import com.yalantis.ucrop.UCropImageEngine;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import io.lettuce.core.api.sync.RedisCommands;
 import io.opentracing.Scope;
@@ -87,6 +90,8 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
      * userIntroduce 用户简介
      * userNameLayout 用户昵称线性布局
      * userIntroduceLayout 用户自我介绍布局
+     * part 存储用户信息
+     * name 保存更改的用户名
      *
      */
     private RoundedImageView userImage;
@@ -97,6 +102,9 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout userIntroduceLayout;
     private LinearLayout userSexLayout;
     private LinearLayout userAgeLayout;
+    private final MyHandler MyHandler = new MyHandler();
+    private PartUserInfo part;
+    private String name="";
     private Tracer  tracer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,18 +121,29 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         {
             userImage.setImageURI(Uri.fromFile(new File(imagpath)));
         }
+        Intent intent1 = new Intent();
+        intent1.putExtra("username",name);
+        setResult(0x0001,intent1);
         /**
-         * 建立连接对象
+         * 获取用户信息
+         * @author 唐小莉
+         * @time 2023/4/26
          */
-        LettuceBaseCase lettuce=new LettuceBaseCase();
+        new Thread(()->{
+            Message msg = Message.obtain();
+            msg.arg1 = 1;
+            /**
+             * 建立连接对象
+             */
+            LettuceBaseCase lettuce=new LettuceBaseCase();
 
-        /**
-         * 获取连接
-         */
-        RedisCommands<String, String> con=lettuce.getSyncConnection();
-        PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,UserInfo.getid(),UserActivity.this);
-        username.setText(part.getUserName());
-        userIntroduce.setText(part.getSignature());
+            /**
+             * 获取连接
+             */
+            RedisCommands<String, String> con=lettuce.getSyncConnection();
+            part= UserInfoOperate.getInfoFromRedis(con,UserInfo.getid(),UserActivity.this);
+            MyHandler.sendMessage(msg);
+        }).start();
     }
 
     /**
@@ -160,7 +179,8 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
              * @time 2023/4/25
              */
             case R.id.user_name_layout:
-                startActivity(new Intent(UserActivity.this, UpdateUsernameActivity.class));
+                Intent intent=new Intent(UserActivity.this,UpdateUsernameActivity.class);
+                startActivityForResult(intent,01);
                 break;
             /**
              * 点击用户个性签名跳转至用户个性签名修改页
@@ -168,13 +188,72 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
              * @time 2023/4/25
              */
             case R.id.user_introduce_layout:
-                startActivity(new Intent(UserActivity.this, UpdateUserSignActivity.class));
+                Intent intent1=new Intent(UserActivity.this,UpdateUserSignActivity.class);
+                startActivityForResult(intent1,2);
                 break;
             default:
                 break;
         }
     }
-
+    @Override
+    public  void onActivityResult(int requestCode,int resultCode,Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        /**
+         * 接收更新昵称界面
+         * @author 唐小莉
+         * @time 2023/4/26
+         */
+        if(requestCode==01)
+        {
+            String data1 = data.getStringExtra("username");
+            /**
+             * 为空不进行更新
+             */
+            if(!Objects.equals(data1, "")){
+                username.setText(data1);
+                name=data1;
+                /**
+                 * 并返回给myCenter
+                 */
+                Intent intent1 = new Intent();
+                intent1.putExtra("username",name);
+                setResult(0x0001,intent1);
+            }
+        }
+        /**
+         * 接收更新简介界面返回值
+         * @author 唐小莉
+         * @time 2023/4/26
+         */
+        else if(requestCode==2){
+            String data2 = data.getStringExtra("userSign");
+            if(!Objects.equals(data2, "")){
+                userIntroduce.setText(data2);
+            }
+        }
+    }
+    /**
+     * 消息发送接收，异步更新UI
+     * @author 唐小莉
+     * @time 2023/4/26
+     */
+    private class MyHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.arg1){
+                /**
+                 * 更新
+                 */
+                case 1:
+                    username.setText(part.getUserName());
+                    userIntroduce.setText(part.getSignature());
+                   break;
+                default:
+                    break;
+            }
+        }
+    }
     /**
      * 自定义沙盒文件处理
      */

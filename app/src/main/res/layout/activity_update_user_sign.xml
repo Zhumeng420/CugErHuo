@@ -35,7 +35,7 @@
                 android:text="编辑名字"
                 android:textColor="#000000" />
             <TextView
-                android:id="@+id/saveUpdateName"
+                android:id="@+id/saveUpdateSign"
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="7dp"
                 android:layout_width="wrap_content"
@@ -54,7 +54,7 @@
             android:layout_marginTop="10dp"
             android:orientation="vertical">
             <EditText
-                android:id="@+id/editUserName"
+                android:id="@+id/editUserSign"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:background="@drawable/background_white_decoration"

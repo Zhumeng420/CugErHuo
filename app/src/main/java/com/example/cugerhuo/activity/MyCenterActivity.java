@@ -24,6 +24,7 @@ import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
+import java.util.Objects;
 
 import io.lettuce.core.api.sync.RedisCommands;
 
@@ -52,6 +53,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
     private LinearLayout llTabFive;
     private LinearLayout userConcern;
     private LinearLayout leUserFans;
+    private  PartUserInfo part;
     public static int focusNum;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,17 +67,21 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         if (!"".equals(imagpath)) {
             userImage.setImageURI(Uri.fromFile(new File(imagpath)));
         }
-        /**
-         * 建立连接对象
-         */
-        LettuceBaseCase lettuce=new LettuceBaseCase();
+        new Thread(()->{
+            Message msg = Message.obtain();
+            msg.arg1 = 3;
 
-        /**
-         * 获取连接
-         */
-        RedisCommands<String, String> con=lettuce.getSyncConnection();
-        PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,UserInfo.getid(),MyCenterActivity.this);
-        username.setText(part.getUserName());
+            /**
+             * 建立连接对象
+             */
+            LettuceBaseCase lettuce=new LettuceBaseCase();
+            /**
+             * 获取连接
+             */
+            RedisCommands<String, String> con=lettuce.getSyncConnection();
+            part= UserInfoOperate.getInfoFromRedis(con,UserInfo.getid(),MyCenterActivity.this);
+            MyHandler.sendMessage(msg);
+        }).start();
 
         /**
          * 获取关注数量
@@ -205,6 +211,10 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
             {
                 userImage.setImageURI(Uri.fromFile(new File(imagpath)));
             }
+            String name=data.getStringExtra("username");
+            if(!Objects.equals(name, "")){
+                username.setText(name);
+            }
         }
         else if(requestCode==0x0002){
             userFocus.setText(""+focusNum);
@@ -294,6 +304,9 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                  */
                 case 2:
                     userFans.setText(String.valueOf(msg.arg2));
+                    break;
+                case 3:
+                    username.setText(part.getUserName());
                     break;
                 default:
                     break;

@@ -45,9 +45,13 @@
     <string name="Fans">/focus/myfans</string>
     <string name="AllFocus">/focus</string>
 
+    <string name="updateName">/user-info/changeusername</string>
+    <string name="updateSign">/user-info/changesignature</string>
+
     <string name="Qq">qq</string>
     <string name="PhoneNumber">phone</string>
     <string name="Username">username</string>
+    <string name="Signature">signature</string>
     <string name="Name">name</string>
     <string name="ImageUrl">imageUrl</string>
     <string name="UserId">userId</string>

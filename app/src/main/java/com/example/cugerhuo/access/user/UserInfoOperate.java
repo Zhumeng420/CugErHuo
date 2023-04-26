@@ -209,5 +209,87 @@ public class UserInfoOperate
         connection.hdel("UserInfo",String.valueOf(id));
     }
 
+    /**
+     * 更改用户昵称
+     * @param id 用户id
+     * @param newName 用户新昵称
+     * @param context 获取映射文件
+     * @return 返回是否更新成功
+     * @author 唐小莉
+     * @time 2023/4/26
+     */
+    public static boolean updateUserName(int id,String newName,Context context){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.ip);
+        String router=context.getString(R.string.updateName);
+        String userid=context.getString(R.string.UserId);
+        String username=context.getString(R.string.Username);
+        /**
+         * 发送请求
+         */
+        String url="http://"+ip+"/"+router+"?"+userid+"="+id+"&"+username+"="+newName;
+        //循环form表单，将表单内容添加到form builder中
+        //构建formBody，将其传入Request请求中
+        Request request = new Request.Builder().url(url).get().build();
+        Response response = null;
+        boolean isUpdate=false;
+        try {
+            response = okHttpClient.newCall(request).execute();
+            JSONObject obj=new JSONObject(response.body().string());
+            if("true".equals(obj.getString("object"))){
+                isUpdate=true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return isUpdate;
+    }
+
+    /**
+     * 更改用户签名
+     * @param id 用户id
+     * @param sign 用户新签名
+     * @param context 获取映射文件
+     * @return 返回是否更新成功
+     * @author 唐小莉
+     * @time 2023/4/26
+     */
+    public static boolean updateUserSign(int id,String sign,Context context){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.ip);
+        String router=context.getString(R.string.updateSign);
+        String userid=context.getString(R.string.UserId);
+        String signature=context.getString(R.string.Signature);
+        /**
+         * 发送请求
+         */
+        String url="http://"+ip+"/"+router+"?"+signature+"="+sign+"&"+userid+"="+id;
+        //循环form表单，将表单内容添加到form builder中
+        //构建formBody，将其传入Request请求中
+        Request request = new Request.Builder().url(url).get().build();
+        Response response = null;
+        boolean isUpdate=false;
+        try {
+            response = okHttpClient.newCall(request).execute();
+            JSONObject obj=new JSONObject(response.body().string());
+            if("true".equals(obj.getString("object"))){
+                isUpdate=true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return isUpdate;
+    }
+
 
 }
