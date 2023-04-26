@@ -129,36 +129,35 @@ public class ConcernActivity extends AppCompatActivity {
             /**
              * 关闭连接啊
              */
-            lettuce.close();
+            //lettuce.close();
         }).start();
 
-        /**
-         * 获取推荐关注用户信息
-         */
+
+
         new Thread(() -> {
             Message msg = Message.obtain();
             msg.arg1 = 2;
             UserOperate userOperate=new UserOperate();
             recommendId=userOperate.getRecommend(id1,ConcernActivity.this);
-//            /**
-//             * 建立连接对象
-//             */
-//            LettuceBaseCase lettuce=new LettuceBaseCase();
-//            /**
-//             * 获取连接
-//             */
-//            RedisCommands<String, String> con=lettuce.getSyncConnection();
+            /**
+             * 建立连接对象
+             */
+            LettuceBaseCase lettuce=new LettuceBaseCase();
+
+            /**
+             * 获取连接
+             */
+            RedisCommands<String, String> con=lettuce.getSyncConnection();
+            PartUserInfo partUserInfo=new PartUserInfo();
             for(int i=0;i<recommendId.size();i++){
-                System.out.println("idididdidiiiidddd"+recommendId.get(i));
-               // PartUserInfo partUserInfo=UserInfoOperate.getInfoFromMysql(recommendId.get(i),ConcernActivity.this);
-               // System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"+partUserInfo.getId());
-               // rePartUserInfo.add(partUserInfo);
+               if( UserInfoOperate.getInfoFromRedis(con,recommendId.get(i),ConcernActivity.this)!=null){
+                   partUserInfo=UserInfoOperate.getInfoFromRedis(con,recommendId.get(i),ConcernActivity.this);
+                   partUserInfo.getUserName();
+                   rePartUserInfo.add(partUserInfo);
+               }
+
             }
             MyHandler.sendMessage(msg);
-            /**
-             * 关闭连接啊
-             */
-            //lettuce.close();
         }).start();
     }
     /**
@@ -250,7 +249,7 @@ public class ConcernActivity extends AppCompatActivity {
                  * @time 2023/4/26
                  */
                 case 2:
-                    RecyclerViewRecommenduser adapter2=new RecyclerViewRecommenduser(getActivity());
+                    RecyclerViewRecommenduser adapter2=new RecyclerViewRecommenduser(getActivity(),rePartUserInfo);
                     revUser.setAdapter(adapter2);
                     break;
                 default:
