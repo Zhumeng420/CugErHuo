@@ -16,7 +16,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.access.user.AddressInfo;
+import com.example.cugerhuo.access.user.MessageInfo;
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import java.util.List;
 
 /**
  * 聊天界面recycler适配器重写
@@ -30,7 +34,8 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
      * count item数量
      */
     private Context context;
-    private int count=20;
+    private int count;
+    private OnItemClickListener mClickListener;
 
     /**
      * 构造函数
@@ -38,8 +43,9 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
      * @author 唐小莉
      * @time 2023/4/22
      */
-    public RecyclerViewChatAdapter(Context context){
-        this.context=context;
+    public RecyclerViewChatAdapter(Context context, List<MessageInfo> partUserInfo) {
+        this.context = context;
+        count=partUserInfo.size();
     }
 
     /**
@@ -65,7 +71,7 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
      * @time 2023/4/22
      */
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewChatAdapter.ViewHolder holder, int position) {
         /**
          * 设置商品图片圆角30度
          */
@@ -73,6 +79,18 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
 //        Glide.with(context).load(R.drawable.icon_iphone)
 //                .apply(options)
 //                .into(holder.goodItemImg);
+
+        holder.userChat.setOnClickListener(new View.OnClickListener() {
+            /**
+             * 点击每个RecyclerView子组件进行相应的响应事件,点击跳转至编辑界面@Author: 李柏睿
+             * @Time: 2023/4/26
+             */
+            @Override
+            public void onClick(View v) {
+                mClickListener.onItemClick(v,position);
+            }
+        });
+
     }
 
     /**
@@ -96,14 +114,34 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
        TextView userChatName;
        TextView userChatInfo;
        TextView userChatTime;
+        private RecyclerViewAdapter.OnItemClickListener mListener;// 声明自定义的接口
         public ViewHolder(View itemView) {
             super(itemView);
-
             userChat =itemView.findViewById(R.id.userChat);
             userChatImg =itemView.findViewById(R.id.userChatImg);
             userChatName =itemView.findViewById(R.id.userChatName);
             userChatInfo =itemView.findViewById(R.id.userChatInfo);
             userChatTime =itemView.findViewById(R.id.userChatTime);
         }
+    }
+
+    /**
+     * item点击响应函数
+     * @param listener
+     * @Author: 李柏睿
+     * @Time: 2023/4/26
+     */
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mClickListener = listener;
+    }
+
+    /**
+     * 定义RecyclerView选项单击事件的回调接口
+     * @Author: 李柏睿
+     * @Time: 2023/4/26
+     */
+    public interface OnItemClickListener {
+        /**参数（父组件，当前单击的View,单击的View的位置，数据）*/
+        public void onItemClick(View view, int position);
     }
 }

@@ -4,11 +4,17 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.access.user.Msg;
+import com.example.cugerhuo.activity.adapter.MsgAdapter;
 import com.example.cugerhuo.tools.MyToast;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
@@ -26,16 +32,38 @@ import com.netease.nimlib.sdk.msg.model.CustomMessageConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.util.NIMUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 聊天
+ * @Author: 朱萌
+ * @Time: 2023/4/11
+ */
 public class ChatActivity extends AppCompatActivity  implements  View.OnClickListener  {
-private
-    Button send;
+
+    private List<Msg> msgList = new ArrayList<>();
+    private RecyclerView msgRecyclerView;
+    private EditText inputText;
+    private Button send;
+    private LinearLayoutManager layoutManager;
+    private MsgAdapter adapter;
+    private ImageView returnImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        msgRecyclerView = findViewById(R.id.msg_recycler_view);
+        inputText = findViewById(R.id.input_text);
+        send = findViewById(R.id.send);
+        returnImg = findViewById(R.id.return_chat);
+        returnImg.setOnClickListener(this);
+        layoutManager = new LinearLayoutManager(this);
+        adapter = new MsgAdapter(msgList = getData());
+        msgRecyclerView.setLayoutManager(layoutManager);
+        msgRecyclerView.setAdapter(adapter);
         /**
          * 即时通讯初始化
          * @author 朱萌
@@ -70,8 +98,11 @@ private
                         Observer<List<IMMessage>> incomingMessageObserver =
                                 messages -> {
                                     // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
-                                    TextView recevie=findViewById(R.id.textView);
-                                    recevie.setText(messages.get(0).getFromAccount()+":"+messages.get(0).getContent());
+//                                    TextView recevie=findViewById(R.id.textView);
+//                                    recevie.setText(messages.get(0).getFromAccount()+":"+messages.get(0).getContent());
+                                    msgList.add(new Msg(messages.get(0).getFromAccount()+":"+messages.get(0).getContent(),Msg.TYPE_RECEIVED));
+                                    adapter.notifyItemInserted(msgList.size()-1);
+                                    msgRecyclerView.scrollToPosition(msgList.size()-1);
                                     MyToast.toast(ChatActivity.this,messages.toString(),3);
                                 };
                         NIMClient.getService(MsgServiceObserve.class)
@@ -91,7 +122,7 @@ private
                         // your code
                     }
                 };
-        //执行手动登录
+        /**执行手动登录*/
         NIMClient.getService(AuthService.class).login(info).setCallback(callback);
 
         /**
@@ -136,6 +167,9 @@ private
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.return_chat:
+                finish();
+                break;
             case R.id.send:{
                 //MyToast.Toast(ChatActivity.this,"你妈的",3);
                 /**
@@ -163,6 +197,24 @@ private
                     @Override
                     public void onSuccess(Void param) {
                         MyToast.toast(ChatActivity.this,"消息发送成功",3);
+                        String content = inputText.getText().toString();
+                        if(!content.equals("")) {
+                            msgList.add(new Msg(content,Msg.TYPE_SEND));
+                            adapter.notifyItemInserted(msgList.size()-1);
+                            msgRecyclerView.scrollToPosition(msgList.size()-1);
+                            inputText.setText("");//清空输入框中的内容
+                        }
+                        //自定义一问一答
+                        if(msgList.size() == 2){
+                            msgList.add(new Msg("What's your name?",Msg.TYPE_RECEIVED));
+                            adapter.notifyItemInserted(msgList.size()-1);
+                            msgRecyclerView.scrollToPosition(msgList.size()-1);
+                        }
+                        if(msgList.size() == 4){
+                            msgList.add(new Msg("Nice to meet you,Bye!",Msg.TYPE_RECEIVED));
+                            adapter.notifyItemInserted(msgList.size()-1);
+                            msgRecyclerView.scrollToPosition(msgList.size()-1);
+                        }
                     }
 
                     @Override
@@ -180,6 +232,13 @@ private
             default:
                 break;
         }
+    }
+
+    private List<Msg> getData(){
+        List<Msg> list = new ArrayList<>();
+        if(list.size()!=0){list.clear();}
+        list.add(new Msg("Hello",Msg.TYPE_RECEIVED));
+        return list;
     }
 
 }

@@ -118,7 +118,7 @@ public class RecyclerViewAddressAdapter extends RecyclerView.Adapter<RecyclerVie
      * @Time: 2023/4/22 19:28
      */
     public interface OnItemClickListener {
-        //参数（父组件，当前单击的View,单击的View的位置，数据）
+        /**参数（父组件，当前单击的View,单击的View的位置，数据）*/
         public void onItemClick(View view, int position);
     }
 

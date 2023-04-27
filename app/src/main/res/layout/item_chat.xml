@@ -28,8 +28,8 @@
         <LinearLayout
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:layout_width="250dp"
-
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
             android:layout_height="match_parent">
             <TextView
                 android:id="@+id/userChatName"

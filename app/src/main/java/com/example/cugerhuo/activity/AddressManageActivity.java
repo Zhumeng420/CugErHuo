@@ -129,7 +129,7 @@ public class AddressManageActivity extends AppCompatActivity implements View.OnC
             super.handleMessage(msg);
             switch (msg.arg1){
                 /**
-                 * 获取关注列表
+                 * 获取地址信息列表
                  */
                 case 1:
                     adapter = new RecyclerViewAddressAdapter(AddressManageActivity.this,addressInfos);

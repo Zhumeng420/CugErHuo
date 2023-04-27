@@ -19,6 +19,7 @@ import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.access.user.UserOperate;
+import com.example.cugerhuo.activity.imessage.ChatActivity;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
 import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -197,7 +198,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
      * @Time: 2023/3/21 19:38
      */
     public void onClickSetting(View view){
-        Intent intent = new Intent(getApplicationContext(),SettingActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
         startActivity(intent);
     }
 
