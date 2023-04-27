@@ -42,7 +42,6 @@ public class SuggestFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_suggest, container, false);
-
         /**初始化adapter**/
         adapter=new RecyclerViewGoodsDisplayAdapter(this.getContext());
         goodsRecyclerView =view.findViewById(R.id.display_good_block);

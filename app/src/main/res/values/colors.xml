@@ -37,4 +37,7 @@
     <color name="key_ok_color_pressed">#E0DF5500</color>
 
     <color name="ic_default_bg_color">#33000000</color>
+    <color name="dot_hong">#E73111</color>
+    <color name="text_bottom_comment">#9B9B9B</color>
+
 </resources>
