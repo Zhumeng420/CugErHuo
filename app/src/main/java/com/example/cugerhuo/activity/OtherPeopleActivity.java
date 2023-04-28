@@ -91,6 +91,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
     ImageView popImg,userImg;
     private AlphaAnimation alphaAniShow, alphaAniHide;
     private TranslateAnimation translateAniShow,translateAniHide;
+
     /**
      * 用户名
      */
@@ -114,6 +115,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
      * 用户信息类
      */
     private  PartUserInfo partUserInfo=new PartUserInfo();
+    private PartUserInfo fansUserInfo=new PartUserInfo();
     private final MyHandler MyHandler =new MyHandler();
 
 
@@ -337,6 +339,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
          */
         Intent intent =getIntent();
         partUserInfo= (PartUserInfo) intent.getSerializableExtra("concernUser");
+       // fansUserInfo=(PartUserInfo) intent.getSerializableExtra("FansUser");
         isConcern=partUserInfo.getConcern();
         /**
          * 将用户信息进行加载显示
@@ -348,7 +351,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
             userImg.setImageURI(Uri.fromFile(new File(partUserInfo.getImageUrl())));
             popImg.setImageURI(Uri.fromFile(new File(partUserInfo.getImageUrl())));
         }
-        isFollowed(partUserInfo.getConcern() == 1 || partUserInfo.getConcern() == 2);
+        isFollowed(partUserInfo.getConcern() == 1 || partUserInfo.getConcern() == 2||partUserInfo.getConcern()==5);
 
 
     }
@@ -357,7 +360,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
         /**
          * 如果已经关注，点击进入聊天页面
          */
-        if(partUserInfo.getConcern()==1||partUserInfo.getConcern()==2){
+        if(partUserInfo.getConcern()==1||partUserInfo.getConcern()==2||partUserInfo.getConcern()==5){
             Intent intent=new Intent(OtherPeopleActivity.this, ChatActivity.class);
             startActivity(intent);
         }
@@ -370,11 +373,17 @@ public class OtherPeopleActivity extends AppCompatActivity {
                 msg.arg1 = 3;
                 UserOperate.setConcern(UserInfo.getid(),partUserInfo.getId(),getActivity());
                 if(UserOperate.isAllFocus(UserInfo.getid(),partUserInfo.getId(),getActivity())){
-                    isConcern=2;
+                   if(partUserInfo.getConcern()==4){
+                       isConcern=5;
+                   }
+                   else{
+                       isConcern=2;
+                   }
                 }
                 else{
                     isConcern=1;
                 }
+                partUserInfo.setConcern(isConcern);
                 //isConcern=true;
                 //4、发送消息
                 MyHandler.sendMessage(msg);
@@ -388,20 +397,27 @@ public class OtherPeopleActivity extends AppCompatActivity {
         /**
          * 如果没有关注，点击进入聊天页面
          */
-        if(partUserInfo.getConcern()==0||partUserInfo.getConcern()==3){
+        if(partUserInfo.getConcern()==0||partUserInfo.getConcern()==3||partUserInfo.getConcern()==4){
             Intent intent=new Intent(OtherPeopleActivity.this, ChatActivity.class);
             startActivity(intent);
+
         }
         else{
             new Thread(() -> {
                 Message msg = Message.obtain();
                 msg.arg1 = 4;
                 if(UserOperate.isAllFocus(UserInfo.getid(),partUserInfo.getId(),getActivity())){
-                    isConcern=3;
+                    if(partUserInfo.getConcern()==5){
+                        isConcern=4;
+                    }
+                    else{
+                        isConcern=3;
+                    }
                 }
                 else {
                     isConcern=0;
                 }
+                partUserInfo.setConcern(isConcern);
                 UserOperate.getIfDeleteConcern(UserInfo.getid(),partUserInfo.getId(),getActivity());
                 //isConcern=true;
                 //4、发送消息
@@ -485,6 +501,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
                     intent.putExtra("isConcern",isConcern);
                     System.out.println("xinaccchhhhhhhhaaaaa"+isConcern);
                     setResult(1,intent);
+                    setResult(2,intent);
                     System.out.println("guanzhuuuanzhu");
                     focusNum++;
                     break;
@@ -495,6 +512,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
                     intent1.putExtra("isConcern",isConcern);
                     System.out.println("xinaccchhhhhhhhaaaaa"+isConcern);
                     setResult(1,intent1);
+                    setResult(2,intent1);
                     focusNum--;
                     break;
                 default:

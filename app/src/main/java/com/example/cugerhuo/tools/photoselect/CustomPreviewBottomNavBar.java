@@ -6,9 +6,10 @@ import android.util.AttributeSet;
 import com.luck.picture.lib.widget.PreviewBottomNavBar;
 
 /**
- * @author：luck
- * @date：2021/11/17 10:46 上午
- * @describe：CustomPreviewBottomNavBar
+ *
+ * 选择照片适配器
+ * @author 施立豪
+ * @date：2023/3/21
  */
 public class CustomPreviewBottomNavBar extends PreviewBottomNavBar {
 

@@ -16,6 +16,7 @@ import com.example.cugerhuo.access.SetGlobalIDandUrl;
 import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.access.user.UserOperate;
+import com.example.cugerhuo.tools.InitChatAccount;
 import com.example.cugerhuo.tools.NameUtil;
 import com.example.cugerhuo.tools.TracingHelper;
 import com.tencent.tauth.IUiListener;
@@ -197,6 +198,19 @@ public class QqLoginActivity extends AppCompatActivity {
                                                  * 保存ID
                                                  */
                                                 UserInfo.setid(result);
+                                                /**
+                                                 * 注册云信
+                                                 * @time 2023/4/28
+                                                 */
+                                                Span span31 = tracer.buildSpan("注册云信").withTag("函数：doComplete", "子追踪").start();
+                                                try (Scope ignored1 = tracer.scopeManager().activate(span31,true)) {
+                                                    InitChatAccount.addUser("CUGerhuo"+String.valueOf(result));                                                } catch (Exception e) {
+                                                    TracingHelper.onError(e, span31);
+                                                    throw e;
+                                                }finally {
+                                                    span31.finish();
+                                                }
+
                                                 /**
                                                  * 插入图数据库
                                                  * @time 2023/3/26

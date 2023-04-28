@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * @author：luck
- * @date：2016/12/31 2:26 下午
- * @describe：PictureOnlyCameraFragment
+ *
+ * 选择照片适配器
+ * @author 施立豪
+ * @date：2023/4/21
  */
-
 public class FullyGridLayoutManager extends GridLayoutManager {
     private final int[] mMeasuredDimension = new int[2];
 

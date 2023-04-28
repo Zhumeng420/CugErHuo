@@ -6,9 +6,10 @@ import android.util.AttributeSet;
 import com.luck.picture.lib.widget.PreviewTitleBar;
 
 /**
- * @author：luck
- * @date：2021/11/19 4:38 下午
- * @describe：CustomPreviewTitleBar
+ *
+ * 选择照片适配器
+ * @author 施立豪
+ * @date：2023/3/21
  */
 public class CustomPreviewTitleBar extends PreviewTitleBar {
 

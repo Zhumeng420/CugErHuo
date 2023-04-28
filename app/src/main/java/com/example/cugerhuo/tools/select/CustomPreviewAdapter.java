@@ -24,9 +24,10 @@ import com.luck.picture.lib.utils.ActivityCompatHelper;
 import com.luck.picture.lib.utils.MediaUtils;
 
 /**
- * @author：luck
- * @date：2022/2/21 4:17 下午
- * @describe：CustomPreviewAdapter
+ *
+ * 选择照片适配器
+ * @author 施立豪
+ * @date：2023/4/21
  */
 public class CustomPreviewAdapter extends PicturePreviewAdapter {
 

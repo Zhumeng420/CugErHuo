@@ -118,12 +118,31 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.btn_concerned.setTextColor(Color.parseColor("#9C9898"));
             partUserInfo.get(position).setConcern(2);
         }
-        else{
+        else if(partUserInfo.get(position).getConcern()==1){
             holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_concern);
             holder.btn_concerned.setText("已关注");
             holder.btn_concerned.setTextColor(Color.parseColor("#9C9898"));
             partUserInfo.get(position).setConcern(1);
         }
+        else if(partUserInfo.get(position).getConcern()==5){
+            holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_concern);
+            holder.btn_concerned.setText("互相关注");
+            holder.btn_concerned.setTextColor(Color.parseColor("#9C9898"));
+            partUserInfo.get(position).setConcern(5);
+        }
+        else if(partUserInfo.get(position).getConcern()==3){
+            holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_cancel_concern);
+            holder.btn_concerned.setText("关注");
+            holder.btn_concerned.setTextColor(Color.RED);
+            partUserInfo.get(position).setConcern(3);
+        }
+        else {
+            holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_cancel_concern);
+            holder.btn_concerned.setText("回粉");
+            holder.btn_concerned.setTextColor(Color.RED);
+            partUserInfo.get(position).setConcern(4);
+        }
+
         /**
          * 获取oss路径
          */
@@ -269,6 +288,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     holder.btn_concerned.setText("关注");
                     holder.btn_concerned.setTextColor(Color.RED);
                     partUserInfo.get(position).setConcern(3);
+                    break;
+                /**
+                 * 初始为互关状态后，设置为回粉状态（粉丝列表）
+                 */
+                case "4":
+                    holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_cancel_concern);
+                    holder.btn_concerned.setText("回粉");
+                    holder.btn_concerned.setTextColor(Color.RED);
+                    partUserInfo.get(position).setConcern(4);
+                    break;
+                /**
+                 * 初始为粉丝列表中的回粉状态，设置为互相关注
+                 */
+                case "5":
+                    holder.btn_concerned.setBackgroundResource(R.drawable.shape_btn_concern);
+                    holder.btn_concerned.setText("互相关注");
+                    holder.btn_concerned.setTextColor(Color.parseColor("#9C9898"));
+                    partUserInfo.get(position).setConcern(5);
                     break;
                 default:
                     break;

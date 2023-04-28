@@ -1,5 +1,10 @@
 package com.example.cugerhuo.tools.entity;
-
+/**
+ *
+ * 商品类
+ * @author 施立豪
+ * @date：2023/3/24
+ */
 public class productParam {
     private String name;
            private int productId;

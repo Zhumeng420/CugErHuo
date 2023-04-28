@@ -10,9 +10,10 @@ import com.example.cugerhuo.R;
 import com.luck.picture.lib.widget.CompleteSelectView;
 
 /**
- * @author：luck
- * @date：2021/12/23 11:54 上午
- * @describe：CustomCompleteSelectView
+ *
+ * 选择照片适配器
+ * @author 施立豪
+ * @date：2023/3/21
  */
 public class CustomCompleteSelectView extends CompleteSelectView {
     public CustomCompleteSelectView(Context context) {

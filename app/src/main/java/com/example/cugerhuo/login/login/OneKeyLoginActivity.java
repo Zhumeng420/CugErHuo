@@ -29,6 +29,7 @@ import com.example.cugerhuo.login.loginutils.BuildConfig;
 import com.example.cugerhuo.login.loginutils.Constant;
 import com.example.cugerhuo.login.utils.ExecutorManager;
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.tools.InitChatAccount;
 import com.example.cugerhuo.tools.NameUtil;
 import com.example.cugerhuo.tools.TracingHelper;
 import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
@@ -344,6 +345,18 @@ public class OneKeyLoginActivity extends Activity {
                                                             span2.finish();
                                                         }
                                                         if(result!=-1){
+                                                            /**
+                                                             * 注册云信
+                                                             * @time 2023/4/28
+                                                             */
+                                                            Span span31 = tracer.buildSpan("注册云信").withTag("函数：doComplete", "子追踪").start();
+                                                            try (Scope ignored1 = tracer.scopeManager().activate(span31,true)) {
+                                                                InitChatAccount.addUser("CUGerhuo"+String.valueOf(result));                                                } catch (Exception e) {
+                                                                TracingHelper.onError(e, span31);
+                                                                throw e;
+                                                            }finally {
+                                                                span31.finish();
+                                                            }
                                                         /**
                                                          * 插入图数据库
                                                          * @time 2023/3/26

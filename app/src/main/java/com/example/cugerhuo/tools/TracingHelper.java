@@ -1,11 +1,16 @@
 package com.example.cugerhuo.tools;
 
-import io.opentracing.Span;
-import io.opentracing.tag.Tags;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import io.opentracing.Span;
+import io.opentracing.tag.Tags;
+/**
+ *
+ *
+ * @author 朱萌
+ *
+ */
 public class TracingHelper {
     public static void onError(Throwable throwable, Span span) {
         Tags.ERROR.set(span, Boolean.TRUE);

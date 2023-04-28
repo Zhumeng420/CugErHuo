@@ -1,7 +1,12 @@
 package com.example.cugerhuo.tools;
 
 import java.util.concurrent.ThreadLocalRandom;
-
+/**
+ *
+ * 随机生成用户名
+ * @author 施立豪
+ * @date：2023/3/21
+ */
 public class NameUtil {
     /**
      * 头部

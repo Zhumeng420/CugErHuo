@@ -21,7 +21,12 @@ import com.tencent.qcloud.core.http.HttpConstants;
 import com.tencent.qcloud.core.http.QCloudHttpRequest;
 
 import java.nio.charset.Charset;
-
+/**
+ *
+ * 文本审核
+ * @author 施立豪
+ * @date：2023/4/21
+ */
 public class TextAudit {
     public static void textAudit(Context context)
     {

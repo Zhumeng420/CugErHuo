@@ -23,7 +23,8 @@ import io.opentracing.Tracer;
 import io.opentracing.util.GlobalTracer;
 
 /**
- * 链路追踪demo
+ * 链路追踪demo、接口调用demo等
+ * @author 朱萌、施立豪
  */
 public class demo {
     void demooo(){

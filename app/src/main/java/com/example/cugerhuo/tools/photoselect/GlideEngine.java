@@ -10,9 +10,10 @@ import com.example.cugerhuo.R;
 import com.luck.picture.lib.engine.ImageEngine;
 import com.luck.picture.lib.utils.ActivityCompatHelper;
 /**
- * @author：luck
- * @date：2019-11-13 17:02
- * @describe：Glide加载引擎
+ *
+ * 选择照片适配器
+ * @author 施立豪
+ * @date：2023/3/21
  */
 public class GlideEngine implements ImageEngine {
 

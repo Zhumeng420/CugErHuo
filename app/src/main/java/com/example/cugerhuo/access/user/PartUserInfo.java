@@ -13,7 +13,7 @@ public class PartUserInfo implements Serializable {
      * imageUrl 头像url
      * signature 简介
      * username 昵称
-     * isConcern 判断是否关注，其中0表示未关注，1表示已关注，2并表示互相关注，3表示未关注状态，但是关注后为互相关注
+     * isConcern 判断是否关注，其中0表示未关注，1表示已关注，2并表示互相关注，3表示未关注状态，但是关注后为互相关注，4表示没有对粉丝进行关注，5表示与粉丝互关
      */
     private int id;
     private String imageUrl;

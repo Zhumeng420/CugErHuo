@@ -4,11 +4,11 @@ import android.os.Bundle;
 
 import com.luck.picture.lib.PictureSelectorPreviewFragment;
 import com.luck.picture.lib.adapter.PicturePreviewAdapter;
-
 /**
- * @author：luck
- * @date：2022/2/21 4:15 下午
- * @describe：CustomPreviewFragment
+ *
+ * 选择照片适配器
+ * @author 施立豪
+ * @date：2023/4/21
  */
 public class CustomPreviewFragment extends PictureSelectorPreviewFragment {
 

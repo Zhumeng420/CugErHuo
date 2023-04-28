@@ -7,9 +7,10 @@ import android.graphics.Canvas;
 import com.luck.picture.lib.utils.DensityUtil;
 
 /**
- * @author：luck
- * @date：2022/4/2 5:22 下午
- * @describe：ImageUtil
+ *
+ * 选择照片适配器
+ * @author 施立豪
+ * @date：2023/4/21
  */
 public class ImageUtil {
     /**
