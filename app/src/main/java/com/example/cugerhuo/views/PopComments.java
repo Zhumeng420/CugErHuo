@@ -96,17 +96,22 @@ public class PopComments extends AppCompatDialog {
         popCommentsView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
-                Rect r = new Rect();
-                //获取当前界面可视部分
-                getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
-                //获取屏幕的高度
-                int screenHeight = getWindow().getDecorView().getRootView().getHeight();
-                //此处就是用来获取键盘的高度的， 在键盘没有弹出的时候 此高度为0 键盘弹出的时候为一个正数
-                int heightDifference = screenHeight - r.bottom;
-                if (heightDifference <= 0 && mLastDiff > 0) {
-                    dismiss();
-                }
-                mLastDiff = heightDifference;
+//                Rect r = new Rect();
+//                //获取当前界面可视部分
+//                getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
+//                //获取屏幕的高度
+//                int screenHeight = getWindow().getDecorView().getRootView().getHeight();
+//                //此处就是用来获取键盘的高度的， 在键盘没有弹出的时候 此高度为0 键盘弹出的时候为一个正数
+//                int heightDifference = screenHeight - r.bottom;
+//                if (heightDifference <= 0 && mLastDiff > 0) {
+//                    dismiss();
+//                }
+//                mLastDiff = heightDifference;
+//                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                getWindow().setGravity(Gravity.BOTTOM);
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+
             }
         });
 
