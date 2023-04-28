@@ -362,6 +362,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
          */
         if(partUserInfo.getConcern()==1||partUserInfo.getConcern()==2||partUserInfo.getConcern()==5){
             Intent intent=new Intent(OtherPeopleActivity.this, ChatActivity.class);
+            intent.putExtra("chatUser",partUserInfo);
             startActivity(intent);
         }
         /**
@@ -399,8 +400,8 @@ public class OtherPeopleActivity extends AppCompatActivity {
          */
         if(partUserInfo.getConcern()==0||partUserInfo.getConcern()==3||partUserInfo.getConcern()==4){
             Intent intent=new Intent(OtherPeopleActivity.this, ChatActivity.class);
+            intent.putExtra("chatUser",partUserInfo);
             startActivity(intent);
-
         }
         else{
             new Thread(() -> {

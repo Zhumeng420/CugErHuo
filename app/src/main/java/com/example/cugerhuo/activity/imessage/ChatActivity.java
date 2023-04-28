@@ -1,6 +1,8 @@
 package com.example.cugerhuo.activity.imessage;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,8 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.user.Msg;
+import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.activity.adapter.MsgAdapter;
 import com.example.cugerhuo.tools.MyToast;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallback;
@@ -32,6 +36,7 @@ import com.netease.nimlib.sdk.msg.model.CustomMessageConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.util.NIMUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +54,16 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private LinearLayoutManager layoutManager;
     private MsgAdapter adapter;
     private ImageView returnImg;
+    /**
+     * 聊天对象头像
+     * 聊天对象昵称
+     */
+    private RoundedImageView chatUserImg;
+    private TextView  chatUserName;
+    /**
+     * 聊天对象
+     */
+    private PartUserInfo chatUser=new PartUserInfo();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +74,26 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         inputText = findViewById(R.id.input_text);
         send = findViewById(R.id.send);
         returnImg = findViewById(R.id.return_chat);
+        chatUserImg=findViewById(R.id.chatUserImg);
+        chatUserName=findViewById(R.id.chatUserName);
         returnImg.setOnClickListener(this);
+
+        /**
+         * 从上个界面获取聊天对象信息
+         */
+        Intent intent =getIntent();
+        chatUser= (PartUserInfo) intent.getSerializableExtra("chatUser");
+        if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
+        {
+            chatUserImg.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
+        }
+        /**
+         * 初始化聊天对象信息
+         */
+        chatUserName.setText(chatUser.getUserName());
+
         layoutManager = new LinearLayoutManager(this);
-        adapter = new MsgAdapter(msgList = getData());
+        adapter = new MsgAdapter(msgList = getData(),chatUser,ChatActivity.this);
         msgRecyclerView.setLayoutManager(layoutManager);
         msgRecyclerView.setAdapter(adapter);
         /**
@@ -72,7 +104,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         // SDK初始化（启动后台服务，若已经存在用户登录信息， SDK 将进行自动登录）。不能对初始化语句添加进程判断逻辑。
         NIMClient.init(this,  null, null);
         // ... your codes
-        LoginInfo info = new LoginInfo("test1","123456");
+        LoginInfo info = new LoginInfo("cugerhuo12","123456");
         RequestCallback<LoginInfo> callback =
                 new RequestCallback<LoginInfo>() {
                     @Override
@@ -86,9 +118,9 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                             @Override
                             public void onEvent(LoginSyncStatus status) {
                                 if (status == LoginSyncStatus.BEGIN_SYNC) {
-                                    MyToast.toast(ChatActivity.this,"数据同步开始",3);
+                                    //MyToast.toast(ChatActivity.this,"数据同步开始",3);
                                 } else if (status == LoginSyncStatus.SYNC_COMPLETED) {
-                                    MyToast.toast(ChatActivity.this,"数据同步完成",3);
+                                    //MyToast.toast(ChatActivity.this,"数据同步完成",3);
                                 }
                             }
                         }, true);
@@ -100,7 +132,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                     // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
 //                                    TextView recevie=findViewById(R.id.textView);
 //                                    recevie.setText(messages.get(0).getFromAccount()+":"+messages.get(0).getContent());
-                                    msgList.add(new Msg(messages.get(0).getFromAccount()+":"+messages.get(0).getContent(),Msg.TYPE_RECEIVED));
+                                    msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_RECEIVED));
                                     adapter.notifyItemInserted(msgList.size()-1);
                                     msgRecyclerView.scrollToPosition(msgList.size()-1);
                                     MyToast.toast(ChatActivity.this,messages.toString(),3);
@@ -174,12 +206,13 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 //MyToast.Toast(ChatActivity.this,"你妈的",3);
                 /**
                  * 以下是往一个账号发送消息的示例
+                 *
                  */
-                // 该帐号为示例
-                String account = "test1";
+                // 给该账号发送消息
+                String account = "cugerhuo"+chatUser.getId();
                 // 以单聊类型为例
                 SessionTypeEnum sessionType = SessionTypeEnum.P2P;
-                String text = "hello world";
+                String text = inputText.getText().toString();
                 // 创建一个文本消息
                 IMMessage textMessage = MessageBuilder.createTextMessage(account, sessionType, text);
                 // 消息的配置选项
@@ -196,7 +229,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 NIMClient.getService(MsgService.class).sendMessage(textMessage, false).setCallback(new RequestCallback<Void>() {
                     @Override
                     public void onSuccess(Void param) {
-                        MyToast.toast(ChatActivity.this,"消息发送成功",3);
+                        //MyToast.toast(ChatActivity.this,"消息发送成功",3);
                         String content = inputText.getText().toString();
                         if(!content.equals("")) {
                             msgList.add(new Msg(content,Msg.TYPE_SEND));
@@ -204,24 +237,12 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                             msgRecyclerView.scrollToPosition(msgList.size()-1);
                             inputText.setText("");//清空输入框中的内容
                         }
-                        //自定义一问一答
-                        if(msgList.size() == 2){
-                            msgList.add(new Msg("What's your name?",Msg.TYPE_RECEIVED));
-                            adapter.notifyItemInserted(msgList.size()-1);
-                            msgRecyclerView.scrollToPosition(msgList.size()-1);
-                        }
-                        if(msgList.size() == 4){
-                            msgList.add(new Msg("Nice to meet you,Bye!",Msg.TYPE_RECEIVED));
-                            adapter.notifyItemInserted(msgList.size()-1);
-                            msgRecyclerView.scrollToPosition(msgList.size()-1);
-                        }
                     }
 
                     @Override
                     public void onFailed(int code) {
                         MyToast.toast(ChatActivity.this,"消息发送失败",1);
                     }
-
                     @Override
                     public void onException(Throwable exception) {
                         MyToast.toast(ChatActivity.this,"消息发送异常",1);
