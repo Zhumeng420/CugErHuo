@@ -233,6 +233,13 @@ public class InputTextMsgDialog extends AppCompatDialog {
 
     @Override
     public void dismiss() {
+        View view = getCurrentFocus();
+        if (view instanceof EditText) {
+            InputMethodManager imm = (InputMethodManager) mContext.getSystemService(INPUT_METHOD_SERVICE);
+            if (getCurrentFocus() != null) {
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+        }
         super.dismiss();
         //dismiss之前重置mLastDiff值避免下次无法打开
         mLastDiff = 0;

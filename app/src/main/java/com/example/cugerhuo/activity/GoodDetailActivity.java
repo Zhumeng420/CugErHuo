@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -15,6 +16,7 @@ import android.os.Message;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,6 +28,7 @@ import com.example.cugerhuo.activity.adapter.RecyclerViewAddressAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewCommentAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewGoodsDisplayAdapter;
 import com.example.cugerhuo.views.InputTextMsgDialog;
+import com.example.cugerhuo.views.PopComments;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +72,8 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
     private  LinearLayout otherGoods;
     private LayoutInflater goodsInflater;
     private final GoodDetailActivity.MyHandler MyHandler =new GoodDetailActivity.MyHandler();
+    /**查看更多留言*/
+    private LinearLayout lookMoreComments;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,6 +152,9 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                     otherGoods, false);
             otherGoods.addView(view);
         }
+        /**查看更多留言*/
+        lookMoreComments = findViewById(R.id.click_look_more);
+        lookMoreComments.setOnClickListener(this);
     }
 
     /**
@@ -209,6 +217,13 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 switchFlag = 1;
                 adapter = new RecyclerViewCommentAdapter(getActivity(), bidInfos,switchFlag);
                 commentRecyclerView.setAdapter(adapter);
+                break;
+            /**查看更多留言*/
+            case R.id.click_look_more:
+                final PopComments popComments = new PopComments(GoodDetailActivity.this, R.style.dialog_center_comment);
+                popComments.show();
+                InputMethodManager imm = (InputMethodManager) GoodDetailActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 break;
             default:
                 break;
