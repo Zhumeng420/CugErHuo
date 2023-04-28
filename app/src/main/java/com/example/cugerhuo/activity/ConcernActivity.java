@@ -133,7 +133,6 @@ public class ConcernActivity extends AppCompatActivity {
         }).start();
 
 
-
         new Thread(() -> {
             Message msg = Message.obtain();
             msg.arg1 = 2;
@@ -143,7 +142,6 @@ public class ConcernActivity extends AppCompatActivity {
              * 建立连接对象
              */
             LettuceBaseCase lettuce=new LettuceBaseCase();
-
             /**
              * 获取连接
              */
@@ -155,7 +153,6 @@ public class ConcernActivity extends AppCompatActivity {
                    partUserInfo.getUserName();
                    rePartUserInfo.add(partUserInfo);
                }
-
             }
             MyHandler.sendMessage(msg);
         }).start();
@@ -293,7 +290,7 @@ public class ConcernActivity extends AppCompatActivity {
             /**
              * 在他人界面点击关注，且关注后不是互相关注状态
              */
-            else {
+            else if(data1==1){
                 adapter.notifyItemChanged(positionClick,0);
             }
             System.out.println("hello concernActivity"+data1);

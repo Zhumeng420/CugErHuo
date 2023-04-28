@@ -221,6 +221,9 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         else if(requestCode==0x0002){
             userFocus.setText(""+focusNum);
         }
+        else if(requestCode==0x0003){
+            userFocus.setText(""+focusNum);
+        }
     }
     /**
      * 底部导航栏点击事件
