@@ -6,9 +6,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,11 +68,18 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
     /**发布者其他商品信息滚动*/
     private  LinearLayout otherGoods;
     private LayoutInflater goodsInflater;
+    private final GoodDetailActivity.MyHandler MyHandler =new GoodDetailActivity.MyHandler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_good_detail);
         initView();
+        // 开启线程
+        new Thread(() -> {
+            Message msg = Message.obtain();
+            msg.arg1 = 1;
+            MyHandler.sendMessage(msg);
+        }).start();
     }
 
     /**
@@ -202,6 +212,40 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 消息发送接收，异步更新UI
+     * @Author: 李柏睿
+     * @Time: 2023/4/28
+     */
+    private class MyHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.arg1){
+                /**
+                 * 获取地址信息列表
+                 */
+                case 1:
+                    /**
+                     * 点击item进行跳转并传值过去
+                     */
+                    goodsAdapter.setOnItemClickListener(new RecyclerViewGoodsDisplayAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            int flag = 1;
+                            Intent intent=new Intent(GoodDetailActivity.this, GoodDetailActivity.class);
+                            intent.putExtra("flag",flag);
+                            //startActivity(intent);
+                            startActivityForResult(intent,1);
+                        }
+                    });
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

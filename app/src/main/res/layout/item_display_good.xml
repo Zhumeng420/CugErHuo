@@ -6,7 +6,8 @@
     android:orientation="vertical"
     android:layout_marginRight="5dp"
     android:layout_marginLeft="5dp"
-    android:background="@drawable/border_radius">
+    android:background="@drawable/border_radius"
+    android:id="@+id/goods_display">
 
     <LinearLayout
         android:layout_width="190dp"

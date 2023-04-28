@@ -2,6 +2,8 @@ package com.example.cugerhuo.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
@@ -14,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.cugerhuo.activity.adapter.RecyclerViewAddressAdapter;
 import com.example.cugerhuo.activity.adapter.ViewAdapter;
 import com.example.cugerhuo.activity.adapter.ViewPagerAdapter;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
@@ -234,4 +237,6 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
         /**设置固定的tab*/
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
     }
+
+
 }

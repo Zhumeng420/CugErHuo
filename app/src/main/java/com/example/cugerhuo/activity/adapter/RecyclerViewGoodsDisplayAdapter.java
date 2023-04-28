@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.cugerhuo.R;
+import com.luck.picture.lib.interfaces.OnItemClickListener;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 /**
@@ -29,6 +31,7 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
      */
     private Context context;
     private int count=20;
+    private OnItemClickListener mClickListener;
 
     /**
      * 构造函数
@@ -71,6 +74,21 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
         Glide.with(context).load(R.drawable.icon_iphone)
                 .apply(options)
                 .into(holder.goodItemImg);
+
+        /**
+         * 点击事件
+         */
+        holder.goodsDisplay.setOnClickListener(new View.OnClickListener() {
+            /**
+             * 点击每个RecyclerView子组件进行相应的响应事件,点击跳转至编辑界面
+             * @Author: 李柏睿
+             * @Time: 2023/4/28
+             */
+            @Override
+            public void onClick(View v) {
+                mClickListener.onItemClick(v,position);
+            }
+        });
     }
 
     /**
@@ -94,6 +112,7 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
         TextView goodsItemPrice;
         RoundedImageView goodItemUserImg;
         TextView goodItemUsername;
+        LinearLayout goodsDisplay;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -102,6 +121,7 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
             goodsItemPrice=itemView.findViewById(R.id.goods_item_price);
             goodItemUserImg=itemView.findViewById(R.id.good_item_user_img);
             goodItemUsername=itemView.findViewById(R.id.good_item_username);
+            goodsDisplay=itemView.findViewById(R.id.goods_display);
 
         }
     }
@@ -122,6 +142,26 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
             outRect.bottom=space;
             outRect.top=space;
         }
+    }
+
+    /**
+     * item点击响应函数
+     * @param listener
+     * @Author: 李柏睿
+     * @Time: 2023/4/28
+     */
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mClickListener = listener;
+    }
+
+    /**
+     * 定义RecyclerView选项单击事件的回调接口
+     * @Author: 李柏睿
+     * @Time: 2023/4/28
+     */
+    public interface OnItemClickListener {
+        /**参数（父组件，当前单击的View,单击的View的位置，数据）*/
+        public void onItemClick(View view, int position);
     }
 
 }
