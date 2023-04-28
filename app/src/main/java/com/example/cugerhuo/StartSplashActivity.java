@@ -422,6 +422,7 @@ public class StartSplashActivity extends AppCompatActivity {
                         /**
                          * 登录信息没过期直接进入主页
                          */
+
                         Intent i=new Intent(getApplicationContext(), ErHuoActivity.class);
                         startActivity(i);
                         overridePendingTransition(0,0);

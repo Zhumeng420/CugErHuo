@@ -648,7 +648,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                 if (grantResults[1]!=0&&grantResults[0]!=0) {
                     for(int i = 0; i < grantResults.length; i++){
                         if(grantResults[i] != PackageManager.PERMISSION_GRANTED){
-                            Toast.makeText(PostSellActivity.this,"未拥有相应权限",Toast.LENGTH_LONG).show();
+                            Toast.makeText(PostSellActivity.this,"未拥有定位相应权限",Toast.LENGTH_LONG).show();
                             return;
                         }
                     }
