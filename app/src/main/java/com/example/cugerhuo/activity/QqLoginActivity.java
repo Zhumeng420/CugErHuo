@@ -198,6 +198,7 @@ public class QqLoginActivity extends AppCompatActivity {
                                                  * 保存ID
                                                  */
                                                 UserInfo.setid(result);
+
                                                 /**
                                                  * 注册云信
                                                  * @time 2023/4/28

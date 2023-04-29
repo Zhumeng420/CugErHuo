@@ -1,6 +1,9 @@
 package com.example.cugerhuo.access.commodity;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -13,6 +16,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
+import io.lettuce.core.api.sync.RedisCommands;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -25,7 +29,30 @@ import okhttp3.Response;
  * @time 2023/4/21
  */
 public class CommodityOperate {
-
+    public static Commodity getCommodityFromRedis(RedisCommands<String, String> connection, int id, Context context)
+    {
+        /**
+         * 查询redis，如果存在则返回，不存在查询mysql放入redis
+         */
+        String info=connection.hget("Commodity",String.valueOf(id));
+        Commodity user = (Commodity) JSON.parseObject(info,Commodity.class);
+        Log.i(TAG,"查询redis for commodity");
+        /**
+         * 没查到，从mysql查询，并插入redis
+         */
+        if(user==null)
+        {
+            user=getCommodity(id,context);
+            String userString=JSON.toJSONString(user);
+            connection.hset("Commodity",String.valueOf(id),userString);
+            Log.i(TAG,"查询mysql for Commodity");
+        }
+        if(user!=null)
+        {
+            user.setUserId(id);
+        }
+        return user;
+    }
     /**
      * 获取商品信息
      * @param id
@@ -136,5 +163,9 @@ public class CommodityOperate {
         } catch (IOException e) {
             e.printStackTrace();
         }return result==200;
+    }
+    public static void remove(RedisCommands<String, String> connection, int id, Context context)
+    {
+        connection.hdel("Commodity",String.valueOf(id));
     }
 }

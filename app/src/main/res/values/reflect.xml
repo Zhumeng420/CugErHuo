@@ -39,6 +39,9 @@
     <string name="Text">text</string>
 
 
+    <string name="recommendCom">recommend/homepage</string>
+    <string name="page1">page=1</string>
+    
     <string name="FocusNum">focus/myfocusnum</string>
     <string name="FansNum">focus/myfansnum</string>
     <string name="Focus">/focus/myfocus</string>

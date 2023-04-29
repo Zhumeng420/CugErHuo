@@ -20,10 +20,13 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.cugerhuo.access.SetCommodityInfo;
+import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.activity.ErHuoActivity;
 import com.example.cugerhuo.access.SetGlobalIDandUrl;
 import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.access.user.UserOperate;
+import com.example.cugerhuo.activity.QqLoginActivity;
 import com.example.cugerhuo.login.config.BaseUIConfig;
 import com.example.cugerhuo.login.loginutils.BuildConfig;
 import com.example.cugerhuo.login.loginutils.Constant;
@@ -182,9 +185,9 @@ public class OneKeyLoginActivity extends Activity {
                          * 必须登录 否则直接退出app的场景
                          */
                     } else {
-//                        Toast.makeText(getApplicationContext(), "一键登录失败切换到其他登录方式", Toast.LENGTH_SHORT).show();
-//                        Intent pIntent = new Intent(OneKeyLoginActivity.this, MessageActivity.class);
-//                        startActivityForResult(pIntent, 1002);
+                        Toast.makeText(getApplicationContext(), "一键登录失败切换到其他登录方式", Toast.LENGTH_SHORT).show();
+                        Intent pIntent = new Intent(OneKeyLoginActivity.this, QqLoginActivity.class);
+                        startActivityForResult(pIntent, 1002);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -345,6 +348,8 @@ public class OneKeyLoginActivity extends Activity {
                                                             span2.finish();
                                                         }
                                                         if(result!=-1){
+                                                            UserInfo.setid(result);
+
                                                             /**
                                                              * 注册云信
                                                              * @time 2023/4/28

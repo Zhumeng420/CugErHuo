@@ -1,15 +1,9 @@
 package com.example.cugerhuo.activity;
-import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,10 +15,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.cugerhuo.R;
-import com.example.cugerhuo.access.user.AddressInfo;
+import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.user.CommentInfo;
-import com.example.cugerhuo.activity.adapter.RecyclerViewAddressAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewCommentAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewGoodsDisplayAdapter;
 import com.example.cugerhuo.views.InputTextMsgDialog;
@@ -39,7 +37,10 @@ import java.util.List;
  * @Time: 2023/4/27 17:33
  */
 public class GoodDetailActivity extends AppCompatActivity implements View.OnClickListener{
-
+    /**
+     * 推荐商品
+     */
+    private List<Commodity> recommendCommodities;
     /**添加评论线性布局*/
     private LinearLayout msgSend;
     /**添加评论线性布局中的textview*/
@@ -93,6 +94,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
      * @Time: 2023/4/27 19:13
      */
     public void initView(){
+        recommendCommodities=new ArrayList<>();
         msgSend = findViewById(R.id.msg_send);
         msgSend.setOnClickListener(this);
         msgText = findViewById(R.id.msg_detail);
@@ -135,7 +137,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
         commentRecyclerView.setAdapter(adapter);
         /**推荐商品模块*/
         /**初始化adapter**/
-        goodsAdapter=new RecyclerViewGoodsDisplayAdapter(getActivity());
+        goodsAdapter=new RecyclerViewGoodsDisplayAdapter(getActivity(),recommendCommodities,new ArrayList<>());
         goodsRecyclerView = findViewById(R.id.display_good);
         /**禁止recyclerView滑动**/
         goodsRecyclerView.setNestedScrollingEnabled(false);

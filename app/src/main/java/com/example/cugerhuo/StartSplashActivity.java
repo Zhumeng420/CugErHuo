@@ -13,9 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
+import com.example.cugerhuo.access.SetCommodityInfo;
 import com.example.cugerhuo.access.SetGlobalIDandUrl;
+import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.activity.ErHuoActivity;
-import com.example.cugerhuo.graph.GraphOperate;
 import com.example.cugerhuo.login.login.OneKeyLoginActivity;
 import com.example.cugerhuo.oss.InitOS;
 
@@ -23,7 +24,6 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import io.jaegertracing.Configuration;
 import io.opentracing.util.GlobalTracer;
@@ -67,7 +67,6 @@ public class StartSplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         //
 //        Intent i1=new Intent(getApplicationContext(), QqLoginActivity.class);
 //        startActivity(i1);
@@ -89,11 +88,11 @@ public class StartSplashActivity extends AppCompatActivity {
             public void run() {
                 //List<String> a=new ArrayList<String>();
               //  a.add("/storage/emulated/0/Android/data/com.example.cugerhuo/cache/luban_disk_cache/CMP_20230429162710476.jpg");
-                List<Integer> a=GraphOperate.productSearch("/storage/emulated/0/Android/data/com.example.cugerhuo/cache/luban_disk_cache/CMP_20230429162710476.jpg");
-                for(int i:a)
-                {
-                    System.out.println(i);
-                }
+//                List<Integer> a=GraphOperate.productSearch("/storage/emulated/0/Android/data/com.example.cugerhuo/cache/luban_disk_cache/CMP_20230429162710476.jpg");
+//                for(int i:a)
+//                {
+//                    System.out.println(i);
+//                }
                 /**
                  * 对象存储初始化1
                  */
@@ -219,6 +218,7 @@ public class StartSplashActivity extends AppCompatActivity {
                              */
                             String qqId=loginMessage.getString("QqId","");
                 SetGlobalIDandUrl.setByQq(qqId,StartSplashActivity.this);
+                            SetCommodityInfo.setInfo(UserInfo.getid(),StartSplashActivity.this);
 
 //                            new Thread(new Runnable() {
 //                                @Override
@@ -332,6 +332,8 @@ public class StartSplashActivity extends AppCompatActivity {
                              */
                             String phoneNumber=loginMessage.getString("PhoneNumber","");
                             SetGlobalIDandUrl.setByPhone(phoneNumber,StartSplashActivity.this);
+                            SetCommodityInfo.setInfo(UserInfo.getid(),StartSplashActivity.this);
+
 //                            new Thread(new Runnable() {
 //                                @Override
 //                                public void run() {

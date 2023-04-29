@@ -183,6 +183,7 @@ dependencies {
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
     //文本审核
     implementation 'com.qcloud.cos:cos-android:5.9.+'
-
+    //组件通信
+    implementation 'org.greenrobot:eventbus:3.0.0'
 }
 
