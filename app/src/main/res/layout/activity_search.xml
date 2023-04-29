@@ -40,10 +40,12 @@
                     android:id="@+id/linear_searchitem">
 
                     <ImageView
+                        android:clickable="true"
                         android:layout_width="20dp"
                         android:layout_height="22dp"
                         android:layout_gravity="center"
                         android:layout_marginLeft="10dp"
+                        android:id="@+id/image_search"
                         android:src="@drawable/icon_search_black" />
                     <ImageView
                         android:layout_width="20dp"

@@ -15,6 +15,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
 import com.example.cugerhuo.access.SetGlobalIDandUrl;
 import com.example.cugerhuo.activity.ErHuoActivity;
+import com.example.cugerhuo.graph.GraphOperate;
 import com.example.cugerhuo.login.login.OneKeyLoginActivity;
 import com.example.cugerhuo.oss.InitOS;
 
@@ -22,6 +23,7 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import io.jaegertracing.Configuration;
 import io.opentracing.util.GlobalTracer;
@@ -78,17 +80,28 @@ public class StartSplashActivity extends AppCompatActivity {
         StatService.setDebugOn(true);
         StatService.autoTrace(this, true, false);
 
+
         /**
          * 链路追踪初始化以及对象存储初始化
          */
         new Thread(new Runnable() {
             @Override
             public void run() {
+                //List<String> a=new ArrayList<String>();
+              //  a.add("/storage/emulated/0/Android/data/com.example.cugerhuo/cache/luban_disk_cache/CMP_20230429162710476.jpg");
+                List<Integer> a=GraphOperate.productSearch("/storage/emulated/0/Android/data/com.example.cugerhuo/cache/luban_disk_cache/CMP_20230429162710476.jpg");
+                for(int i:a)
+                {
+                    System.out.println(i);
+                }
                 /**
                  * 对象存储初始化1
                  */
                 InitOS m=InitOS.getInstance(getApplicationContext());
                 System.out.println("secret"+m.get());
+                /**
+                 * 图像检索初始化
+                 */
                 /**
                  * 链路追踪初始化
                  */
@@ -206,6 +219,7 @@ public class StartSplashActivity extends AppCompatActivity {
                              */
                             String qqId=loginMessage.getString("QqId","");
                 SetGlobalIDandUrl.setByQq(qqId,StartSplashActivity.this);
+
 //                            new Thread(new Runnable() {
 //                                @Override
 //                                public void run() {

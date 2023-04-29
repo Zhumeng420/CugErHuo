@@ -19,6 +19,7 @@ android {
                 exclude 'META-INF/INDEX.LIST'
                 exclude 'META-INF/io.netty.versions.properties'
                 exclude 'META-INF/DEPENDENCIES'
+
             }
     defaultConfig {
         applicationId "com.example.cugerhuo"
@@ -129,6 +130,7 @@ dependencies {
     implementation 'com.alibaba:fastjson:1.2.15'
 
     implementation files('libs\\open_sdk_3.5.14.3_rc26220c_lite.jar')
+    implementation files('libs\\aip-java-sdk-4.16.14.jar')
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.airbnb.android:lottie:3.6.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
@@ -181,7 +183,6 @@ dependencies {
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
     //文本审核
     implementation 'com.qcloud.cos:cos-android:5.9.+'
-
 
 }
 

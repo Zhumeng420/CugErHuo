@@ -84,6 +84,7 @@ import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.activity.adapter.GridImageAdapter;
 import com.example.cugerhuo.activity.listener.DragListener;
 import com.example.cugerhuo.activity.listener.OnItemLongClickListener;
+import com.example.cugerhuo.graph.GraphOperate;
 import com.example.cugerhuo.tools.GetFileNameUtil;
 import com.example.cugerhuo.tools.MyToast;
 import com.example.cugerhuo.tools.OssOperate;
@@ -437,20 +438,23 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                         /**
                          * 上传商品信息
                          */
+                        List<String> imageSearch=new ArrayList<>();
+
                         for(int i=0;i< paths.size();++i)
-                        {
+                        {             imageSearch.add((String) paths.get(i));
+
                             {
                                 String fileName = "specific_"+ paths.get(i);
                                 boolean isUped=false;
-                                Span span1 = tracer.buildSpan("上传头像到oss流程").withTag("onChangeImage函数：", "子追踪").start();
+                                Span span1 = tracer.buildSpan("上传商品到oss流程").withTag("onChangeImage函数：", "子追踪").start();
                                 try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
                                     // 业务逻辑写这里
                                     isUped= OssOperate.up(fileName, Uri.fromFile(new File((String) paths.get(i))));
                                     if(isUped) {
-                                        Log.i(TAG, "修改头像oss上传成功");
+                                        Log.i(TAG, "上传商品oss上传成功");
                                     }
                                     else{
-                                        Log.e(TAG,"修改头像oss上传失败");
+                                        Log.e(TAG,"上传商品oss上传失败");
                                     }
                                     //UserInfo.setUrl(fileName);
                                 } catch (Exception e) {
@@ -460,6 +464,22 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                                     span.finish();
                                 }
                             }
+                        }
+                        Span span1 = tracer.buildSpan("上传到oss流程").withTag("onChangeImage函数：", "子追踪").start();
+                        try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
+                            // 业务逻辑写这里
+                           Boolean a= GraphOperate.productAdd(imageSearch,result);
+                            if(a) {
+                                Log.i(TAG, "上传成功");
+                            }
+                            else{
+                                Log.e(TAG,"oss上传失败");
+                            }
+                        } catch (Exception e) {
+                            TracingHelper.onError(e, span);
+                            throw e;
+                        } finally {
+                            span.finish();
                         }
                         /**
                          * 通知UI发生提醒
@@ -1259,7 +1279,6 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                                         Message msg = Message.obtain();
                                         msg.arg1 = 5;
                                         MyHandler.sendMessage(msg);
-
                                     } catch (Exception e) {
                                         TracingHelper.onError(e, span);
                                         throw e;} finally {
