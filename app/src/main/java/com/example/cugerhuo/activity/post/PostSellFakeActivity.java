@@ -208,7 +208,7 @@ import top.zibin.luban.OnRenameListener;
  * @data：2023/4/21
  * @描述: 发布页面
  */
-public class PostSellActivity extends AppCompatActivity implements IBridgePictureBehavior, View.OnClickListener,
+public class PostSellFakeActivity extends AppCompatActivity implements IBridgePictureBehavior, View.OnClickListener,
         RadioGroup.OnCheckedChangeListener, CompoundButton.OnCheckedChangeListener{
     private final static String[] new_old_list=new String[]{"全新","几乎全新","轻微使用痕迹/磕碰划痕","明显使用痕迹/磕碰划痕"};
     private final static String TAG = "PictureSelectorTag";
@@ -383,7 +383,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
     public boolean lacksPermission(String[] permissions) {
         for (String permission : permissions) {
             //判断是否缺少权限，true=缺少权限
-            if(ContextCompat.checkSelfPermission(PostSellActivity.this, permission) != PackageManager.PERMISSION_GRANTED){
+            if(ContextCompat.checkSelfPermission(PostSellFakeActivity.this, permission) != PackageManager.PERMISSION_GRANTED){
                 return true;
             }
         }
@@ -417,7 +417,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
             Span span = tracer.buildSpan("发布流程").withTag("onBtnClickedListener：", "子踪").start();
             try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                 // 插入mysql并获取id
-                result=CommodityOperate.insertCommodity(commodity,PostSellActivity.this);
+                result=CommodityOperate.insertCommodity(commodity, PostSellFakeActivity.this);
                 if(result>0)
                 {
                     Log.i(TAG,"插入商品至mysql成功");
@@ -430,7 +430,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                     }
                     else
                     {temp=name[0];}
-                    result1=CommodityOperate.insertUserToTu(id,result,temp,PostSellActivity.this);
+                    result1=CommodityOperate.insertUserToTu(id,result,temp, PostSellFakeActivity.this);
                     if(result1)
                     {
                         Log.i(TAG,"插入商品至图数据库成功");
@@ -546,7 +546,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                     .setRegion(region)
                     .isHttps(true) // 使用 HTTPS 请求, 默认为 HTTP 请求
                     .builder();
-            CIService ciService=new CIService(PostSellActivity.this,serviceConfig,myCredentialProvider);
+            CIService ciService=new CIService(PostSellFakeActivity.this,serviceConfig,myCredentialProvider);
             // 存储桶名称，格式为 BucketName-APPID
             String bucket = "cug-erhuo-1314485188";
             // 对象键，是对象在 COS 上的完整路径，如果带目录的话，格式为 "dir1/object1"
@@ -648,7 +648,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                 if (grantResults[1]!=0&&grantResults[0]!=0) {
                     for(int i = 0; i < grantResults.length; i++){
                         if(grantResults[i] != PackageManager.PERMISSION_GRANTED){
-                            Toast.makeText(PostSellActivity.this,"未拥有定位相应权限",Toast.LENGTH_LONG).show();
+                            Toast.makeText(PostSellFakeActivity.this,"未拥有定位相应权限",Toast.LENGTH_LONG).show();
                             return;
                         }
                     }
@@ -704,9 +704,9 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
             }
         };
         AMapLocationClient.setApiKey("9f769df4a1a71a366247dc9da243750b");
-        AMapLocationClient.updatePrivacyAgree(PostSellActivity.this,true);
-        AMapLocationClient.updatePrivacyShow(PostSellActivity.this,true,true);
-        mLocationClient = new AMapLocationClient(PostSellActivity.this);//设置定位回调监听
+        AMapLocationClient.updatePrivacyAgree(PostSellFakeActivity.this,true);
+        AMapLocationClient.updatePrivacyShow(PostSellFakeActivity.this,true,true);
+        mLocationClient = new AMapLocationClient(PostSellFakeActivity.this);//设置定位回调监听
         mLocationClient.setLocationListener(mLocationListener);
         AMapLocationClientOption mLocationOption = null;
 //初始化AMapLocationClientOption对象
@@ -754,7 +754,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
         price=0;
         originalPrice=0;
         //监听点击描述文本框之外的部分，文本框更新则调用获取分类接口函数
-        postInput.setOnFocusChangeListener(new android.view.View.OnFocusChangeListener() {
+        postInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
 
@@ -785,8 +785,8 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                                 Span span = tracer.buildSpan("发布商品流程").withTag("获取品牌函数：", "子追踪").start();
                                 try (Scope ignored = tracer.scopeManager().activate(span, true)) {
                                     // 获取分类
-                                    cate[0] = Nlp.getNlpCatrgory(temp, PostSellActivity.this).toArray(new String[0]);
-                                    name=Nlp.getNlpWords(temp, PostSellActivity.this).toArray(new String[0]);
+                                    cate[0] = Nlp.getNlpCatrgory(temp, PostSellFakeActivity.this).toArray(new String[0]);
+                                    name=Nlp.getNlpWords(temp, PostSellFakeActivity.this).toArray(new String[0]);
                                 } catch (Exception e) {
                                     TracingHelper.onError(e, span);
                                     throw e;
@@ -864,7 +864,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
             @Override
             public void onItemClick(View v, int position) {
                 // 预览图片、视频、音频
-                PictureSelector.create(PostSellActivity.this)
+                PictureSelector.create(PostSellFakeActivity.this)
                         .openPreview()
                         .setImageEngine(imageEngine)
                         .setVideoPlayerEngine(videoPlayerEngine)
@@ -1005,7 +1005,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                     }
                 } else {
                     // 单独拍照
-                    PictureSelectionCameraModel cameraModel = PictureSelector.create(PostSellActivity.this)
+                    PictureSelectionCameraModel cameraModel = PictureSelector.create(PostSellFakeActivity.this)
                             .openCamera(chooseMode)
                             .setCameraInterceptListener(getCustomCameraEvent())
                             .setRecordAudioInterceptListener(new MeOnRecordAudioInterceptListener())
@@ -1042,13 +1042,13 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
 //        clearCache();
 
         /**数字键盘*/
-        final KeyboardUtil keyboardUtil = new KeyboardUtil(PostSellActivity.this);
+        final KeyboardUtil keyboardUtil = new KeyboardUtil(PostSellFakeActivity.this);
         keyboardUtil.setOnOkClick(new KeyboardUtil.OnOkClick() {
             @Override
             public void onOkClick() {
                 if (validate()) {
                     ll_price_select.setVisibility(View.GONE);
-                    tv_price.setText(et_price.getText() );
+                    tv_price.setText(et_price.getText() + "/价格");
                 }
             }
         });
@@ -1128,7 +1128,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
             public boolean onPreDraw() {
                 height = linearlayout_id.getMeasuredHeight();
                 // 移除OnPreDrawListener事件监听
-                PostSellActivity.this.getWindow().getDecorView().getViewTreeObserver().removeOnPreDrawListener(this);
+                PostSellFakeActivity.this.getWindow().getDecorView().getViewTreeObserver().removeOnPreDrawListener(this);
                 //获取完高度后隐藏控件
                 linearlayout_id.setVisibility(View.GONE);
 
@@ -1255,7 +1255,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                                     Span span = tracer.buildSpan("发布商品流程").withTag("获取品牌函数：", "子追踪").start();
                                     try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                                         // 获取品牌
-                                       bran[0]= Nlp.getNlpBrand(category, PostSellActivity.this).toArray(new String[0]);
+                                       bran[0]= Nlp.getNlpBrand(category, PostSellFakeActivity.this).toArray(new String[0]);
                                         Message msg = Message.obtain();
                                         msg.arg1 = 5;
                                         MyHandler.sendMessage(msg);
@@ -1291,7 +1291,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                     }
                     break;
                 case 4:
-                    MyToast.toast(PostSellActivity.this,"发布成功",3);
+                    MyToast.toast(PostSellFakeActivity.this,"发布成功",3);
                     break;
                 case 5:
                     adapt(bran[0],(LinearLayout) findViewById(R.id.brand_id),categoryInflater,R.layout.brand_item,R.id.brand,R.id.brand_layout);
@@ -1301,24 +1301,24 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                     switch (msg.arg2)
                     {
                         case 0:
-                            MyToast.toast(PostSellActivity.this,"正在上传",2);
+                            MyToast.toast(PostSellFakeActivity.this,"正在上传",2);
                             PublishTask publishTask=new PublishTask(commodity,UserInfo.getid());
                             executor.execute(publishTask);
                             break;
                         case 1:
-                            MyToast.toast(PostSellActivity.this,"您的输入存在色情内容，禁止发布",0);
+                            MyToast.toast(PostSellFakeActivity.this,"您的输入存在色情内容，禁止发布",0);
                             break;
                         case 2:
-                            MyToast.toast(PostSellActivity.this,"您的输入中检测到广告，禁止发布",0);
+                            MyToast.toast(PostSellFakeActivity.this,"您的输入中检测到广告，禁止发布",0);
                             break;
                         default:
-                            MyToast.toast(PostSellActivity.this,"抱歉,未知错误",1);
+                            MyToast.toast(PostSellFakeActivity.this,"抱歉,未知错误",1);
                             break;
                     }
 
                     break;
                 case 7:
-                    MyToast.toast(PostSellActivity.this,"抱歉,文本审核功能遇到了问题！",0);
+                    MyToast.toast(PostSellFakeActivity.this,"抱歉,文本审核功能遇到了问题！",0);
                     default:
                         break;
             }
@@ -1353,7 +1353,7 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
         Log.v("hideInputResult","zzz-->>"+hideInputResult);
         if(hideInputResult){
             v.clearFocus();
-            InputMethodManager imm = (InputMethodManager) PostSellActivity.this
+            InputMethodManager imm = (InputMethodManager) PostSellFakeActivity.this
                     .getSystemService(Activity.INPUT_METHOD_SERVICE);
             if(v != null){
                 if(imm.isActive()){
@@ -1489,15 +1489,13 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
                     temp.setBrand(brand);}
                 temp.setDescription(postText);
                 temp.setState(true);
-                price= Double.parseDouble(tv_price.getText().toString());
-
                 temp.setOriginalprice((float) originalPrice);
                 temp.setPrice((float) price);
                 temp.setPurchasechannel(null);
                 if(newOld!=null){
                     temp.setQuality(newOld);}
 
-                temp.setUserId(UserInfo.getid());
+                temp.setUserId(1);
                 temp.setId(0);
                String history= JSONObject.toJSONString(temp);
                 SharedPreferences draftMessage = getSharedPreferences("Draft", Context.MODE_PRIVATE);
@@ -1510,13 +1508,13 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
                 editor.putString("brand",branHistory);
                 editor.apply();
                 Log.i(TAG,"保存成功");
-                MyToast.toast(PostSellActivity.this,"正在保存",2);
-                MyToast.toast(PostSellActivity.this,"保存成功",3);
+                MyToast.toast(PostSellFakeActivity.this,"正在保存",2);
+                MyToast.toast(PostSellFakeActivity.this,"保存成功",3);
                 break;
             case R.id.publishGoods:
                 if(postText==null||postText.length()==0)
                 {
-                    MyToast.toast(PostSellActivity.this,"请填写商品描述",0);
+                    MyToast.toast(PostSellFakeActivity.this,"请填写商品描述",0);
                     break;
                 }
                 else
@@ -1558,22 +1556,19 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
                 Date date = new Date(System.currentTimeMillis());
                 commodity.setTime(date);
                 commodity.setOriginalprice((float) originalPrice);
-                price=Double.parseDouble(tv_price.getText().toString());
                 commodity.setPrice((float) price);
                 commodity.setPurchasechannel(null);
                 if(newOld!=null){
                 commodity.setQuality(newOld);}
                 else
                 {
-                    MyToast.toast(PostSellActivity.this,"请选择成色",1);
+                    MyToast.toast(PostSellFakeActivity.this,"请选择成色",1);
                     break;
                 }
-                EditText temp1=findViewById(R.id.fakeid);
-                int uid= Integer.parseInt(temp1.getText().toString());
-                commodity.setUserId(uid);
+                commodity.setUserId(UserInfo.getid());
                 commodity.setId(0);
                 postText=  postInput.getText().toString();
-                MyToast.toast(PostSellActivity.this,"正在审核",2);
+                MyToast.toast(PostSellFakeActivity.this,"正在审核",2);
                 AuditTask auditTask=new AuditTask(postText);
                 executor.execute(auditTask);
 //                new Thread(new Runnable() {
@@ -1700,7 +1695,7 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
                                 Span span = tracer.buildSpan("发布商品流程").withTag("获取品牌函数：", "子追踪").start();
                                 try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                                     // 获取品牌
-                                    bran[0]= Nlp.getNlpBrand(category, PostSellActivity.this).toArray(new String[0]);
+                                    bran[0]= Nlp.getNlpBrand(category, PostSellFakeActivity.this).toArray(new String[0]);
                                     Message msg = Message.obtain();
                                     msg.arg1 = 5;
                                     MyHandler.sendMessage(msg);
