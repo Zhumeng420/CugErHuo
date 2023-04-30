@@ -45,14 +45,14 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file("C:\\Users\\施立豪\\CUGERHUOSHA.jks")
+            //storeFile file("C:\\Users\\施立豪\\CUGERHUOSHA.jks")
             storePassword "CUGerhuo444"
             keyAlias "key0"
             keyPassword "CUGerhuo444"
         }
         //发布版的keystore
         release {
-            storeFile file("C:\\Users\\施立豪\\CUGERHUOSHA.jks")
+            //storeFile file("C:\\Users\\施立豪\\CUGERHUOSHA.jks")
             storePassword "CUGerhuo444"
             keyAlias "key0"
             keyPassword "CUGerhuo444"
@@ -186,6 +186,8 @@ dependencies {
     //组件通信
     implementation 'org.greenrobot:eventbus:3.0.0'
 
+    //elasticsearch
+    implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.14.0'
 
 }
 
