@@ -4,6 +4,7 @@ import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,7 +30,9 @@ import com.example.cugerhuo.activity.adapter.RecyclerViewCommentAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewGoodsDisplayAdapter;
 import com.example.cugerhuo.views.InputTextMsgDialog;
 import com.example.cugerhuo.views.PopComments;
+import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +54,19 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
      * 推荐商品
      */
     private List<Commodity> recommendCommodities;
+    /**
+     * 卖家头像
+     */
+    private RoundedImageView sellerImage;
+    /**
+     * 描述框
+     */
+    private TextView sellerName;
+    private TextView sellerDescripe;
+    private TextView goodCate;
+    private TextView goodBrand;
+    private TextView goodOldNew;
+    private TextView goodDetail;
     /**添加评论线性布局*/
     private LinearLayout msgSend;
     /**添加评论线性布局中的textview*/
@@ -91,6 +107,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_good_detail);
         initView();
+        initData();
         // 开启线程
         new Thread(() -> {
             Message msg = Message.obtain();
@@ -108,6 +125,12 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
         {
         commodity= RecommendInfo.getCommodityList().get(position);
         userInfo=RecommendInfo.getPartUserInfoList().get(position);
+        sellerDescripe.setText(userInfo.getSignature());
+        sellerImage.setImageURI(Uri.fromFile(new File(userInfo.getImageUrl())));
+        sellerName.setText(userInfo.getUserName());
+        goodDetail.setText(commodity.getDescription());
+        goodCate.setText(commodity.getCategory());
+        goodBrand.setText(commodity.getBrand());
         }
         else
         {
@@ -121,6 +144,16 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
      * @Time: 2023/4/27 19:13
      */
     public void initView(){
+        /**
+         * 卖家初始化
+         */
+        sellerDescripe=findViewById(R.id.userDescription_top);
+        sellerName=findViewById(R.id.userName_top);
+        sellerImage=findViewById(R.id.userImg_top);
+        goodBrand=findViewById(R.id.brand_information);
+        goodCate=findViewById(R.id.cate_information);
+        goodOldNew=findViewById(R.id.old_new_information);
+        goodDetail=findViewById(R.id.good_detail);
         recommendCommodities=new ArrayList<>();
         msgSend = findViewById(R.id.msg_send);
         msgSend.setOnClickListener(this);

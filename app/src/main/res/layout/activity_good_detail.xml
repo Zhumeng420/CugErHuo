@@ -102,10 +102,12 @@
                         android:text="旺旺仙贝"
                         android:textColor="@color/black"
                         android:textSize="15sp"
+                        android:id="@+id/userName_top"
                         android:textStyle="bold"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:id="@+id/userDescription_top"
                         android:textSize="12sp"
                         android:text="我也不知道写点什么"/>
                 </LinearLayout>
@@ -186,6 +188,7 @@
                     android:orientation="vertical">
 
                     <TextView
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="13sp"

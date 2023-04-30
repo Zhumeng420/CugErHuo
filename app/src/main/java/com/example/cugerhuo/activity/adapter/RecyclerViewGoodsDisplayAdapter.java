@@ -31,6 +31,7 @@ import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.oss.InitOS;
+import com.example.cugerhuo.tools.GetFileNameUtil;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
@@ -89,7 +90,9 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-    holder.goodItemTitle.setText(commodities.get(position).getCategory());
+        String firstCate= GetFileNameUtil.getCate(commodities.get(position).getCategory());
+    holder.goodItemTitle.setText(commodities.get(position).getDescription());
+        commodities.get(position).setCategory(firstCate);
     holder.goodsItemPrice.setText(String.valueOf(commodities.get(position).getPrice()));
     holder.goodItemUsername.setText(userInfos.get(position).getUserName());
         /**
@@ -154,6 +157,7 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
                                      */
                                     System.out.println("image"+newUrl);
                                     holder.goodItemUserImg.setImageURI(Uri.fromFile(new File(newUrl)));
+                                    userInfos.get(position).setImageUrl(newUrl);
                                 } catch (Exception e) {
                                     OSSLog.logInfo(e.toString());
                                 }

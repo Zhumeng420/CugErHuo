@@ -143,6 +143,12 @@ public class demo {
 //                System.out.println(part.getImageUrl());
         //关闭连接
 //                lettuce.close();
+
+
+//        for(int i=0;i<1040;++i)
+//        {
+//            UserInfoOperate.remove(con,i, StartSplashActivity.this);
+//        }
     }
     /**
      * 操作redis的demo，以获取用户的id，个签，用户名，头像url为例
