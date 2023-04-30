@@ -103,8 +103,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         Observer<List<IMMessage>> incomingMessageObserver =
                 messages -> {
                     // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
-//                                    TextView recevie=findViewById(R.id.textView);
-//                                    recevie.setText(messages.get(0).getFromAccount()+":"+messages.get(0).getContent());
                     msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_RECEIVED));
                     adapter.notifyItemInserted(msgList.size()-1);
                     msgRecyclerView.scrollToPosition(msgList.size()-1);

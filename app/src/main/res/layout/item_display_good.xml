@@ -70,7 +70,7 @@
         <!--昵称区域-->
         <TextView
             android:id="@+id/good_item_username"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="阿呆"

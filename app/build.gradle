@@ -185,5 +185,7 @@ dependencies {
     implementation 'com.qcloud.cos:cos-android:5.9.+'
     //组件通信
     implementation 'org.greenrobot:eventbus:3.0.0'
+
+
 }
 

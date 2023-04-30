@@ -2,74 +2,70 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/all_zone"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/all_zone"
-    tools:context=".activity.imessage.ChatActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".activity.imessage.ChatActivity">
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="3dp"
         android:orientation="horizontal">
+
         <ImageView
             android:id="@+id/return_chat"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:src="@drawable/icon_arrow_black"
             android:layout_gravity="center"
-            android:rotation="180"/>
+            android:rotation="180"
+            android:src="@drawable/icon_arrow_black" />
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/chatUserImg"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_marginLeft="5dp"
-            app:riv_oval="true"
             android:layout_gravity="center"
-            android:src="@drawable/default_avatar_1"/>
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/default_avatar_1"
+            app:riv_oval="true" />
+
         <TextView
             android:id="@+id/chatUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:textSize="15sp"
-            android:textColor="@color/black"
             android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
             android:layout_weight="1"
-            android:text="旺旺仙贝"/>
+            android:text="旺旺仙贝"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
         <ImageView
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_gravity="center"
             android:layout_marginRight="5dp"
-            android:src="@drawable/icon_more_black"/>
+            android:src="@drawable/icon_more_black" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/msg_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="八嘎"
-        tools:layout_editor_absoluteX="155dp"
-        tools:layout_editor_absoluteY="344dp"
-        tools:ignore="MissingConstraints" />
+        android:layout_weight="1" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
-        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="8dp"
+        android:background="#fff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -82,26 +78,26 @@
             android:layout_height="25dp"
             android:layout_gravity="center"
             android:layout_marginRight="8dp"
-            android:src="@drawable/icon_speak"/>
+            android:src="@drawable/icon_speak" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:background="@drawable/corner_grey_d25"
-            android:layout_weight="1">
+            android:padding="5dp">
 
             <EditText
                 android:id="@+id/input_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:hint="发消息..."
                 android:maxLines="4"
                 android:padding="3dp"
-                android:layout_marginLeft="5dp"
                 android:paddingLeft="15dp"
                 android:textSize="15sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -113,25 +109,24 @@
         </LinearLayout>
 
 
-
         <Button
             android:id="@+id/send"
             android:layout_width="50dp"
             android:layout_height="31dp"
-            android:layout_marginLeft="8dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/btn_radius_orange_decoration"
             android:text="发送"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@drawable/btn_radius_orange_decoration" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </LinearLayout>
 
-<!--    <Button-->
-<!--        android:id="@+id/send"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="点我发送"-->
-<!--        tools:layout_editor_absoluteX="169dp"-->
-<!--        tools:layout_editor_absoluteY="467dp"-->
-<!--        tools:ignore="MissingConstraints" />-->
+    <!--    <Button-->
+    <!--        android:id="@+id/send"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="点我发送"-->
+    <!--        tools:layout_editor_absoluteX="169dp"-->
+    <!--        tools:layout_editor_absoluteY="467dp"-->
+    <!--        tools:ignore="MissingConstraints" />-->
 </LinearLayout>

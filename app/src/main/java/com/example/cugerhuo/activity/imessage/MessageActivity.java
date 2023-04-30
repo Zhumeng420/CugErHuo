@@ -18,15 +18,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.user.MessageInfo;
+import com.example.cugerhuo.access.user.PartUserInfo;
+import com.example.cugerhuo.access.user.UserInfoOperate;
+import com.example.cugerhuo.access.user.UserOperate;
+import com.example.cugerhuo.activity.ConcernActivity;
 import com.example.cugerhuo.activity.ErHuoActivity;
 import com.example.cugerhuo.activity.MyCenterActivity;
+import com.example.cugerhuo.activity.OtherPeopleActivity;
 import com.example.cugerhuo.activity.PublishSelectionActivity;
 import com.example.cugerhuo.activity.XuanShangActivity;
 import com.example.cugerhuo.activity.adapter.RecyclerViewChatAdapter;
-import com.example.cugerhuo.activity.adapter.RecyclerViewGoodsDisplayAdapter;
+import com.example.cugerhuo.tools.LettuceBaseCase;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.RequestCallbackWrapper;
+import com.netease.nimlib.sdk.msg.MsgService;
+import com.netease.nimlib.sdk.msg.model.RecentContact;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.lettuce.core.api.sync.RedisCommands;
 
 /**
  * 消息主页
@@ -51,8 +62,14 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
 
     private RecyclerView chatRecyclerView;
     private RecyclerViewChatAdapter recyclerViewChatAdapter;
-    /**地址信息列表*/
+    /**
+     * messageInfos 消息信息列表，包含消息的缩略内容与时间
+     * contactId 最近联系人的 ID（好友帐号)
+     * chatUserInfo 最近联系人的信息
+     */
     private List<MessageInfo> messageInfos =new ArrayList<>();
+    private List<Integer> contactId=new ArrayList<>();
+    private List<PartUserInfo> chatUserInfo =new ArrayList<>();
     /**positionClick  记录目前点击的item位置*/
     private int positionClick;
     private final MessageActivity.MyHandler MyHandler =new MessageActivity.MyHandler();
@@ -63,13 +80,68 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_message);
         initView();
         chatRecyclerView.setLayoutManager(new GridLayoutManager(this,1));
-        chatRecyclerView.setAdapter(recyclerViewChatAdapter);
-        // 开启线程
+
+        /**
+         * 获取最近会话
+         * @author 唐小莉
+         * @time 2023/4/30
+         */
+        NIMClient.getService(MsgService.class).queryRecentContacts()
+                .setCallback(new RequestCallbackWrapper<List<RecentContact>>() {
+                    @Override
+                    public void onResult(int code, List<RecentContact> recents, Throwable e) {
+                        // recents参数即为最近联系人列表（最近会话列表）
+                       for(int i=0;i<recents.size();i++){
+                           String str="";
+                           /**
+                            * 截取contactId中的数字部分，作为用户id以便后续查询
+                            * @author 唐小莉
+                            * @time 2023/4/30
+                            */
+                           for(int j=0;j<recents.get(i).getContactId().length();j++){
+                               if(recents.get(i).getContactId().charAt(j)>=48&&recents.get(i).getContactId().charAt(j)<=57){
+                                   str+=recents.get(i).getContactId().charAt(j);
+                               }
+                           }
+                           contactId.add(Integer.valueOf(str));
+                           MessageInfo messageInfo=new MessageInfo();
+                           messageInfo.setChatTime(recents.get(i).getTime());
+                           messageInfo.setContent(recents.get(i).getContent());
+                           messageInfos.add(messageInfo);
+                       }
+                    }
+                });
+
+        // 5、开启线程
         new Thread(() -> {
             Message msg = Message.obtain();
             msg.arg1 = 1;
+            /**
+             * 建立连接对象
+             */
+            LettuceBaseCase lettuce=new LettuceBaseCase();
+            /**
+             * 获取连接
+             */
+            RedisCommands<String, String> con=lettuce.getSyncConnection();
+
+            /**
+             * 通过连接调用查询
+             */
+            for(int i=0;i<contactId.size();i++){
+                PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,contactId.get(i),MessageActivity.this);
+                chatUserInfo.add(part);
+            }
+//            msg.arg2=fansNum;
+            //4、发送消息
             MyHandler.sendMessage(msg);
+            /**
+             * 关闭连接啊
+             */
+            //lettuce.close();
         }).start();
+
+
     }
 
     /**
@@ -88,11 +160,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         llTabFive.setOnClickListener(this);
         ivTabThree = (ImageView) findViewById(R.id.iv_tab_three);
         ivTabThree.setOnClickListener(this);
-        for(int i=0;i<20;i++){
-            MessageInfo part= new MessageInfo();
-            messageInfos.add(part);
-        }
-        recyclerViewChatAdapter=new RecyclerViewChatAdapter(getActivity(),messageInfos);
+
         chatRecyclerView=findViewById(R.id.re_chat);
     }
     /**
@@ -175,20 +243,24 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.arg1){
-                /**
-                 * 获取消息列表
-                 */
                 case 1:
-                    recyclerViewChatAdapter = new RecyclerViewChatAdapter(MessageActivity.this,messageInfos);
+                    recyclerViewChatAdapter=new RecyclerViewChatAdapter(getActivity(),messageInfos,chatUserInfo);
                     chatRecyclerView.setAdapter(recyclerViewChatAdapter);
                     /**
-                     * 点击item进行跳转并传值过去
+                     * 点击进行跳转至聊天界面
+                     * @author 唐小莉
+                     * @time 2023/4/30
                      */
                     recyclerViewChatAdapter.setOnItemClickListener(new RecyclerViewChatAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
-                            Intent intent=new Intent(MessageActivity.this, ChatActivity.class);
-                            startActivityForResult(intent,1);
+                            positionClick=position;
+                            Intent intent=new Intent(getActivity(), ChatActivity.class);
+                            /**
+                             * 将聊天对象的信息传递过去
+                             */
+                            intent.putExtra("chatUser",chatUserInfo.get(position));
+                            startActivity(intent);
                         }
                     });
                     break;
