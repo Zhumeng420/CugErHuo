@@ -20,18 +20,17 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.example.cugerhuo.access.SetCommodityInfo;
-import com.example.cugerhuo.access.user.UserInfo;
-import com.example.cugerhuo.activity.ErHuoActivity;
+import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.SetGlobalIDandUrl;
+import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.access.user.UserOperate;
+import com.example.cugerhuo.activity.ErHuoActivity;
 import com.example.cugerhuo.activity.QqLoginActivity;
 import com.example.cugerhuo.login.config.BaseUIConfig;
 import com.example.cugerhuo.login.loginutils.BuildConfig;
 import com.example.cugerhuo.login.loginutils.Constant;
 import com.example.cugerhuo.login.utils.ExecutorManager;
-import com.example.cugerhuo.R;
 import com.example.cugerhuo.tools.InitChatAccount;
 import com.example.cugerhuo.tools.NameUtil;
 import com.example.cugerhuo.tools.TracingHelper;
@@ -390,6 +389,14 @@ public class OneKeyLoginActivity extends Activity {
                                                             }finally {
                                                                 span3.finish();
                                                             }
+
+                                                            /**
+                                                             * 初始化全局变量
+                                                             * @author 施立豪
+                                                             * @time 2023/4/9
+                                                             */
+                                                            SetGlobalIDandUrl.setByPhone(phoneNumber, OneKeyLoginActivity.this);
+
                                                         }
                                                         else
                                                         {
@@ -423,14 +430,7 @@ public class OneKeyLoginActivity extends Activity {
                                      * 初始化全局变量，本地持久化+跳转到主页
                                      *
                                      */
-                                    {
-                                        /**
-                                         * 初始化全局变量
-                                         * @author 施立豪
-                                         * @time 2023/4/9
-                                         */
-                                        SetGlobalIDandUrl.setByPhone(phoneNumber, OneKeyLoginActivity.this);
-                                        /**
+                                    {                                        /**
                                          * 本地存储
                                          */
                                         String time = format.format(date);

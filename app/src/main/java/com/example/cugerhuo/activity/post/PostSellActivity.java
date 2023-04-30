@@ -444,7 +444,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                         {             imageSearch.add((String) paths.get(i));
 
                             {
-                                String fileName = "specific_"+ paths.get(i);
+                                String fileName = "specific_"+GetFileNameUtil.getFileName((String) paths.get(i));
                                 boolean isUped=false;
                                 Span span1 = tracer.buildSpan("上传商品到oss流程").withTag("onChangeImage函数：", "子追踪").start();
                                 try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {

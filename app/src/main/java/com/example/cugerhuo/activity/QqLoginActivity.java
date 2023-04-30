@@ -239,6 +239,12 @@ public class QqLoginActivity extends AppCompatActivity {
                                                 }finally {
                                                     span3.finish();
                                                 }
+                                                /**
+                                                 * 初始化全局变量
+                                                 * @author 施立豪
+                                                 * @time 2023/4/9
+                                                 */
+                                                SetGlobalIDandUrl.setByQq(openid,QqLoginActivity.this);
                                             }
                                             else
                                             {
@@ -271,12 +277,7 @@ public class QqLoginActivity extends AppCompatActivity {
                         /**
                          * 初始化全局变量，本地持久化+跳转到主页
                          */
-                        {  /**
-                         * 初始化全局变量
-                         * @author 施立豪
-                         * @time 2023/4/9
-                         */
-                            SetGlobalIDandUrl.setByQq(openid,QqLoginActivity.this);
+                        {
                             /**
                              * 本地存储
                              */

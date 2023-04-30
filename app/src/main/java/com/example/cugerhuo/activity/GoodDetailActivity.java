@@ -22,7 +22,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
+import com.example.cugerhuo.access.commodity.RecommendInfo;
 import com.example.cugerhuo.access.user.CommentInfo;
+import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.activity.adapter.RecyclerViewCommentAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewGoodsDisplayAdapter;
 import com.example.cugerhuo.views.InputTextMsgDialog;
@@ -37,6 +39,14 @@ import java.util.List;
  * @Time: 2023/4/27 17:33
  */
 public class GoodDetailActivity extends AppCompatActivity implements View.OnClickListener{
+    /**
+     *当前商品
+     */
+    private Commodity commodity;
+    /**
+     * 当前用户
+     */
+    private PartUserInfo userInfo;
     /**
      * 推荐商品
      */
@@ -71,6 +81,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
     private RecyclerViewGoodsDisplayAdapter goodsAdapter;
     /**发布者其他商品信息滚动*/
     private  LinearLayout otherGoods;
+
     private LayoutInflater goodsInflater;
     private final GoodDetailActivity.MyHandler MyHandler =new GoodDetailActivity.MyHandler();
     /**查看更多留言*/
@@ -87,7 +98,23 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
             MyHandler.sendMessage(msg);
         }).start();
     }
-
+    /**
+     * 初始化商品数据和用户数据
+     */
+    public void initData()
+    {   Intent temp=getIntent();
+        int position=temp.getIntExtra("position",-1);
+        if(position!=-1)
+        {
+        commodity= RecommendInfo.getCommodityList().get(position);
+        userInfo=RecommendInfo.getPartUserInfoList().get(position);
+        }
+        else
+        {
+            commodity=new Commodity();
+            userInfo=new PartUserInfo();
+        }
+    }
     /**
      * 初始化各控件
      * @Author: 李柏睿

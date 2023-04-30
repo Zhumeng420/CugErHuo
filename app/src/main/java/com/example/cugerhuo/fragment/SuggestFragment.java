@@ -105,7 +105,7 @@ public class SuggestFragment extends Fragment {
                 public void onItemClick(View view, int position) {
                     int flag = 1;
                     Intent intent=new Intent(getActivity(), GoodDetailActivity.class);
-                    intent.putExtra("flag",flag);
+                    intent.putExtra("position",position);
                     //startActivity(intent);
                     startActivityForResult(intent,1);
                 }
@@ -184,7 +184,7 @@ public class SuggestFragment extends Fragment {
                     public void onItemClick(View view, int position) {
                         int flag = 1;
                         Intent intent=new Intent(getActivity(), GoodDetailActivity.class);
-                        intent.putExtra("flag",flag);
+                        intent.putExtra("position",position);
                         //startActivity(intent);
                         startActivityForResult(intent,1);
                     }

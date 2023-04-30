@@ -16,7 +16,8 @@ import com.example.cugerhuo.R;
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
     private ImageView imageSearch;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         imageSearch=findViewById(R.id.image_search);
