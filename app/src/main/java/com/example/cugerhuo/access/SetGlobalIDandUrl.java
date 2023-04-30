@@ -154,7 +154,6 @@ public class SetGlobalIDandUrl {
                  * @author 施立豪
                  * @time 2023/4/9
                  */
-
                 Tracer tracer = GlobalTracer.get();
                 // 创建spann
                 /**

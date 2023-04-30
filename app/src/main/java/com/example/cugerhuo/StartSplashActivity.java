@@ -13,9 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
-import com.example.cugerhuo.access.SetCommodityInfo;
 import com.example.cugerhuo.access.SetGlobalIDandUrl;
-import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.activity.ErHuoActivity;
 import com.example.cugerhuo.login.login.OneKeyLoginActivity;
 import com.example.cugerhuo.oss.InitOS;
@@ -218,7 +216,6 @@ public class StartSplashActivity extends AppCompatActivity {
                              */
                             String qqId=loginMessage.getString("QqId","");
                 SetGlobalIDandUrl.setByQq(qqId,StartSplashActivity.this);
-                            SetCommodityInfo.setInfo(UserInfo.getid(),StartSplashActivity.this);
 
 //                            new Thread(new Runnable() {
 //                                @Override
@@ -332,7 +329,6 @@ public class StartSplashActivity extends AppCompatActivity {
                              */
                             String phoneNumber=loginMessage.getString("PhoneNumber","");
                             SetGlobalIDandUrl.setByPhone(phoneNumber,StartSplashActivity.this);
-                            SetCommodityInfo.setInfo(UserInfo.getid(),StartSplashActivity.this);
 
 //                            new Thread(new Runnable() {
 //                                @Override
