@@ -14,22 +14,26 @@
            android:background="@drawable/border_radius"
            android:layout_gravity="center_horizontal"
            android:padding="10dp"
-           android:layout_height="110dp">
+           android:layout_height="wrap_content">
            <LinearLayout
                android:layout_width="match_parent"
-               android:layout_height="40dp"
+               android:layout_height="100dp"
                android:layout_marginRight="15dp"
                android:layout_marginBottom="10dp"
                android:orientation="vertical">
-               <TextView
-                   android:id="@+id/desc_concern"
+               <EditText
+                   android:id="@+id/edit_trade_position"
                    android:layout_width="match_parent"
-                   android:layout_height="fill_parent"
-                   android:layout_marginTop="15dp"
-                   android:layout_marginLeft="10dp"
-                   android:textColor="#474242"
-                   android:text="确定不再关注？"
-                   android:textSize="16sp"/>
+                   android:layout_height="80dp"
+                   android:layout_marginTop="20dp"
+                   android:paddingTop="10dp"
+                   android:paddingLeft="10dp"
+                   android:gravity="left"
+                   android:hint="输入具体交易地点~"
+                   android:textColorHint="#999999"
+                   android:textColor="#999999"
+                   android:textSize="15sp"
+                   android:background="@null"/>
            </LinearLayout>
            <LinearLayout
                android:layout_width="match_parent"

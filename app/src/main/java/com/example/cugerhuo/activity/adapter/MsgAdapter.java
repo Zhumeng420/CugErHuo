@@ -50,24 +50,37 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
         this.context=context;
     }
     static class ViewHolder extends RecyclerView.ViewHolder{
+        /**左侧收到消息*/
         LinearLayout leftLayout;
         TextView left_msg;
-
+        /**右侧发出消息*/
         LinearLayout rightLayout;
         TextView right_msg;
-
+        /**发消息中的头像*/
         RoundedImageView incomingAvatar;
         RoundedImageView outcomingAvatar;
+        /**左侧确认订单*/
+        LinearLayout leftCard;
+        RoundedImageView incomingAvatarCard;
+        /**右侧确认订单*/
+        LinearLayout rightCard;
+        RoundedImageView outcomingAvatarCard;
+        /**对方已提交订单*/
+        LinearLayout confirmCard;
 
         public ViewHolder(View view){
             super(view);
             leftLayout = view.findViewById(R.id.left_layout);
             left_msg = view.findViewById(R.id.left_msg);
-
             rightLayout = view.findViewById(R.id.right_layout);
             right_msg = view.findViewById(R.id.right_msg);
             incomingAvatar=view.findViewById(R.id.incoming_avatar);
             outcomingAvatar=view.findViewById(R.id.outcoming_avatar);
+            leftCard=view.findViewById(R.id.left_card);
+            rightCard=view.findViewById(R.id.right_card);
+            confirmCard=view.findViewById(R.id.trade_confirm_card);
+            incomingAvatarCard=view.findViewById(R.id.incoming_avatar_card);
+            outcomingAvatarCard=view.findViewById(R.id.outcoming_avatar_card);
         }
     }
 
@@ -81,30 +94,75 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Msg msg = list.get(position);
-        if(msg.getType() == Msg.TYPE_RECEIVED){
-            /**如果是收到的消息，则显示左边的消息布局，将右边的消息布局隐藏*/
-            holder.leftLayout.setVisibility(View.VISIBLE);
-            holder.left_msg.setText(msg.getContent());
-            /**注意此处隐藏右面的消息布局用的是 View.GONE*/
-            holder.rightLayout.setVisibility(View.GONE);
-            if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
-            {
-                holder.incomingAvatar.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
-            }
-        }else if(msg.getType() == Msg.TYPE_SEND){
-            /**如果是发出的消息，则显示右边的消息布局，将左边的消息布局隐藏*/
-            holder.rightLayout.setVisibility(View.VISIBLE);
-            holder.right_msg.setText(msg.getContent());
-
-            /**同样使用View.GONE*/
-            holder.leftLayout.setVisibility(View.GONE);
-            if (!"".equals(UserInfo.getUrl())&&UserInfo.getUrl()!=null)
-            {
-                holder.outcomingAvatar.setImageURI(Uri.fromFile(new File(UserInfo.getUrl())));
-            }
+        switch (msg.getType()){
+            /**TYPE_RECEIVED 表示收到的消息*/
+            case Msg.TYPE_RECEIVED:
+                /**如果是收到的消息，则显示左边的消息布局，将右边的消息布局隐藏*/
+                holder.leftLayout.setVisibility(View.VISIBLE);
+                holder.left_msg.setText(msg.getContent());
+                /**注意此处隐藏右面的消息布局用的是 View.GONE*/
+                holder.rightLayout.setVisibility(View.GONE);
+                holder.leftCard.setVisibility(View.GONE);
+                holder.rightCard.setVisibility(View.GONE);
+                holder.confirmCard.setVisibility(View.GONE);
+                if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
+                {
+                    holder.incomingAvatar.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
+                }
+                break;
+            /**TYPE_SEND 表示发送的消息*/
+            case Msg.TYPE_SEND:
+                /**如果是发出的消息，则显示右边的消息布局，将左边的消息布局隐藏*/
+                holder.rightLayout.setVisibility(View.VISIBLE);
+                holder.right_msg.setText(msg.getContent());
+                /**同样使用View.GONE*/
+                holder.leftLayout.setVisibility(View.GONE);
+                holder.leftCard.setVisibility(View.GONE);
+                holder.rightCard.setVisibility(View.GONE);
+                holder.confirmCard.setVisibility(View.GONE);
+                if (!"".equals(UserInfo.getUrl())&&UserInfo.getUrl()!=null)
+                {
+                    holder.outcomingAvatar.setImageURI(Uri.fromFile(new File(UserInfo.getUrl())));
+                }
+                break;
+            /**TYPE_RECEIVED_CARD 表示对方已确认交易信息*/
+            case Msg.TYPE_RECEIVED_CARD:
+                holder.leftCard.setVisibility(View.VISIBLE);
+                /**同样使用View.GONE*/
+                holder.rightLayout.setVisibility(View.GONE);
+                holder.leftLayout.setVisibility(View.GONE);
+                holder.rightCard.setVisibility(View.GONE);
+                holder.confirmCard.setVisibility(View.GONE);
+                if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
+                {
+                    holder.incomingAvatarCard.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
+                }
+                break;
+            /**TYPE_SEND_CARD 表示发送的消息*/
+            case Msg.TYPE_SEND_CARD:
+                holder.rightCard.setVisibility(View.VISIBLE);
+                /**同样使用View.GONE*/
+                holder.leftLayout.setVisibility(View.GONE);
+                holder.leftCard.setVisibility(View.GONE);
+                holder.rightLayout.setVisibility(View.GONE);
+                holder.confirmCard.setVisibility(View.GONE);
+                if (!"".equals(UserInfo.getUrl())&&UserInfo.getUrl()!=null)
+                {
+                    holder.outcomingAvatarCard.setImageURI(Uri.fromFile(new File(UserInfo.getUrl())));
+                }
+                break;
+            /**TYPE_CONFIRM_CARD 表示接受到对方的提交信息*/
+            case Msg.TYPE_CONFIRM_CARD:
+                holder.confirmCard.setVisibility(View.VISIBLE);
+                /**同样使用View.GONE*/
+                holder.leftLayout.setVisibility(View.GONE);
+                holder.leftCard.setVisibility(View.GONE);
+                holder.rightLayout.setVisibility(View.GONE);
+                holder.rightCard.setVisibility(View.GONE);
+                break;
+            default:
+                break;
         }
-
-
 
 //        /**
 //         * 获取oss路径

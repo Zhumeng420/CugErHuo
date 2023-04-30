@@ -18,7 +18,7 @@ import com.example.cugerhuo.Fragment.ReginFragment;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.activity.adapter.ViewAdapter;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
-import com.example.cugerhuo.fragment.SuggestFragment;
+import com.example.cugerhuo.Fragment.SuggestFragment;
 import com.example.cugerhuo.graph.GraphService;
 import com.google.android.material.tabs.TabLayout;
 

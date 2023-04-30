@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.user.Msg;
 import com.example.cugerhuo.access.user.PartUserInfo;
+import com.example.cugerhuo.activity.AddressManageActivity;
+import com.example.cugerhuo.activity.CreatTradeActivity;
+import com.example.cugerhuo.activity.EditAddressActivity;
 import com.example.cugerhuo.activity.adapter.MsgAdapter;
 import com.example.cugerhuo.tools.MyToast;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -59,6 +63,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
      * 聊天对象
      */
     private PartUserInfo chatUser=new PartUserInfo();
+    /**立即交易*/
+    private LinearLayout tradeConfirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +78,16 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         chatUserImg=findViewById(R.id.chatUserImg);
         chatUserName=findViewById(R.id.chatUserName);
         returnImg.setOnClickListener(this);
+        tradeConfirm = findViewById(R.id.trade_confirm);
+        tradeConfirm.setOnClickListener(this);
 
         /**
          * 从上个界面获取聊天对象信息
          */
         Intent intent =getIntent();
         chatUser= (PartUserInfo) intent.getSerializableExtra("chatUser");
+
+
         if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
         {
             chatUserImg.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
@@ -188,6 +198,11 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 });
                 break;
             }
+            case R.id.trade_confirm:
+                Intent intent=new Intent(ChatActivity.this, CreatTradeActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                break;
             default:
                 break;
         }

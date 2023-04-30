@@ -51,6 +51,85 @@
             android:src="@drawable/icon_more_black" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/trade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:layout_marginBottom="5dp">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/img_trade_images"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/icon_iphone"
+                app:riv_corner_radius_bottom_left="10dp"
+                app:riv_corner_radius_bottom_right="10dp"
+                app:riv_corner_radius_top_left="10dp"
+                app:riv_corner_radius_top_right="10dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/trade_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="￥200w"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="#959595"
+                    android:text="交易前聊一聊"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/trade_confirm"
+                android:layout_width="70dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/good_detail_orange">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="13sp"
+                    android:textColor="@color/app_color_white"
+                    android:text="立即交易"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+        <include layout="@drawable/bottom_border" />
+
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/msg_recycler_view"
         android:layout_width="match_parent"

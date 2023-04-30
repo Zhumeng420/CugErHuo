@@ -28,6 +28,8 @@ import com.example.cugerhuo.access.user.CommentInfo;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.activity.adapter.RecyclerViewCommentAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewGoodsDisplayAdapter;
+import com.example.cugerhuo.activity.imessage.ChatActivity;
+import com.example.cugerhuo.activity.post.PostSellActivity;
 import com.example.cugerhuo.views.InputTextMsgDialog;
 import com.example.cugerhuo.views.PopComments;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -102,6 +104,8 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
     private final GoodDetailActivity.MyHandler MyHandler =new GoodDetailActivity.MyHandler();
     /**查看更多留言*/
     private LinearLayout lookMoreComments;
+    /**卖同款和我想要*/
+    private LinearLayout sellSame,iWant;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -217,6 +221,11 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
         /**查看更多留言*/
         lookMoreComments = findViewById(R.id.click_look_more);
         lookMoreComments.setOnClickListener(this);
+        /**卖同款和我想要*/
+        sellSame = findViewById(R.id.sell_same);
+        sellSame.setOnClickListener(this);
+        iWant = findViewById(R.id.want);
+        iWant.setOnClickListener(this);
     }
 
     /**
@@ -286,6 +295,19 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 popComments.show();
                 InputMethodManager imm = (InputMethodManager) GoodDetailActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                break;
+            /**卖同款*/
+            case R.id.sell_same:
+                startActivity(new Intent(getApplicationContext(), PostSellActivity.class));
+                overridePendingTransition(0,0);
+                break;
+            /**我想要*/
+            case R.id.want:
+                int iWant = 1;
+                Intent intent=new Intent(GoodDetailActivity.this, ChatActivity.class);
+                intent.putExtra("iWant",iWant);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
                 break;
             default:
                 break;

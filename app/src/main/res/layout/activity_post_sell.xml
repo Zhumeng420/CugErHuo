@@ -401,6 +401,7 @@
         android:weightSum="1">
 
         <View
+            android:id="@+id/click_blank"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -425,8 +426,6 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:weightSum="10">
-
-
 
             <TextView
                 android:layout_width="0dp"

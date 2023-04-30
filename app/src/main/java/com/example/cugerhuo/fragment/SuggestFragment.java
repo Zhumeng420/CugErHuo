@@ -1,4 +1,4 @@
-package com.example.cugerhuo.fragment;
+package com.example.cugerhuo.Fragment;
 
 import static com.luck.picture.lib.thread.PictureThreadUtils.runOnUiThread;
 
