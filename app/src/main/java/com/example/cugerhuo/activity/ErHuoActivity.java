@@ -66,7 +66,6 @@ import java.util.List;
  */
 public class ErHuoActivity extends AppCompatActivity implements View.OnClickListener{
 
-
     /**
      * 变量从one-five依次对应，首页，悬赏，发布，消息，个人中心控件
      * @author: 唐小莉

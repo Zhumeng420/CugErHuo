@@ -44,6 +44,11 @@ public class SuggestFragment extends Fragment {
     private RecyclerViewGoodsDisplayAdapter adapter;
     private RecyclerView goodsRecyclerView;
     private final SuggestFragment.MyHandler MyHandler =new SuggestFragment.MyHandler();
+
+    /**
+     * 记录是否第一次进入页面，以更新商品
+     */
+    private static boolean isFirst=false;
     /**
      * 首页展示商品
      */
@@ -85,6 +90,27 @@ public class SuggestFragment extends Fragment {
         goodsRecyclerView.setLayoutManager(new GridLayoutManager(this.getContext(),2));
         /**设置每个item之间的间距**/
         goodsRecyclerView.addItemDecoration(new RecyclerViewGoodsDisplayAdapter.spaceItem(10));
+        if(isFirst)
+        {
+            userInfos= RecommendInfo.getPartUserInfoList();
+            commodities=RecommendInfo.getCommodityList();
+            adapter=new RecyclerViewGoodsDisplayAdapter(getContext(),commodities,userInfos);
+
+            goodsRecyclerView.setAdapter(adapter);
+            /**
+             * 点击item进行跳转并传值过去
+             */
+            adapter.setOnItemClickListener(new RecyclerViewGoodsDisplayAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    int flag = 1;
+                    Intent intent=new Intent(getActivity(), GoodDetailActivity.class);
+                    intent.putExtra("flag",flag);
+                    //startActivity(intent);
+                    startActivityForResult(intent,1);
+                }
+            });
+        }
         // 开启线程
         new Thread(() -> {
             Message msg = Message.obtain();
@@ -163,6 +189,7 @@ public class SuggestFragment extends Fragment {
                         startActivityForResult(intent,1);
                     }
                 });
+                isFirst=true;
             }
         });
 

@@ -91,6 +91,7 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     holder.goodItemTitle.setText(commodities.get(position).getCategory());
     holder.goodsItemPrice.setText(String.valueOf(commodities.get(position).getPrice()));
+    holder.goodItemUsername.setText(userInfos.get(position).getUserName());
         /**
          * 用户头像
          */
