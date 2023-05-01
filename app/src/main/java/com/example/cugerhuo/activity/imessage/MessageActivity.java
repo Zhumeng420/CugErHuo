@@ -260,6 +260,8 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                              * 将聊天对象的信息传递过去
                              */
                             intent.putExtra("chatUser",chatUserInfo.get(position));
+                            int iWant = 0;
+                            intent.putExtra("iWant",iWant);
                             startActivity(intent);
                         }
                     });

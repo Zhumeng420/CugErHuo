@@ -1,7 +1,11 @@
 package com.example.cugerhuo.activity.imessage;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +29,7 @@ import com.example.cugerhuo.activity.CreatTradeActivity;
 import com.example.cugerhuo.activity.EditAddressActivity;
 import com.example.cugerhuo.activity.adapter.MsgAdapter;
 import com.example.cugerhuo.tools.MyToast;
+import com.example.cugerhuo.tools.SystemNotification;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
@@ -70,8 +76,16 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private PartUserInfo chatUser=new PartUserInfo();
     /**立即交易*/
     private LinearLayout tradeConfirm;
+    /**是否从商品详情页跳过来的*/
+    private int iWant;
+    /**交易模块*/
+    private LinearLayout tradeLayout;
 
-
+    /**
+     * 消息通知
+     */
+    NotificationManager mNotificationManager;
+    NotificationCompat.Builder mNotificationBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,13 +101,23 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         returnImg.setOnClickListener(this);
         tradeConfirm = findViewById(R.id.trade_confirm);
         tradeConfirm.setOnClickListener(this);
+        tradeLayout = findViewById(R.id.trade);
+        /**
+         * 系统消息通知实例
+         * @time 2023/05/01
+         */
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         /**
          * 从上个界面获取聊天对象信息
          */
         Intent intent =getIntent();
         chatUser= (PartUserInfo) intent.getSerializableExtra("chatUser");
+        iWant = (int)intent.getSerializableExtra("iWant");
 
+        if(iWant==1){
+            tradeLayout.setVisibility(View.VISIBLE);
+        }
 
         if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
         {
@@ -124,9 +148,27 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                         msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_RECEIVED));
                         adapter.notifyItemInserted(msgList.size()-1);
                         msgRecyclerView.scrollToPosition(msgList.size()-1);
-                        MyToast.toast(ChatActivity.this,messages.toString(),3);
+                        //MyToast.toast(ChatActivity.this,messages.toString(),3);
+                        /**
+                         * 消息的系统提示
+                         * @author 朱萌
+                         * @time 2023/05/01
+                         */
+                        //点击跳转事件
+                        Intent newIntent = new Intent(this,MessageActivity.class);
+                        @SuppressLint("UnspecifiedImmutableFlag") PendingIntent pi = PendingIntent.getActivity(this,0,newIntent,PendingIntent.FLAG_CANCEL_CURRENT);
+                        //初始化消息通知
+                        mNotificationBuilder=new NotificationCompat.Builder(this)
+                                .setContentTitle("收到了一条新消息")
+                                .setContentText(messages.get(0).getContent())
+                                .setWhen(System.currentTimeMillis())
+                                .setColor(getResources().getColor(R.color.colorPrimary))
+                                .setSmallIcon(R.drawable.logo2)
+                                .setContentIntent(pi)
+                                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.logo2));
+                        //通知
+                        mNotificationManager.notify(1, mNotificationBuilder.build());
                     }
-
                 };
         NIMClient.getService(MsgServiceObserve.class)
                 .observeReceiveMessage(incomingMessageObserver, true);
