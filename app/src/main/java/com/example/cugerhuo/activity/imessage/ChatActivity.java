@@ -24,6 +24,7 @@ import com.example.cugerhuo.activity.CreatTradeActivity;
 import com.example.cugerhuo.activity.EditAddressActivity;
 import com.example.cugerhuo.activity.adapter.MsgAdapter;
 import com.example.cugerhuo.tools.MyToast;
+import com.example.cugerhuo.tools.SystemNotification;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
@@ -133,7 +134,13 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                         msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_RECEIVED));
                         adapter.notifyItemInserted(msgList.size()-1);
                         msgRecyclerView.scrollToPosition(msgList.size()-1);
-                        MyToast.toast(ChatActivity.this,messages.toString(),3);
+                        //MyToast.toast(ChatActivity.this,messages.toString(),3);
+                        /**
+                         * 消息的系统提示
+                         * @author 朱萌
+                         * @time 2023/05/01
+                         */
+                        SystemNotification.showNotification(this, "你收到了一条新消息", messages.get(0).getContent());
                     }
 
                 };
