@@ -91,24 +91,24 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                     @Override
                     public void onResult(int code, List<RecentContact> recents, Throwable e) {
                         // recents参数即为最近联系人列表（最近会话列表）
-                       for(int i=0;i<recents.size();i++){
-                           String str="";
-                           /**
-                            * 截取contactId中的数字部分，作为用户id以便后续查询
-                            * @author 唐小莉
-                            * @time 2023/4/30
-                            */
-                           for(int j=0;j<recents.get(i).getContactId().length();j++){
-                               if(recents.get(i).getContactId().charAt(j)>=48&&recents.get(i).getContactId().charAt(j)<=57){
-                                   str+=recents.get(i).getContactId().charAt(j);
-                               }
-                           }
-                           contactId.add(Integer.valueOf(str));
-                           MessageInfo messageInfo=new MessageInfo();
-                           messageInfo.setChatTime(recents.get(i).getTime());
-                           messageInfo.setContent(recents.get(i).getContent());
-                           messageInfos.add(messageInfo);
-                       }
+                        for(int i=0;i<recents.size();i++){
+                            String str="";
+                            /**
+                             * 截取contactId中的数字部分，作为用户id以便后续查询
+                             * @author 唐小莉
+                             * @time 2023/4/30
+                             */
+                            for(int j=0;j<recents.get(i).getContactId().length();j++){
+                                if(recents.get(i).getContactId().charAt(j)>=48&&recents.get(i).getContactId().charAt(j)<=57){
+                                    str+=recents.get(i).getContactId().charAt(j);
+                                }
+                            }
+                            contactId.add(Integer.valueOf(str));
+                            MessageInfo messageInfo=new MessageInfo();
+                            messageInfo.setChatTime(recents.get(i).getTime());
+                            messageInfo.setContent(recents.get(i).getContent());
+                            messageInfos.add(messageInfo);
+                        }
                     }
                 });
 

@@ -199,21 +199,21 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                     /**
                      * 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
                      */
-                  if(!Objects.equals(result.get(i).getContent(), "")){
-                      /**
-                       * 发出的消息
-                       */
-                      if(result.get(i).getDirect()==MsgDirectionEnum.Out){
-                          msgList.add(new Msg(result.get(i).getContent(),Msg.TYPE_SEND));
+                    if(!Objects.equals(result.get(i).getContent(), "")){
+                        /**
+                         * 发出的消息
+                         */
+                        if(result.get(i).getDirect()==MsgDirectionEnum.Out){
+                            msgList.add(new Msg(result.get(i).getContent(),Msg.TYPE_SEND));
 
-                      }
-                      /**
-                       * 接收到的消息
-                       */
-                      if(result.get(i).getDirect()==MsgDirectionEnum.In){
-                          msgList.add(new Msg(result.get(i).getContent(),Msg.TYPE_RECEIVED));
-                      }
-                  }
+                        }
+                        /**
+                         * 接收到的消息
+                         */
+                        if(result.get(i).getDirect()==MsgDirectionEnum.In){
+                            msgList.add(new Msg(result.get(i).getContent(),Msg.TYPE_RECEIVED));
+                        }
+                    }
                 }
                 adapter.notifyItemInserted(msgList.size()-1);
                 msgRecyclerView.scrollToPosition(msgList.size()-1);
