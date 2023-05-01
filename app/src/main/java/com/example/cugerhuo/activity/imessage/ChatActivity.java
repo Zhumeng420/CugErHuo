@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.user.Msg;
 import com.example.cugerhuo.access.user.PartUserInfo;
+import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.activity.AddressManageActivity;
 import com.example.cugerhuo.activity.CreatTradeActivity;
 import com.example.cugerhuo.activity.EditAddressActivity;
@@ -27,17 +28,21 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 import com.netease.nimlib.sdk.util.NIMUtil;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 聊天
@@ -65,6 +70,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private PartUserInfo chatUser=new PartUserInfo();
     /**立即交易*/
     private LinearLayout tradeConfirm;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,11 +119,14 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
          */
         Observer<List<IMMessage>> incomingMessageObserver =
                 messages -> {
-                    // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
-                    msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_RECEIVED));
-                    adapter.notifyItemInserted(msgList.size()-1);
-                    msgRecyclerView.scrollToPosition(msgList.size()-1);
-                    MyToast.toast(ChatActivity.this,messages.toString(),3);
+                    if(messages.get(0).getContent()!=""){
+                        // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
+                        msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_RECEIVED));
+                        adapter.notifyItemInserted(msgList.size()-1);
+                        msgRecyclerView.scrollToPosition(msgList.size()-1);
+                        MyToast.toast(ChatActivity.this,messages.toString(),3);
+                    }
+
                 };
         NIMClient.getService(MsgServiceObserve.class)
                 .observeReceiveMessage(incomingMessageObserver, true);
@@ -135,6 +145,41 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
         }
 
+        /**
+         * 查询历史消息，比anchor时间更早的一万条消息
+         * @author 唐小莉
+         * @time 2023/5/1
+         */
+        IMMessage anchor = MessageBuilder.createEmptyMessage("cugerhuo"+chatUser.getId(), SessionTypeEnum.P2P, System.currentTimeMillis());
+        NIMClient.getService(MsgService.class).queryMessageListEx(anchor, QueryDirectionEnum.QUERY_OLD,
+                10000, true).setCallback(new RequestCallbackWrapper<List<IMMessage>>() {
+            @Override
+            public void onResult(int code, List<IMMessage> result, Throwable exception) {
+                for(int i=0;i<result.size();i++){
+
+                    /**
+                     * 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
+                     */
+                  if(!Objects.equals(result.get(i).getContent(), "")){
+                      /**
+                       * 发出的消息
+                       */
+                      if(result.get(i).getDirect()==MsgDirectionEnum.Out){
+                          msgList.add(new Msg(result.get(i).getContent(),Msg.TYPE_SEND));
+
+                      }
+                      /**
+                       * 接收到的消息
+                       */
+                      if(result.get(i).getDirect()==MsgDirectionEnum.In){
+                          msgList.add(new Msg(result.get(i).getContent(),Msg.TYPE_RECEIVED));
+                      }
+                  }
+                }
+                adapter.notifyItemInserted(msgList.size()-1);
+                msgRecyclerView.scrollToPosition(msgList.size()-1);
+            }
+        });
     }
 
 
@@ -160,42 +205,50 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 String account = "cugerhuo"+chatUser.getId();
                 // 以单聊类型为例
                 SessionTypeEnum sessionType = SessionTypeEnum.P2P;
-                String text = inputText.getText().toString();
-                // 创建一个文本消息
-                IMMessage textMessage = MessageBuilder.createTextMessage(account, sessionType, text);
-                // 消息的配置选项
-                CustomMessageConfig config = new CustomMessageConfig();
-                // 该消息保存到服务器
-                config.enableHistory = true;
-                // 该消息漫游
-                config.enableRoaming = true;
-                // 该消息同步
-                config.enableSelfSync = true;
-                textMessage.setConfig(config);
+                String text="";
+                /**
+                 * 如果输入框不为空，进行发送
+                 */
+                if(!inputText.getText().toString().equals("")){
+                    text = inputText.getText().toString();
+                    // 创建一个文本消息
+                    IMMessage textMessage = MessageBuilder.createTextMessage(account, sessionType, text);
+                    // 消息的配置选项
+                    CustomMessageConfig config = new CustomMessageConfig();
+                    // 该消息保存到服务器
+                    config.enableHistory = true;
+                    // 该消息漫游
+                    config.enableRoaming = true;
+                    // 该消息同步
+                    config.enableSelfSync = true;
+                    textMessage.setConfig(config);
 
-                // 发送给对方
-                NIMClient.getService(MsgService.class).sendMessage(textMessage, false).setCallback(new RequestCallback<Void>() {
-                    @Override
-                    public void onSuccess(Void param) {
-                        //MyToast.toast(ChatActivity.this,"消息发送成功",3);
-                        String content = inputText.getText().toString();
-                        if(!content.equals("")) {
-                            msgList.add(new Msg(content,Msg.TYPE_SEND));
-                            adapter.notifyItemInserted(msgList.size()-1);
-                            msgRecyclerView.scrollToPosition(msgList.size()-1);
-                            inputText.setText("");//清空输入框中的内容
+                    // 发送给对方
+                    NIMClient.getService(MsgService.class).sendMessage(textMessage, false).setCallback(new RequestCallback<Void>() {
+                        @Override
+                        public void onSuccess(Void param) {
+                            //MyToast.toast(ChatActivity.this,"消息发送成功",3);
+                            String content = inputText.getText().toString();
+                            if(!content.equals("")) {
+                                msgList.add(new Msg(content,Msg.TYPE_SEND));
+                                adapter.notifyItemInserted(msgList.size()-1);
+                                msgRecyclerView.scrollToPosition(msgList.size()-1);
+                                inputText.setText("");//清空输入框中的内容
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailed(int code) {
-                        MyToast.toast(ChatActivity.this,"消息发送失败",1);
-                    }
-                    @Override
-                    public void onException(Throwable exception) {
-                        MyToast.toast(ChatActivity.this,"消息发送异常",1);
-                    }
-                });
+                        @Override
+                        public void onFailed(int code) {
+                            MyToast.toast(ChatActivity.this,"消息发送失败",1);
+                        }
+                        @Override
+                        public void onException(Throwable exception) {
+                            MyToast.toast(ChatActivity.this,"消息发送异常",1);
+                        }
+                    });
+                }
+
+
                 break;
             }
             case R.id.trade_confirm:
@@ -211,7 +264,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private List<Msg> getData(){
         List<Msg> list = new ArrayList<>();
         if(list.size()!=0){list.clear();}
-        list.add(new Msg("Hello",Msg.TYPE_RECEIVED));
         return list;
     }
 
