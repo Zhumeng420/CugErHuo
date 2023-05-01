@@ -169,7 +169,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                         //通知
                         mNotificationManager.notify(1, mNotificationBuilder.build());
                     }
-
                 };
         NIMClient.getService(MsgServiceObserve.class)
                 .observeReceiveMessage(incomingMessageObserver, true);
