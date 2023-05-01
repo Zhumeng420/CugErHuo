@@ -363,6 +363,11 @@
             如果 SDKOptions 中提供了，则取 SDKOptions 中的值。
         -->
         <service android:name="com.amap.api.location.APSService" /> <!-- 高德地图服务 -->
+        <service
+            android:name="com.example.cugerhuo.tools.MyService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
         <meta-data
             android:name="com.netease.nim.appKey"
             android:value="c45d8e893b6e4d7b2fab77a68dfe8ad8" /> <!-- 云信后台服务，请使用独立进程。 -->

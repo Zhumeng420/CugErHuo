@@ -188,8 +188,6 @@ dependencies {
     //单项/数字、二三级联动、日期/时间等滚轮选择器
     implementation 'com.github.gzu-liyujiang.AndroidPicker:WheelPicker:4.0.1'
 
-    //elasticsearch
-    implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.14.0'
 
 }
 

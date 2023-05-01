@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,13 +26,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.user.Msg;
 import com.example.cugerhuo.access.user.PartUserInfo;
-import com.example.cugerhuo.access.user.UserInfo;
-import com.example.cugerhuo.activity.AddressManageActivity;
 import com.example.cugerhuo.activity.CreatTradeActivity;
-import com.example.cugerhuo.activity.EditAddressActivity;
 import com.example.cugerhuo.activity.adapter.MsgAdapter;
 import com.example.cugerhuo.tools.MyToast;
-import com.example.cugerhuo.tools.SystemNotification;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
@@ -70,6 +69,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
      */
     private RoundedImageView chatUserImg;
     private TextView  chatUserName;
+    private final MyHandler MyHandler =new MyHandler(Looper.getMainLooper());
+
     /**
      * 聊天对象
      */
@@ -148,26 +149,22 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                         msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_RECEIVED));
                         adapter.notifyItemInserted(msgList.size()-1);
                         msgRecyclerView.scrollToPosition(msgList.size()-1);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Message msg = Message.obtain();
+                                msg.arg1 = 1;
+                                msg.obj=messages.get(0).getContent();
+                                MyHandler.sendMessage(msg);
+                            }
+                        }).start();
                         //MyToast.toast(ChatActivity.this,messages.toString(),3);
                         /**
                          * 消息的系统提示
                          * @author 朱萌
                          * @time 2023/05/01
                          */
-                        //点击跳转事件
-                        Intent newIntent = new Intent(this,MessageActivity.class);
-                        @SuppressLint("UnspecifiedImmutableFlag") PendingIntent pi = PendingIntent.getActivity(this,0,newIntent,PendingIntent.FLAG_CANCEL_CURRENT);
-                        //初始化消息通知
-                        mNotificationBuilder=new NotificationCompat.Builder(this)
-                                .setContentTitle("收到了一条新消息")
-                                .setContentText(messages.get(0).getContent())
-                                .setWhen(System.currentTimeMillis())
-                                .setColor(getResources().getColor(R.color.colorPrimary))
-                                .setSmallIcon(R.drawable.logo2)
-                                .setContentIntent(pi)
-                                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.logo2));
-                        //通知
-                        mNotificationManager.notify(1, mNotificationBuilder.build());
+
                     }
                 };
         NIMClient.getService(MsgServiceObserve.class)
@@ -223,7 +220,39 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             }
         });
     }
+    /**
+     * 消息发送接收，异步更新UI
+     * @author 施立豪
+     * @time 2023/4/19
+     */
+    private class MyHandler extends Handler {
+        public MyHandler(Looper mainLooper) {
 
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.arg1) {
+                case 1:
+                    //点击跳转事件
+                    Intent newIntent = new Intent(ChatActivity.this,MessageActivity.class);
+                    @SuppressLint("UnspecifiedImmutableFlag") PendingIntent pi = PendingIntent.getActivity(ChatActivity.this,0,newIntent,PendingIntent.FLAG_CANCEL_CURRENT);
+                    //初始化消息通知
+                    mNotificationBuilder=new NotificationCompat.Builder(ChatActivity.this)
+                            .setContentTitle("收到了一条新消息")
+                            .setContentText((CharSequence) msg.obj)
+                            .setWhen(System.currentTimeMillis())
+                            .setColor(getResources().getColor(R.color.colorPrimary))
+                            .setSmallIcon(R.drawable.logo2)
+                            .setContentIntent(pi)
+                            .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.logo2));
+                    //通知
+                    mNotificationManager.notify(1, mNotificationBuilder.build());
+                    break;
+                default:
+                    break;
+            }}}
 
     /**
      * UI的点击实际处理

@@ -84,6 +84,9 @@ public class StartSplashActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+
+
                 //List<String> a=new ArrayList<String>();
               //  a.add("/storage/emulated/0/Android/data/com.example.cugerhuo/cache/luban_disk_cache/CMP_20230429162710476.jpg");
 //                List<Integer> a=GraphOperate.productSearch("/storage/emulated/0/Android/data/com.example.cugerhuo/cache/luban_disk_cache/CMP_20230429162710476.jpg");
