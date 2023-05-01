@@ -1,7 +1,11 @@
 package com.example.cugerhuo.activity.imessage;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -76,7 +81,11 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     /**交易模块*/
     private LinearLayout tradeLayout;
 
-
+    /**
+     * 消息通知
+     */
+    NotificationManager mNotificationManager;
+    NotificationCompat.Builder mNotificationBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +102,11 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         tradeConfirm = findViewById(R.id.trade_confirm);
         tradeConfirm.setOnClickListener(this);
         tradeLayout = findViewById(R.id.trade);
+        /**
+         * 系统消息通知实例
+         * @time 2023/05/01
+         */
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         /**
          * 从上个界面获取聊天对象信息
@@ -140,7 +154,20 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                          * @author 朱萌
                          * @time 2023/05/01
                          */
-                        SystemNotification.showNotification(this, "你收到了一条新消息", messages.get(0).getContent());
+                        //点击跳转事件
+                        Intent newIntent = new Intent(this,MessageActivity.class);
+                        @SuppressLint("UnspecifiedImmutableFlag") PendingIntent pi = PendingIntent.getActivity(this,0,newIntent,PendingIntent.FLAG_CANCEL_CURRENT);
+                        //初始化消息通知
+                        mNotificationBuilder=new NotificationCompat.Builder(this)
+                                .setContentTitle("收到了一条新消息")
+                                .setContentText(messages.get(0).getContent())
+                                .setWhen(System.currentTimeMillis())
+                                .setColor(getResources().getColor(R.color.colorPrimary))
+                                .setSmallIcon(R.drawable.logo2)
+                                .setContentIntent(pi)
+                                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.logo2));
+                        //通知
+                        mNotificationManager.notify(1, mNotificationBuilder.build());
                     }
 
                 };
