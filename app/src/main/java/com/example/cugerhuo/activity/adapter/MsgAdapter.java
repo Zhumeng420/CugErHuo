@@ -28,6 +28,7 @@ import com.example.cugerhuo.access.user.Msg;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.oss.InitOS;
+import com.luck.picture.lib.interfaces.OnItemClickListener;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
@@ -44,6 +45,9 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
     private Context context;
     private List<Msg> list;
     private PartUserInfo chatUser;
+    private OnItemClickListener mTradeClickListener;
+    private OnItemClickListener mTradeDetailClickListener;
+
     public MsgAdapter(List<Msg> list, PartUserInfo chatUser,Context context){
         this.list = list;
         this.chatUser=chatUser;
@@ -62,11 +66,17 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
         /**左侧确认订单*/
         LinearLayout leftCard;
         RoundedImageView incomingAvatarCard;
+        LinearLayout leftCardDetail;
         /**右侧确认订单*/
         LinearLayout rightCard;
         RoundedImageView outcomingAvatarCard;
+        LinearLayout rightCardDetail;
         /**对方已提交订单*/
         LinearLayout confirmCard;
+        /**点击待确认订单*/
+        private RecyclerViewAdapter.OnItemClickListener mTradeListener;// 声明自定义的接口
+        /**点击查看订单*/
+        private RecyclerViewAdapter.OnItemClickListener mTradeDetailListener;// 声明自定义的接口
 
         public ViewHolder(View view){
             super(view);
@@ -81,6 +91,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
             confirmCard=view.findViewById(R.id.trade_confirm_card);
             incomingAvatarCard=view.findViewById(R.id.incoming_avatar_card);
             outcomingAvatarCard=view.findViewById(R.id.outcoming_avatar_card);
+            leftCardDetail = view.findViewById(R.id.left_trade_detail);
+            rightCardDetail = view.findViewById(R.id.right_trade_detail);
         }
     }
 
@@ -137,8 +149,15 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 {
                     holder.incomingAvatarCard.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
                 }
+                /**点击查看待确认订单*/
+                holder.leftCardDetail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mTradeDetailClickListener.onItemClick(v,position);
+                    }
+                });
                 break;
-            /**TYPE_SEND_CARD 表示发送的消息*/
+            /**TYPE_SEND_CARD 表示我已确认交易信息*/
             case Msg.TYPE_SEND_CARD:
                 holder.rightCard.setVisibility(View.VISIBLE);
                 /**同样使用View.GONE*/
@@ -150,6 +169,13 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 {
                     holder.outcomingAvatarCard.setImageURI(Uri.fromFile(new File(UserInfo.getUrl())));
                 }
+                /**点击查看待确认订单*/
+                holder.rightCardDetail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mTradeDetailClickListener.onItemClick(v,position);
+                    }
+                });
                 break;
             /**TYPE_CONFIRM_CARD 表示接受到对方的提交信息*/
             case Msg.TYPE_CONFIRM_CARD:
@@ -159,6 +185,13 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.leftCard.setVisibility(View.GONE);
                 holder.rightLayout.setVisibility(View.GONE);
                 holder.rightCard.setVisibility(View.GONE);
+                /**点击待确认订单*/
+                holder.confirmCard.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mTradeClickListener.onItemClick(v,position);
+                    }
+                });
                 break;
             default:
                 break;
@@ -239,5 +272,36 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    /**
+     * 点击待确定订单
+     * @param listener
+     * @Author: 李柏睿
+     * @Time: 2023/5/1
+     */
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mTradeClickListener = listener;
+    }
+
+    /**
+     * 点击查看订单信息
+     * @param listener
+     * @Author: 李柏睿
+     * @Time: 2023/5/1
+     */
+    public void setOnItemDetailClickListener(OnItemClickListener listener) {
+        this.mTradeDetailClickListener = listener;
+    }
+
+
+    /**
+     * 定义RecyclerView选项单击事件的回调接口
+     * @Author: 李柏睿
+     * @Time: 2023/5/1
+     */
+    public interface OnItemClickListener {
+        /**参数（父组件，当前单击的View,单击的View的位置，数据）*/
+        public void onItemClick(View view, int position);
     }
 }

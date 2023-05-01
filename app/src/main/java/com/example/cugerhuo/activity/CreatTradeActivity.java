@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,7 +19,9 @@ import android.widget.Toast;
 
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.user.AddressInfo;
+import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.activity.adapter.RecyclerViewAddressAdapter;
+import com.example.cugerhuo.activity.imessage.ChatActivity;
 import com.example.cugerhuo.activity.post.PostSellActivity;
 import com.example.cugerhuo.views.ConcernDialog;
 import com.example.cugerhuo.views.EditDialog;
@@ -52,11 +55,25 @@ public class CreatTradeActivity extends AppCompatActivity implements View.OnClic
     LinearLayout ll_price_select;
     View blankClick;
 
+    /**生成订单*/
+    private Button createTrade;
+
+    /**
+     * 聊天对象
+     */
+    private PartUserInfo chatUser=new PartUserInfo();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creat_trade);
         initView();
+
+        /**
+         * 从上个界面获取聊天对象信息
+         */
+        Intent intent =getIntent();
+        chatUser= (PartUserInfo) intent.getSerializableExtra("chatUser");
     }
 
     /**
@@ -83,6 +100,8 @@ public class CreatTradeActivity extends AppCompatActivity implements View.OnClic
         ll_price_select = findViewById(R.id.ll_price_select);
         blankClick = findViewById(R.id.click_blank);
         blankClick.setOnClickListener(this);
+        createTrade = findViewById(R.id.create_trade);
+        createTrade.setOnClickListener(this);
     }
 
     /**
@@ -188,6 +207,21 @@ public class CreatTradeActivity extends AppCompatActivity implements View.OnClic
                     }
                 });
                 editDialog.show();
+                break;
+            case R.id.create_trade:
+                Intent intent=new Intent(CreatTradeActivity.this, ChatActivity.class);
+                intent.putExtra("chatUser",chatUser);
+                int iWant = 0;
+                intent.putExtra("iWant",iWant);
+                /**是否生成订单*/
+                int creatTrade = 1;
+                intent.putExtra("isTrade",creatTrade);
+                /**订单id*/
+                int tradeId = 1;
+                intent.putExtra("tradeId",tradeId);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                finish();
                 break;
             default:
                 break;
