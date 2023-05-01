@@ -70,6 +70,10 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private PartUserInfo chatUser=new PartUserInfo();
     /**立即交易*/
     private LinearLayout tradeConfirm;
+    /**是否从商品详情页跳过来的*/
+    private int iWant;
+    /**交易模块*/
+    private LinearLayout tradeLayout;
 
 
 
@@ -87,13 +91,18 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         returnImg.setOnClickListener(this);
         tradeConfirm = findViewById(R.id.trade_confirm);
         tradeConfirm.setOnClickListener(this);
+        tradeLayout = findViewById(R.id.trade);
 
         /**
          * 从上个界面获取聊天对象信息
          */
         Intent intent =getIntent();
         chatUser= (PartUserInfo) intent.getSerializableExtra("chatUser");
+        iWant = (int)intent.getSerializableExtra("iWant");
 
+        if(iWant==1){
+            tradeLayout.setVisibility(View.VISIBLE);
+        }
 
         if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
         {

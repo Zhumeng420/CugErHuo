@@ -122,19 +122,19 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
     /**
      * 初始化商品数据和用户数据
      */
-    public void initData()
-    {   Intent temp=getIntent();
+    public void initData() {
+        Intent temp=getIntent();
         int position=temp.getIntExtra("position",-1);
         if(position!=-1)
         {
-        commodity= RecommendInfo.getCommodityList().get(position);
-        userInfo=RecommendInfo.getPartUserInfoList().get(position);
-        sellerDescripe.setText(userInfo.getSignature());
-        sellerImage.setImageURI(Uri.fromFile(new File(userInfo.getImageUrl())));
-        sellerName.setText(userInfo.getUserName());
-        goodDetail.setText(commodity.getDescription());
-        goodCate.setText(commodity.getCategory());
-        goodBrand.setText(commodity.getBrand());
+            commodity= RecommendInfo.getCommodityList().get(position);
+            userInfo=RecommendInfo.getPartUserInfoList().get(position);
+            sellerDescripe.setText(userInfo.getSignature());
+            sellerImage.setImageURI(Uri.fromFile(new File(userInfo.getImageUrl())));
+            sellerName.setText(userInfo.getUserName());
+            goodDetail.setText(commodity.getDescription());
+            goodCate.setText(commodity.getCategory());
+            goodBrand.setText(commodity.getBrand());
         }
         else
         {
@@ -306,6 +306,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 int iWant = 1;
                 Intent intent=new Intent(GoodDetailActivity.this, ChatActivity.class);
                 intent.putExtra("iWant",iWant);
+                intent.putExtra("chatUser",userInfo);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
                 break;

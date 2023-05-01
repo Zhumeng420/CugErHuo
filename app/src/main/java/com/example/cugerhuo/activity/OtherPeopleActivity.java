@@ -363,6 +363,8 @@ public class OtherPeopleActivity extends AppCompatActivity {
         if(partUserInfo.getConcern()==1||partUserInfo.getConcern()==2||partUserInfo.getConcern()==5){
             Intent intent=new Intent(OtherPeopleActivity.this, ChatActivity.class);
             intent.putExtra("chatUser",partUserInfo);
+            int iWant = 0;
+            intent.putExtra("iWant",iWant);
             startActivity(intent);
         }
         /**
