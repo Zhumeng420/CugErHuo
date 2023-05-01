@@ -48,9 +48,11 @@ public class ConcernActivity extends AppCompatActivity {
     private List<PartUserInfo> getFocusInfo=new ArrayList<>();
     private final MyHandler MyHandler =new MyHandler();
     /**
-     * positionClick  记录目前点击的item位置
+     * positionClick  记录目前关注列表点击的item位置
+     * rePosition 记录目前推荐关注点击的item位置
      */
     private int positionClick;
+    private int rePosition;
     /**
      * 判断是否取消关注成功
      */
@@ -68,7 +70,12 @@ public class ConcernActivity extends AppCompatActivity {
      */
     private List<PartUserInfo> rePartUserInfo=new ArrayList<>();
 
+    /**
+     * adapter对应关注列表
+     * adapter2对应推荐列表
+     */
     private  RecyclerViewAdapter adapter;
+    private  RecyclerViewRecommenduser adapter2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +140,7 @@ public class ConcernActivity extends AppCompatActivity {
         }).start();
 
 
+    //获取推荐列表
         new Thread(() -> {
             Message msg = Message.obtain();
             msg.arg1 = 2;
@@ -150,8 +158,9 @@ public class ConcernActivity extends AppCompatActivity {
             for(int i=0;i<recommendId.size();i++){
                if( UserInfoOperate.getInfoFromRedis(con,recommendId.get(i),ConcernActivity.this)!=null){
                    partUserInfo=UserInfoOperate.getInfoFromRedis(con,recommendId.get(i),ConcernActivity.this);
-                   partUserInfo.getUserName();
+                   partUserInfo.setConcern(0);
                    rePartUserInfo.add(partUserInfo);
+
                }
             }
             MyHandler.sendMessage(msg);
@@ -246,8 +255,62 @@ public class ConcernActivity extends AppCompatActivity {
                  * @time 2023/4/26
                  */
                 case 2:
-                    RecyclerViewRecommenduser adapter2=new RecyclerViewRecommenduser(getActivity(),rePartUserInfo);
+                    adapter2=new RecyclerViewRecommenduser(getActivity(),rePartUserInfo);
                     revUser.setAdapter(adapter2);
+                    /**
+                     * 点击推荐列表关注响应事件
+                     * @author 唐小莉
+                     * @time 2023/5/1
+                     */
+                    adapter2.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            rePosition=position;
+                            if(rePartUserInfo.get(position).getConcern()==1||rePartUserInfo.get(position).getConcern()==2){
+                                new Thread(new ConcernActivity.MyRunnableDeleteReConcernOperate()).start();
+                                if(rePartUserInfo.get(position).getConcern()==1){
+                                    adapter2.notifyItemChanged(position,"1");
+                                }
+                                else {
+                                    adapter2.notifyItemChanged(position,"3");
+                                }
+                                focusNum--;
+                            }
+                            else{
+                                new Thread(new ConcernActivity.MyRunnableReConcernOperate()).start();
+
+                                /**
+                                 * 如果此时属于未关注状态，且之前不是互相关注
+                                 */
+                                if(rePartUserInfo.get(position).getConcern()==0){
+                                    adapter2.notifyItemChanged(position,"0");
+                                }
+                                /**
+                                 * 互相关注
+                                 */
+                                else {
+                                    adapter2.notifyItemChanged(position,"2");
+                                }
+                                focusNum++;
+                            }
+                        }
+                    });
+                    /**
+                     * 点击推荐列表进行跳转
+                     * @author 唐小莉
+                     * @time 2023/5/1
+                     */
+                    adapter2.setOnItemUserClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            rePosition=position;
+                            Intent intent=new Intent(getActivity(), OtherPeopleActivity.class);
+                            intent.putExtra("concernUser",rePartUserInfo.get(position));
+                            intent.putExtra("focusNum",focusNum);
+                            //startActivity(intent);
+                            startActivityForResult(intent,3);
+                        }
+                    });
                     break;
                 default:
                     break;
@@ -295,9 +358,43 @@ public class ConcernActivity extends AppCompatActivity {
             }
             System.out.println("hello concernActivity"+data1);
         }
+        /**
+         * 推荐关注返回信息
+         * @author 唐小莉
+         * @time 2023/5/1
+         */
+        if(requestCode==3){
+            int data1 = data.getIntExtra("isConcern",0);
+            rePartUserInfo.get(rePosition).setConcern(data1);
+            adapter2.setPartUserInfoPosition(rePosition,data1);
+            /**
+             * 在他人界面点击了取消关注，且取消前不是互相关注状态
+             */
+            if(data1==0){
+                adapter2.notifyItemChanged(rePosition,1);
+            }
+            /**
+             * 在他人界面点击关注，且关注后为互相关注状态
+             */
+            else if(data1==2){
+                adapter2.notifyItemChanged(rePosition,"2");
+            }
+            /**
+             * 在他人界面点击取消关注，且取消前是互相关注状态
+             */
+            else if(data1==3){
+                adapter2.notifyItemChanged(rePosition,"3");
+            }
+            /**
+             * 在他人界面点击关注
+             */
+            else{
+                adapter2.notifyItemChanged(rePosition,"0");
+            }
+        }
     }
     /**
-     * 开启线程,取消关注
+     * 开启线程,取消关注列表关注
      * @author 唐小莉
      * @time 2023/4/13
      */
@@ -309,6 +406,7 @@ public class ConcernActivity extends AppCompatActivity {
             System.out.println("issuccess"+isCancelSuccess);
         }
     }
+
     /**
      * 开启线程,关注
      * @author 唐小莉
@@ -319,6 +417,32 @@ public class ConcernActivity extends AppCompatActivity {
         public void run() {
             boolean su=UserOperate.setConcern(id1,getFocusInfo.get(positionClick).getId(),getActivity());
             System.out.println("concernhhhhh success"+su);
+        }
+    }
+
+    /**
+     * 开启线程,取消推荐列表关注
+     * @author 唐小莉
+     * @time 2023/4/30
+     */
+    class MyRunnableDeleteReConcernOperate implements  Runnable{
+        @Override
+        public void run() {
+
+           UserOperate.getIfDeleteConcern(id1,rePartUserInfo.get(rePosition).getId(),getActivity());
+        }
+    }
+
+
+    /**
+     * 开启线程,推荐关注
+     * @author 唐小莉
+     * @time 2023/4/30
+     */
+    class MyRunnableReConcernOperate implements Runnable{
+        @Override
+        public void run() {
+           UserOperate.setConcern(id1,rePartUserInfo.get(rePosition).getId(),getActivity());
         }
     }
 }

@@ -503,6 +503,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
                     System.out.println("xinaccchhhhhhhhaaaaa"+isConcern);
                     setResult(1,intent);
                     setResult(2,intent);
+                    setResult(3,intent);
                     System.out.println("guanzhuuuanzhu");
                     focusNum++;
                     break;
@@ -514,6 +515,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
                     System.out.println("xinaccchhhhhhhhaaaaa"+isConcern);
                     setResult(1,intent1);
                     setResult(2,intent1);
+                    setResult(3,intent1);
                     focusNum--;
                     break;
                 default:

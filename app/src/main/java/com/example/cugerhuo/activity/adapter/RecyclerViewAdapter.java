@@ -143,77 +143,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             partUserInfo.get(position).setConcern(4);
         }
 
-        /**
-         * 获取oss路径
-         */
-        String url = partUserInfo.get(position).getImageUrl();
-        /**
-         *  判断头像是否为空，如果为空则使用默认的头像进行显示
-         */
-        if(url!=null&&!"".equals(url))
-        { /**@time 2023/4/13
-         * @author 施立豪
-         * 异步更新头像,并实时更新
-         */
-        OSSClient oss = InitOS.getOssClient();
 
-        /**
-         * 获取本地保存路径
-         */
-        String newUrl= getSandBoxPath(context) + url;
-        partUserInfo.get(position).setImageUrl(newUrl);
-        System.out.println("newUrlhhhh"+newUrl);
-        File f = new File(newUrl);
-        if (!f.exists()) {
-            /**
-             * 构建oss请求
-             */
-            GetObjectRequest get = new GetObjectRequest("cugerhuo", url);
-            /**
-             * 异步任务
-             */
-            oss.asyncGetObject(get, new OSSCompletedCallback<GetObjectRequest, GetObjectResult>() {
-                /**
-                 * 下载成功
-                 * @param request
-                 * @param result
-                 */
-                @Override
-                public void onSuccess(GetObjectRequest request, GetObjectResult result) {
-                    // 开始读取数据。
-                    long length = result.getContentLength();
-                    if (length > 0) {
-                        byte[] buffer = new byte[(int) length];
-                        int readCount = 0;
-                        while (readCount < length) {
-                            try {
-                                readCount += result.getObjectContent().read(buffer, readCount, (int) length - readCount);
-                            } catch (Exception e) {
-                                OSSLog.logInfo(e.toString());
-                            }
-                        }
-                        // 将下载后的文件存放在指定的本地路径，例如D:\\localpath\\exampleobject.jpg。
-                        try {
-                            FileOutputStream fout = new FileOutputStream(newUrl);
-                            fout.write(buffer);
-                            fout.close();
-                            /**
-                             * 下载完成，填写更新逻辑
-                             */
-                            holder.user_concern_img.setImageURI(Uri.fromFile(new File(newUrl)));
-                        } catch (Exception e) {
-                            OSSLog.logInfo(e.toString());
-                        }
-                    }
-                }
-                @Override
-                public void onFailure(GetObjectRequest request, ClientException clientException,
-                                      ServiceException serviceException) {
-                    Log.e(TAG, "oss下载文件失败");
-                }
-            });
-        } else {
-            holder.user_concern_img.setImageURI(Uri.fromFile(new File(newUrl)));}}
         holder.user_concern.setOnClickListener(new View.OnClickListener() {
             /**
              * 点击每个RecyclerView子组件进行相应的响应事件,点击跳转至个人主页
@@ -234,6 +164,89 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
 
         });
+
+        setUserImg(holder,position);
+    }
+
+    /**
+     * 设置头像
+     * @param holder
+     * @param position  item位置
+     * @author 唐小莉
+     * @time 2023/4/30
+     */
+    public void setUserImg(final ViewHolder holder,final int position){
+        /**
+         * 获取oss路径
+         */
+        String url = partUserInfo.get(position).getImageUrl();
+        /**
+         *  判断头像是否为空，如果为空则使用默认的头像进行显示
+         */
+        if(url!=null&&!"".equals(url))
+        { /**@time 2023/4/13
+         * @author 施立豪
+         * 异步更新头像,并实时更新
+         */
+            OSSClient oss = InitOS.getOssClient();
+
+            /**
+             * 获取本地保存路径
+             */
+            String newUrl= getSandBoxPath(context) + url;
+            partUserInfo.get(position).setImageUrl(newUrl);
+            System.out.println("newUrlhhhh"+newUrl);
+            File f = new File(newUrl);
+            if (!f.exists()) {
+                /**
+                 * 构建oss请求
+                 */
+                GetObjectRequest get = new GetObjectRequest("cugerhuo", url);
+                /**
+                 * 异步任务
+                 */
+                oss.asyncGetObject(get, new OSSCompletedCallback<GetObjectRequest, GetObjectResult>() {
+                    /**
+                     * 下载成功
+                     * @param request
+                     * @param result
+                     */
+                    @Override
+                    public void onSuccess(GetObjectRequest request, GetObjectResult result) {
+                        // 开始读取数据。
+                        long length = result.getContentLength();
+                        if (length > 0) {
+                            byte[] buffer = new byte[(int) length];
+                            int readCount = 0;
+                            while (readCount < length) {
+                                try {
+                                    readCount += result.getObjectContent().read(buffer, readCount, (int) length - readCount);
+                                } catch (Exception e) {
+                                    OSSLog.logInfo(e.toString());
+                                }
+                            }
+                            // 将下载后的文件存放在指定的本地路径，例如D:\\localpath\\exampleobject.jpg。
+                            try {
+                                FileOutputStream fout = new FileOutputStream(newUrl);
+                                fout.write(buffer);
+                                fout.close();
+                                /**
+                                 * 下载完成，填写更新逻辑
+                                 */
+                                holder.user_concern_img.setImageURI(Uri.fromFile(new File(newUrl)));
+                            } catch (Exception e) {
+                                OSSLog.logInfo(e.toString());
+                            }
+                        }
+                    }
+                    @Override
+                    public void onFailure(GetObjectRequest request, ClientException clientException,
+                                          ServiceException serviceException) {
+                        Log.e(TAG, "oss下载文件失败");
+                    }
+                });
+            } else {
+                holder.user_concern_img.setImageURI(Uri.fromFile(new File(newUrl)));}}
     }
 
     /**

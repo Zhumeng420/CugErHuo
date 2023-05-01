@@ -100,6 +100,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
              * 获取关注数量
              */
             focusNum=UserOperate.getFocusNum(userId,MyCenterActivity.this);
+            System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"+focusNum);
             msg.arg2=focusNum;
             //4、发送消息
             MyHandler.sendMessage(msg);
