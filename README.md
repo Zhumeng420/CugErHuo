@@ -153,6 +153,7 @@
 
 ## 三、项目结构：
 
+<img width="416" alt="image" src="https://user-images.githubusercontent.com/76473360/235690519-927b3d2e-dda3-4df3-b4f3-e7855164f6ab.png">
 
 
 ## 四、项目地址：
@@ -163,19 +164,18 @@
 
 后台管理系统：
 
-## 五、第三方服务及SDK地址：
+## 五、第三方服务：
 
 手机号码一键登录：[号码认证服务 (aliyun.com)](https://help.aliyun.com/product/75010.html)
 
 动画库：[LottieFiles: Download Free lightweight animations for website & apps.](https://lottiefiles.com/)
 
-动态手机权限请求：[getActivity/XXPermissions: Android 权限请求框架，已适配 Android 13 (github.com)](https://github.com/getActivity/XXPermissions)
-
-图片上传选择器：
+## 六、开源组件
 
 
 
-## 六、开发团队：
+
+## 七、开发团队：
 
 朱萌（zhumeng@cug.edu.cn)：主要负责软件架构设计、技术选型、软件过程与项目管理
 
@@ -187,7 +187,5 @@
 
 李伯睿(363127772@qq.com)：主要负责客户端UI的开发、后台管理系统的前端+后端的开发
 
-## 七、鸣谢
 
-感谢华中科技大学3090543761@qq.com提供信息安全方面的帮助。
 
