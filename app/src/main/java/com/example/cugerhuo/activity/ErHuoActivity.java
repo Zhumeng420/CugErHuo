@@ -13,9 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.cugerhuo.Fragment.ConcernFragment;
-import com.example.cugerhuo.Fragment.ReginFragment;
-import com.example.cugerhuo.Fragment.SuggestFragment;
+import com.example.cugerhuo.fragment.ConcernFragment;
+import com.example.cugerhuo.fragment.ReginFragment;
+import com.example.cugerhuo.fragment.SuggestFragment;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.activity.adapter.ViewAdapter;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
@@ -202,8 +202,6 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
         /**初始化数据*/
         fragments.add(new ConcernFragment("关注"));
         fragments.add(new SuggestFragment("推荐"));
-        fragments.add(new ReginFragment("地区"));
-
         /**设置ViewPager适配器*/
         adapter = new ViewAdapter(getSupportFragmentManager(),fragments);
         viewPager.setAdapter(adapter);

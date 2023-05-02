@@ -1,4 +1,4 @@
-package com.example.cugerhuo.Fragment;
+package com.example.cugerhuo.fragment;
 
 import static com.luck.picture.lib.thread.PictureThreadUtils.runOnUiThread;
 
@@ -18,16 +18,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
+import com.example.cugerhuo.access.SetCommodityInfo;
 import com.example.cugerhuo.access.commodity.RecommendInfo;
 import com.example.cugerhuo.access.user.PartUserInfo;
+import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.util.MsgEvent1;
 import com.example.cugerhuo.activity.GoodDetailActivity;
 import com.example.cugerhuo.activity.adapter.RecyclerViewGoodsDisplayAdapter;
+import com.scwang.smart.refresh.header.BezierRadarHeader;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * 首页推荐页
@@ -44,6 +51,11 @@ public class SuggestFragment extends Fragment {
     private RecyclerViewGoodsDisplayAdapter adapter;
     private RecyclerView goodsRecyclerView;
     private final SuggestFragment.MyHandler MyHandler =new SuggestFragment.MyHandler();
+    /**
+     * 下拉刷新
+     */
+    SmartRefreshLayout smartRefreshLayout;
+
 
     /**
      * 记录是否第一次进入页面，以更新商品
@@ -81,6 +93,9 @@ public class SuggestFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_suggest, container, false);
+        smartRefreshLayout=view.findViewById(R.id.refresh_parent);
+
+
 
         /**初始化adapter**/
         goodsRecyclerView =view.findViewById(R.id.display_good_block);
@@ -111,10 +126,35 @@ public class SuggestFragment extends Fragment {
                 }
             });
         }
+        /**
+         * 下拉 刷新整个RecyclerView
+         */
+        smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                /**
+                 * 随机生成数，用于刷新的page
+                 */
+                Random r = new Random();
+                int page=r.nextInt(4);
+                /**
+                 * 获取刷新后的商品信息
+                 */
+                SetCommodityInfo.setInfoRefresh(UserInfo.getid(),page,getActivity());
+                    userInfos= RecommendInfo.getPartUserInfoList();
+                    commodities=RecommendInfo.getCommodityList();
+                    //adapter.notifyDataSetChanged();
+                    adapter=new RecyclerViewGoodsDisplayAdapter(getContext(),commodities,userInfos);
+                    goodsRecyclerView.setAdapter(adapter);
+
+                /*重新刷新列表控件的数据*/
+                smartRefreshLayout.finishRefresh(1500);
+            }
+        });
+
         // 开启线程
         new Thread(() -> {
             Message msg = Message.obtain();
-//            SetCommodityInfo.setInfo(UserInfo.getid(),getContext());
             msg.arg1 = 1;
             MyHandler.sendMessage(msg);
         }).start();

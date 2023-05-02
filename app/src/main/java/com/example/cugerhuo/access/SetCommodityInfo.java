@@ -92,4 +92,81 @@ public class SetCommodityInfo {
 
 return true;
     }
+
+    /**
+     * 首页刷新推荐
+     * @param id 用户id
+     * @param page2 页数
+     * @param context 获取映射文件
+     * @return 返回是否成功
+     * @author 唐小莉
+     * @time 2023/5/2
+     */
+    public static boolean setInfoRefresh(int id, int page2,Context context)
+    {
+        OkHttpClient okHttpClient = new OkHttpClient();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<Integer> recommedCom=new ArrayList<>();
+                /**
+                 * 建立连接对象
+                 */
+                LettuceBaseCase lettuce=new LettuceBaseCase();
+                /**
+                 * 获取连接
+                 */
+                RedisCommands<String, String> con=lettuce.getSyncConnection();
+                /**
+                 * 获取XML文本
+                 */
+                String ip=context.getString(R.string.Tuip);
+                String router=context.getString(R.string.recommendCom);
+                String page=context.getString(R.string.page);
+                String uid=context.getString(R.string.UserId);
+                /**
+                 * 发送请求
+                 */
+                String url="http://"+ip+"/"+router+"?"+page+"="+page2+"&"+uid+"="+id;
+                Request request = new Request.Builder().url(url).get().build();
+                Response response = null;
+                int result
+                        =-1;
+                try {
+                    response = okHttpClient.newCall(request).execute();
+                    JSONObject pa= JSONObject.parseObject(response.body().string());
+                    System.out.println(result);
+                    System.out.println("asdsa");
+                    JSONArray a=JSONArray.parseArray(pa.getString("object"));
+                    for(Object i:a)
+                    {
+                        System.out.println("doashda"+i);
+                        recommedCom.add((Integer) i);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                List<Commodity>  tt=new ArrayList<>();
+                List<PartUserInfo> mm=new ArrayList<>();
+                for(Integer i:recommedCom)
+                {
+                    Commodity temp= CommodityOperate.getCommodityFromRedis(con,i,context);
+                    int id=temp.getUserId();
+                    tt.add(temp);
+                    mm.add(UserInfoOperate.getInfoFromRedis(con,id,context));
+                }
+                RecommendInfo.setCommodityList(tt);
+                RecommendInfo.setPartUserInfoList(mm);
+                // 构建广播Intent
+                Intent intent = new Intent("update");
+                intent.setAction("com.example.cugerhuo.fragment.SuggestFragment.BroadcastReceiver");
+                // 发送广播
+                EventBus.getDefault().post(new MsgEvent1("子线程发的消息1"));
+            }
+        }).start();
+
+        return true;
+    }
 }

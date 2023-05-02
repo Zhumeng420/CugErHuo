@@ -52,8 +52,7 @@ public class ViewAdapter extends FragmentPagerAdapter {
                 return "关注";
             case 1:
                 return "推荐";
-            case 2:
-                return "地区";
+
             default:
                 return "";
         }
