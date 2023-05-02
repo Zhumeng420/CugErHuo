@@ -74,6 +74,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.mycenter.MyPostActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".activity.TradeDetailActivity"
             android:exported="false">
             <meta-data
@@ -366,8 +373,8 @@
         <service
             android:name="com.example.cugerhuo.tools.MyService"
             android:enabled="true"
-            android:exported="true">
-        </service>
+            android:exported="true"></service>
+
         <meta-data
             android:name="com.netease.nim.appKey"
             android:value="c45d8e893b6e4d7b2fab77a68dfe8ad8" /> <!-- 云信后台服务，请使用独立进程。 -->

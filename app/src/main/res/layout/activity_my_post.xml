@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:clipChildren="false"
+    tools:context=".activity.mycenter.MyPostActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:padding="15dp"
+        android:layout_height="wrap_content"
+        >
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/return_img"
+                android:rotation="180"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/icon_arrow_black" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginRight="5dp"
+                android:text="我发布的"
+                android:textColor="#000000"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:padding="5dp"
+       android:gravity="left">
+       <com.google.android.material.tabs.TabLayout
+           android:id="@+id/tab_post_navigation"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           app:tabGravity="start"
+           app:tabTextAppearance="@style/fragment"
+           app:layout_constraintTop_toTopOf="parent"
+           app:tabIndicatorAnimationDuration="400"
+           app:tabIndicatorFullWidth="false"
+           app:tabIndicatorColor="@null"
+           tools:ignore="SpeakableTextPresentCheck" />
+   </LinearLayout>
+    <com.example.cugerhuo.views.MyViewPager
+        android:id="@+id/viewPager_post"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/move"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+
+</com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout>

@@ -22,6 +22,7 @@ import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.access.user.UserOperate;
 import com.example.cugerhuo.activity.imessage.ChatActivity;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
+import com.example.cugerhuo.activity.mycenter.MyPostActivity;
 import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -48,6 +49,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
     private TextView userFocus;
     private TextView userFans;
     private TextView username;
+    private LinearLayout myPost;
     private final MyHandler MyHandler = new MyHandler();
     private LinearLayout llTabOne;
     private LinearLayout llTabTwo;
@@ -69,6 +71,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         if (!"".equals(imagpath)) {
             userImage.setImageURI(Uri.fromFile(new File(imagpath)));
         }
+        myPost.setOnClickListener(this::myPostClick);
         new Thread(()->{
             Message msg = Message.obtain();
             msg.arg1 = 3;
@@ -144,7 +147,10 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         userConcern =findViewById(R.id.concern);
         username=findViewById(R.id.username);
         leUserFans=findViewById(R.id.le_user_fans);
+        myPost=findViewById(R.id.my_post);
     }
+
+
 
     /**
      * 点击关注按钮跳转至关注界面
@@ -167,6 +173,17 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
     public void userFansClick(View view){
         Intent intent=new Intent(getApplicationContext(),FansActivity.class);
         startActivityForResult(intent,0x0003);
+    }
+
+    /**
+     * 点击我发布的
+     * @param view
+     * @author 唐小莉
+     * @time 2023/5/2
+     */
+    public void myPostClick(View view){
+        Intent intent=new Intent(getApplicationContext(), MyPostActivity.class);
+        startActivityForResult(intent,0x0004);
     }
 
     /**

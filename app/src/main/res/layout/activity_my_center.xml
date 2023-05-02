@@ -238,6 +238,7 @@
                             android:layout_height="wrap_content" />
                     </LinearLayout>
                     <LinearLayout
+                        android:id="@+id/my_post"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
