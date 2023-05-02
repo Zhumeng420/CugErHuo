@@ -54,6 +54,7 @@ import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.attachment.ImageAttachment;
+import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -260,18 +261,19 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 messages -> {
                     if(messages.get(0).getContent()!=""){
                         if(messages.get(0).getAttachment()!=null){
-                            CustomAttachment attachment = (CustomAttachment)messages.get(0).getAttachment();
-                            int type = attachment.getType();
-                            if(type==10003){
-                                msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_CONFIRM_CARD));
-                            }else if(type==10002){
-                                msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_RECEIVED_CARD));
-                            }else {//图片消息
-                                Log.e("TAG", "图片type: " + type);
+                            if(messages.get(0).getAttachment().toString().indexOf("ImageAttachment")!=-1){
                                 Log.e("TAG", "messages.get(0).getAttachment(): " + messages.get(0).getAttachment().toString());
                                 ImageAttachment msgAttachment=(ImageAttachment)messages.get(0).getAttachment();
                                 String uri=msgAttachment.getThumbUrl();
                                 msgList.add(new Msg(uri,Msg.TYPE_RECEIVED_PIC));
+                            }else{//自定义消息消息
+                                CustomAttachment attachment = (CustomAttachment)messages.get(0).getAttachment();
+                                int type = attachment.getType();
+                                if(type==10003){
+                                    msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_CONFIRM_CARD));
+                                }else if(type==10002){
+                                    msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_RECEIVED_CARD));
+                                }
                             }
 
                         }else{
@@ -326,7 +328,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 //                                  msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_SEND));
                               }else if(result.get(i).getAttachStr().indexOf("10002")!=-1){
                                   msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_SEND_CARD));
-                              } else if(result.get(i).getAttachStr().indexOf("image")!=-1){
+                              } else if(result.get(i).getAttachStr().indexOf("jpg")!=-1||result.get(i).getAttachStr().indexOf("png")!=-1){
                                   String path = result.get(i).getAttachStr();
                                   String filePath = subString(path,"\"url\":\"","\",\"size\"");
                                   String filePathTo = filePath.replace("\\/","/");
@@ -345,7 +347,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                   msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_CONFIRM_CARD));}
                               else if(result.get(i).getAttachStr().indexOf("10002")!=-1){
                                   msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_RECEIVED_CARD));
-                              }else if(result.get(i).getAttachStr().indexOf("image")!=-1){
+                              }else if(result.get(i).getAttachStr().indexOf("jpg")!=-1||result.get(i).getAttachStr().indexOf("png")!=-1){
                                   String path = result.get(i).getAttachStr();
                                   String filePath = subString(path,"\"url\":\"","\",\"size\"");
                                   String filePathTo = filePath.replace("\\/","/");
