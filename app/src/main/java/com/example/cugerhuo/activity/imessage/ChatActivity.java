@@ -1,19 +1,33 @@
 package com.example.cugerhuo.activity.imessage;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,7 +53,9 @@ import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.attachment.ImageAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
+import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
@@ -87,6 +103,12 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private final ChatActivity.MyHandler MyHandler =new ChatActivity.MyHandler();
     /**是否确认订单*/
     private int confirmTrade;
+    /**点击更多*/
+    ImageView chatMore;
+    /**底部更多*/
+    LinearLayout moreFunction;
+    /**选择图片发送*/
+    LinearLayout selectPic;
 
 
 
@@ -99,6 +121,18 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             NIMClient.getService(MsgService.class).registerCustomAttachmentParser(new CustomAttachParser());
         }
         msgRecyclerView = findViewById(R.id.msg_recycler_view);
+        msgRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v instanceof RecyclerView){
+                    if(moreFunction.getVisibility()!=View.GONE){
+                        moreFunction.setVisibility(View.GONE);
+                    }
+                }
+                return false;
+            }
+        });
+
         inputText = findViewById(R.id.input_text);
         send = findViewById(R.id.send);
         returnImg = findViewById(R.id.return_chat);
@@ -110,7 +144,50 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         tradeLayout = findViewById(R.id.trade);
         speakImg = findViewById(R.id.speak);
         speakImg.setOnClickListener(this);
+        chatMore = findViewById(R.id.chat_more);
+        chatMore.setOnClickListener(this);
+        moreFunction = findViewById(R.id.more_function);
+        selectPic = findViewById(R.id.chat_send_pic);
+        selectPic.setOnClickListener(this);
 
+        /**监听输入框*/
+        inputText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (inputText.getText().length() > 0) {
+                    send.setVisibility(View.VISIBLE);
+                    chatMore.setVisibility(View.GONE);
+
+                } else {
+                    send.setVisibility(View.GONE);
+                    chatMore.setVisibility(View.VISIBLE);
+                }
+                return true;
+            }
+        });
+
+        inputText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.length() == 0) {
+                    send.setVisibility(View.GONE);
+                    chatMore.setVisibility(View.VISIBLE);
+                } else {
+                    send.setVisibility(View.VISIBLE);
+                    chatMore.setVisibility(View.GONE);
+                }
+            }
+        });
 
         /**
          * 从上个界面获取聊天对象信息
@@ -189,12 +266,14 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                 msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_CONFIRM_CARD));
                             }else if(type==10002){
                                 msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_RECEIVED_CARD));
+                            }else {//图片消息
+                                Log.e("TAG", "图片type: " + type);
+                                Log.e("TAG", "messages.get(0).getAttachment(): " + messages.get(0).getAttachment().toString());
+                                ImageAttachment msgAttachment=(ImageAttachment)messages.get(0).getAttachment();
+                                String uri=msgAttachment.getThumbUrl();
+                                msgList.add(new Msg(uri,Msg.TYPE_RECEIVED_PIC));
                             }
-//                            if(messages.get(0).getAttachment()==new ToBeConfirmedAttachment()){
-//                                msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_CONFIRM_CARD));
-//                            }else if(messages.get(0).getAttachment()==new MyOrderAttachment()){
-//                                msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_RECEIVED_CARD));
-//                            }
+
                         }else{
                             // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
                             msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_RECEIVED));
@@ -247,6 +326,11 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 //                                  msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_SEND));
                               }else if(result.get(i).getAttachStr().indexOf("10002")!=-1){
                                   msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_SEND_CARD));
+                              } else if(result.get(i).getAttachStr().indexOf("image")!=-1){
+                                  String path = result.get(i).getAttachStr();
+                                  String filePath = subString(path,"\"url\":\"","\",\"size\"");
+                                  String filePathTo = filePath.replace("\\/","/");
+                                  msgList.add(new Msg(filePathTo+"&thumbnail=350x350&imageView",Msg.TYPE_SEND_PIC));
                               }
                           }else{
                               msgList.add(new Msg(result.get(i).getContent(),Msg.TYPE_SEND));
@@ -261,6 +345,11 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                   msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_CONFIRM_CARD));}
                               else if(result.get(i).getAttachStr().indexOf("10002")!=-1){
                                   msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_RECEIVED_CARD));
+                              }else if(result.get(i).getAttachStr().indexOf("image")!=-1){
+                                  String path = result.get(i).getAttachStr();
+                                  String filePath = subString(path,"\"url\":\"","\",\"size\"");
+                                  String filePathTo = filePath.replace("\\/","/");
+                                  msgList.add(new Msg(filePathTo+"&thumbnail=350x350&imageView",Msg.TYPE_RECEIVED_PIC));
                               }
                           }else{
                               msgList.add(new Msg(result.get(i).getContent(),Msg.TYPE_RECEIVED));
@@ -356,6 +445,18 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 startActivity(intent);
                 overridePendingTransition(0, 0);
                 finish();
+                break;
+            case R.id.chat_more:
+                moreFunction.setVisibility(View.VISIBLE);
+                break;
+            case R.id.chat_send_pic:
+                //动态申请权限
+                if (ContextCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(ChatActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                } else {
+                    //访问相册
+                    InputPicture();
+                }
                 break;
             default:
                 break;
@@ -501,4 +602,111 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         }
     }
 
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                InputPicture();
+            } else {
+                Toast.makeText(this, "你拒绝打开此权限，无法进行下一步操作！", Toast.LENGTH_SHORT).show();
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void InputPicture() {
+        //Intent.ACTION_PICK 从数据中选择一个项目 (item)，将被选中的项目返回。
+        //MediaStore.Images.Media.EXTERNAL_CONTENT_URI 获取外部的URI
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        //参数一:对应的数据的URI 参数二:使用该函数表示要查找文件的MIME类型
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 1 && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            Log.e("TAG", "onActivityResult: " + picturePath);
+            SendPic(picturePath,data);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * 发送图片
+     * @Author: 李柏睿
+     * @Time: 2023/5/2
+     */
+    public void SendPic(String filepath,Intent data){
+        // 给该账号发送消息
+        String account = "cugerhuo"+chatUser.getId();
+        // 以单聊类型为例
+        SessionTypeEnum sessionType = SessionTypeEnum.P2P;
+        // 消息的配置选项
+        CustomMessageConfig config = new CustomMessageConfig();
+        // 该消息保存到服务器
+        config.enableHistory = true;
+        // 该消息漫游
+        config.enableRoaming = true;
+        // 该消息同步
+        config.enableSelfSync = true;
+        // 示例图片，需要开发者在相应目录下有图片
+        File file = new File(filepath);
+        // 创建一个图片消息
+        IMMessage message = MessageBuilder.createImageMessage(account, sessionType, file, file.getName());
+        message.setConfig(config);
+        // 发送给对方
+        NIMClient.getService(MsgService.class).sendMessage(message, false).setCallback(new RequestCallback<Void>() {
+            @Override
+            public void onSuccess(Void param) {
+//                message.getAttachment();
+                ImageAttachment msgAttachment=(ImageAttachment)message.getAttachment();
+                String uri=msgAttachment.getThumbUrl();
+                Log.e("TAG", "uri: " + uri);
+                Log.e("TAG", "data: " + data.getData().toString());
+                Msg customMsg = new Msg(filepath,Msg.TYPE_SEND_PIC);
+                msgList.add(customMsg);
+                MyToast.toast(ChatActivity.this,"图片信息发送成功",3);
+            }
+
+            @Override
+            public void onFailed(int code) {
+                MyToast.toast(ChatActivity.this,"图片信息发送失败",1);
+            }
+            @Override
+            public void onException(Throwable exception) {
+                MyToast.toast(ChatActivity.this,"图片信息发送异常",1);
+            }
+        });
+
+    }
+
+    /**
+     * 截取字符串str中指定字符 strStart、strEnd之间的字符串
+     * @return
+     */
+    public static String subString(String str, String strStart, String strEnd) {
+
+        /* 找出指定的2个字符在 该字符串里面的 位置 */
+        int strStartIndex = str.indexOf(strStart);
+        int strEndIndex = str.indexOf(strEnd);
+
+        /* index 为负数 即表示该字符串中 没有该字符 */
+        if (strStartIndex < 0) {
+            return "字符串 :---->" + str + "<---- 中不存在 " + strStart + ", 无法截取目标字符串";
+        }
+        if (strEndIndex < 0) {
+            return "字符串 :---->" + str + "<---- 中不存在 " + strEnd + ", 无法截取目标字符串";
+        }
+        /* 开始截取 */
+        String result = str.substring(strStartIndex, strEndIndex).substring(strStart.length());
+        return result;
+    }
 }

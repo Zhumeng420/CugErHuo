@@ -191,6 +191,7 @@
 
         <Button
             android:id="@+id/send"
+            android:visibility="gone"
             android:layout_width="50dp"
             android:layout_height="31dp"
             android:layout_gravity="center"
@@ -199,14 +200,57 @@
             android:text="发送"
             app:layout_constraintBottom_toBottomOf="parent" />
 
+        <ImageView
+            android:id="@+id/chat_more"
+            android:layout_width="31dp"
+            android:layout_height="31dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/icon_chat_more"/>
+
     </LinearLayout>
 
-    <!--    <Button-->
-    <!--        android:id="@+id/send"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:text="点我发送"-->
-    <!--        tools:layout_editor_absoluteX="169dp"-->
-    <!--        tools:layout_editor_absoluteY="467dp"-->
-    <!--        tools:ignore="MissingConstraints" />-->
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/more_function"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:weightSum="8"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:background="#EDEDED"
+        android:paddingBottom="15dp">
+
+        <LinearLayout
+            android:id="@+id/chat_send_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:gravity="center"
+                android:background="@drawable/background_white_decoration"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_chat_picture" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="图片"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
 </LinearLayout>

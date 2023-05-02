@@ -348,8 +348,69 @@
                 android:src="@drawable/icon_arrow" />
 
         </LinearLayout>
+    </LinearLayout>
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/left_pic"
+        android:orientation="horizontal">
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/incoming_avatar_pic"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            app:riv_oval="true"
+            android:src="@drawable/default_avatar_1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="80dp">
+
+            <ImageView
+                android:id="@+id/received_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/phone"/>
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/right_pic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/send_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:maxHeight="100dp"
+            android:maxWidth="300dp"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:scaleType="fitEnd"
+            android:layout_marginLeft="80dp"
+            android:src="@drawable/icon_phone" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/outcoming_avatar_pic"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/default_avatar_4"
+            app:riv_oval="true" />
     </LinearLayout>
 
 </LinearLayout>

@@ -2,14 +2,18 @@ package com.example.cugerhuo.activity.adapter;
 
 import static android.content.ContentValues.TAG;
 import static com.example.cugerhuo.access.SetGlobalIDandUrl.getSandBoxPath;
+import static com.netease.nim.highavailable.HighAvailableObject.getContext;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 import android.view.ContentInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,6 +27,8 @@ import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
 import com.alibaba.sdk.android.oss.common.OSSLog;
 import com.alibaba.sdk.android.oss.model.GetObjectRequest;
 import com.alibaba.sdk.android.oss.model.GetObjectResult;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.user.Msg;
 import com.example.cugerhuo.access.user.PartUserInfo;
@@ -33,6 +39,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -78,6 +85,15 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
         /**点击查看订单*/
         private RecyclerViewAdapter.OnItemClickListener mTradeDetailListener;// 声明自定义的接口
 
+        /**左侧图片*/
+        LinearLayout leftPic;
+        RoundedImageView incomingAvatarPic;
+        ImageView leftImg;
+        /**右侧图片*/
+        LinearLayout rightPic;
+        RoundedImageView outcomingAvatarPic;
+        ImageView rightImg;
+
         public ViewHolder(View view){
             super(view);
             leftLayout = view.findViewById(R.id.left_layout);
@@ -93,6 +109,12 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
             outcomingAvatarCard=view.findViewById(R.id.outcoming_avatar_card);
             leftCardDetail = view.findViewById(R.id.left_trade_detail);
             rightCardDetail = view.findViewById(R.id.right_trade_detail);
+            leftPic = view.findViewById(R.id.left_pic);
+            rightPic = view.findViewById(R.id.right_pic);
+            incomingAvatarPic = view.findViewById(R.id.incoming_avatar_pic);
+            outcomingAvatarPic = view.findViewById(R.id.outcoming_avatar_pic);
+            leftImg = view.findViewById(R.id.received_pic);
+            rightImg = view.findViewById(R.id.send_pic);
         }
     }
 
@@ -117,6 +139,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.leftCard.setVisibility(View.GONE);
                 holder.rightCard.setVisibility(View.GONE);
                 holder.confirmCard.setVisibility(View.GONE);
+                holder.leftPic.setVisibility(View.GONE);
+                holder.rightPic.setVisibility(View.GONE);
                 if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
                 {
                     holder.incomingAvatar.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
@@ -132,6 +156,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.leftCard.setVisibility(View.GONE);
                 holder.rightCard.setVisibility(View.GONE);
                 holder.confirmCard.setVisibility(View.GONE);
+                holder.leftPic.setVisibility(View.GONE);
+                holder.rightPic.setVisibility(View.GONE);
                 if (!"".equals(UserInfo.getUrl())&&UserInfo.getUrl()!=null)
                 {
                     holder.outcomingAvatar.setImageURI(Uri.fromFile(new File(UserInfo.getUrl())));
@@ -145,6 +171,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.leftLayout.setVisibility(View.GONE);
                 holder.rightCard.setVisibility(View.GONE);
                 holder.confirmCard.setVisibility(View.GONE);
+                holder.leftPic.setVisibility(View.GONE);
+                holder.rightPic.setVisibility(View.GONE);
                 if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
                 {
                     holder.incomingAvatarCard.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
@@ -165,6 +193,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.leftCard.setVisibility(View.GONE);
                 holder.rightLayout.setVisibility(View.GONE);
                 holder.confirmCard.setVisibility(View.GONE);
+                holder.leftPic.setVisibility(View.GONE);
+                holder.rightPic.setVisibility(View.GONE);
                 if (!"".equals(UserInfo.getUrl())&&UserInfo.getUrl()!=null)
                 {
                     holder.outcomingAvatarCard.setImageURI(Uri.fromFile(new File(UserInfo.getUrl())));
@@ -185,6 +215,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.leftCard.setVisibility(View.GONE);
                 holder.rightLayout.setVisibility(View.GONE);
                 holder.rightCard.setVisibility(View.GONE);
+                holder.leftPic.setVisibility(View.GONE);
+                holder.rightPic.setVisibility(View.GONE);
                 /**点击待确认订单*/
                 holder.confirmCard.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -192,6 +224,37 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                         mTradeClickListener.onItemClick(v,position);
                     }
                 });
+                break;
+            case Msg.TYPE_SEND_PIC:
+                holder.rightPic.setVisibility(View.VISIBLE);
+                Glide.with(context).load(msg.getContent()).into(holder.rightImg);
+                Log.e("TAG", "picImage " + msg.getContent());
+                /**同样使用View.GONE*/
+                holder.leftLayout.setVisibility(View.GONE);
+                holder.leftCard.setVisibility(View.GONE);
+                holder.rightLayout.setVisibility(View.GONE);
+                holder.confirmCard.setVisibility(View.GONE);
+                holder.leftPic.setVisibility(View.GONE);
+                holder.rightCard.setVisibility(View.GONE);
+                if (!"".equals(UserInfo.getUrl())&&UserInfo.getUrl()!=null)
+                {
+                    holder.outcomingAvatarPic.setImageURI(Uri.fromFile(new File(UserInfo.getUrl())));
+                }
+                break;
+            case Msg.TYPE_RECEIVED_PIC:
+                holder.leftPic.setVisibility(View.VISIBLE);
+                Glide.with(context).load(msg.getContent()).into(holder.leftImg);
+                /**同样使用View.GONE*/
+                holder.rightLayout.setVisibility(View.GONE);
+                holder.leftLayout.setVisibility(View.GONE);
+                holder.rightCard.setVisibility(View.GONE);
+                holder.confirmCard.setVisibility(View.GONE);
+                holder.leftCard.setVisibility(View.GONE);
+                holder.rightPic.setVisibility(View.GONE);
+                if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
+                {
+                    holder.incomingAvatarPic.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
+                }
                 break;
             default:
                 break;
