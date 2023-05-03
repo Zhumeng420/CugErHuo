@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,14 +47,17 @@ import com.example.cugerhuo.activity.session.CustomAttachment;
 import com.example.cugerhuo.activity.session.MyOrderAttachment;
 import com.example.cugerhuo.activity.session.ToBeConfirmedAttachment;
 import com.example.cugerhuo.tools.MyToast;
+import com.example.cugerhuo.views.RecordButton;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
+import com.netease.nimlib.sdk.avsignalling.SignallingServiceObserver;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.attachment.AudioAttachment;
 import com.netease.nimlib.sdk.msg.attachment.ImageAttachment;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
@@ -63,10 +68,16 @@ import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 import com.netease.nimlib.sdk.util.NIMUtil;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import okhttp3.internal.http2.Header;
 
 /**
  * 聊天
@@ -105,11 +116,15 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     /**是否确认订单*/
     private int confirmTrade;
     /**点击更多*/
-    ImageView chatMore;
+    private ImageView chatMore;
     /**底部更多*/
-    LinearLayout moreFunction;
+    private LinearLayout moreFunction;
     /**选择图片发送*/
-    LinearLayout selectPic;
+    private LinearLayout selectPic;
+    /**按住说话*/
+    private RecordButton recordButton;
+    /**输入线性布局*/
+    private LinearLayout editLayout;
 
 
 
@@ -134,6 +149,15 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             }
         });
 
+        /**动态申请语音权限*/
+        int hasWriteStoragePermission = ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.RECORD_AUDIO);
+        if (hasWriteStoragePermission == PackageManager.PERMISSION_GRANTED) {
+            //拥有权限，执行操作
+        }else{
+            //没有权限，向用户请求权限
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0x20);
+        }
+
         inputText = findViewById(R.id.input_text);
         send = findViewById(R.id.send);
         returnImg = findViewById(R.id.return_chat);
@@ -150,6 +174,19 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         moreFunction = findViewById(R.id.more_function);
         selectPic = findViewById(R.id.chat_send_pic);
         selectPic.setOnClickListener(this);
+        recordButton = findViewById(R.id.btnAudio);
+        editLayout = findViewById(R.id.edit_msg);
+        ((RecordButton) recordButton).setOnFinishedRecordListener(new RecordButton.OnFinishedRecordListener() {
+            @Override
+            public void onFinishedRecord(String audioPath, int time) {
+                Log.e("TAG", "录音结束回调");
+                File file = new File(audioPath);
+                if (file.exists()) {
+                    sendAudioMessage(audioPath,time);
+                    Log.e("TAG", "录音成功！");
+                }
+            }
+        });
 
         /**监听输入框*/
         inputText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -266,6 +303,11 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                 ImageAttachment msgAttachment=(ImageAttachment)messages.get(0).getAttachment();
                                 String uri=msgAttachment.getThumbUrl();
                                 msgList.add(new Msg(uri,Msg.TYPE_RECEIVED_PIC));
+                            }else if(messages.get(0).getAttachment().toString().indexOf("AudioAttachment")!=-1){
+                                AudioAttachment msgAttachment=(AudioAttachment) messages.get(0).getAttachment();
+                                String uri=msgAttachment.getUrl();
+                                long timeReceive = msgAttachment.getDuration();
+                                msgList.add(new Msg(uri+",and time is"+timeReceive/1000,Msg.TYPE_RECEIVED_AUDIO));
                             }else{//自定义消息消息
                                 CustomAttachment attachment = (CustomAttachment)messages.get(0).getAttachment();
                                 int type = attachment.getType();
@@ -333,6 +375,19 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                   String filePath = subString(path,"\"url\":\"","\",\"size\"");
                                   String filePathTo = filePath.replace("\\/","/");
                                   msgList.add(new Msg(filePathTo+"&thumbnail=350x350&imageView",Msg.TYPE_SEND_PIC));
+                              } else if(result.get(i).getAttachStr().indexOf("mp3")!=-1){
+                                  String path = result.get(i).getAttachStr();
+                                  String filePath = subString(path,"\"url\":\"","\",\"size\"");
+                                  String filePathTo = filePath.replace("\\/","/");
+                                  MediaPlayer mediaPlayer = new MediaPlayer();
+                                  try {
+                                      mediaPlayer.setDataSource(filePathTo);
+                                      mediaPlayer.prepare();
+                                  } catch (IOException e) {
+                                      e.printStackTrace();
+                                  }
+                                  int timeAudio = mediaPlayer.getDuration();
+                                  msgList.add(new Msg(filePathTo+",and time is"+timeAudio/1000,Msg.TYPE_SEND_AUDIO));
                               }
                           }else{
                               msgList.add(new Msg(result.get(i).getContent(),Msg.TYPE_SEND));
@@ -352,6 +407,19 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                   String filePath = subString(path,"\"url\":\"","\",\"size\"");
                                   String filePathTo = filePath.replace("\\/","/");
                                   msgList.add(new Msg(filePathTo+"&thumbnail=350x350&imageView",Msg.TYPE_RECEIVED_PIC));
+                              }else if(result.get(i).getAttachStr().indexOf("mp3")!=-1){
+                                  String path = result.get(i).getAttachStr();
+                                  String filePath = subString(path,"\"url\":\"","\",\"size\"");
+                                  String filePathTo = filePath.replace("\\/","/");
+                                  MediaPlayer mediaPlayer = new MediaPlayer();
+                                  try {
+                                      mediaPlayer.setDataSource(filePathTo);
+                                      mediaPlayer.prepare();
+                                  } catch (IOException e) {
+                                      e.printStackTrace();
+                                  }
+                                  int timeAudio = mediaPlayer.getDuration();
+                                  msgList.add(new Msg(filePathTo+",and time is"+timeAudio/1000,Msg.TYPE_RECEIVED_AUDIO));
                               }
                           }else{
                               msgList.add(new Msg(result.get(i).getContent(),Msg.TYPE_RECEIVED));
@@ -437,8 +505,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                         }
                     });
                 }
-
-
                 break;
             }
             case R.id.trade_confirm:
@@ -458,6 +524,17 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 } else {
                     //访问相册
                     InputPicture();
+                }
+                break;
+            case R.id.speak:
+                if(editLayout.getVisibility()!=View.GONE){
+                    speakImg.setImageResource(R.drawable.icon_chat_keyboard);
+                    recordButton.setVisibility(View.VISIBLE);
+                    editLayout.setVisibility(View.GONE);
+                }else{
+                    speakImg.setImageResource(R.drawable.icon_speak);
+                    recordButton.setVisibility(View.GONE);
+                    editLayout.setVisibility(View.VISIBLE);
                 }
                 break;
             default:
@@ -597,6 +674,21 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                             finish();
                         }
                     });
+
+                    adapter.setOnItemImgClickListener(new MsgAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            int isConfirm = 1;
+                            view.findViewById(R.id.left_pic);
+                            Intent intent=new Intent(ChatActivity.this, TradeDetailActivity.class);
+                            intent.putExtra("isConfirm",isConfirm);
+                            intent.putExtra("chatUser",chatUser);
+                            //startActivity(intent);
+                            startActivityForResult(intent,1);
+                            finish();
+                        }
+                    });
+
                     break;
                 default:
                     break;
@@ -710,5 +802,56 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         /* 开始截取 */
         String result = str.substring(strStartIndex, strEndIndex).substring(strStart.length());
         return result;
+    }
+
+    /**
+     * 发送语音消息
+     * @Author: 李柏睿
+     * @Time: 2023/5/3 1:18
+     */
+    public void sendAudioMessage(String audioPath, int time){
+
+        // 给该账号发送消息
+        String account = "cugerhuo"+chatUser.getId();
+        // 以单聊类型为例
+        SessionTypeEnum sessionType = SessionTypeEnum.P2P;
+        // 消息的配置选项
+        CustomMessageConfig config = new CustomMessageConfig();
+        // 该消息保存到服务器
+        config.enableHistory = true;
+        // 该消息漫游
+        config.enableRoaming = true;
+        // 该消息同步
+        config.enableSelfSync = true;
+        // 示例音频，需要开发者在相应目录下有文件
+        File audioFile = new File(audioPath);
+        // 音频时长，时间为示例
+        long audioLength = time;
+        // 创建音频消息
+        IMMessage audioMessage = MessageBuilder.createAudioMessage(account, sessionType, audioFile, audioLength);
+
+        audioMessage.setConfig(config);
+        // 发送给对方
+        NIMClient.getService(MsgService.class).sendMessage(audioMessage, false).setCallback(new RequestCallback<Void>() {
+            @Override
+            public void onSuccess(Void param) {
+//                message.getAttachment();
+                AudioAttachment audioAttachment = (AudioAttachment)audioMessage.getAttachment();
+                String uri=audioAttachment.getUrl();
+                Log.e("TAG", "uri: " + uri);
+                Msg customMsg = new Msg(audioPath+",and time is"+time,Msg.TYPE_SEND_AUDIO);
+                msgList.add(customMsg);
+                MyToast.toast(ChatActivity.this,"语音信息发送成功",3);
+            }
+
+            @Override
+            public void onFailed(int code) {
+                MyToast.toast(ChatActivity.this,"语音信息发送失败",1);
+            }
+            @Override
+            public void onException(Throwable exception) {
+                MyToast.toast(ChatActivity.this,"语音信息发送异常",1);
+            }
+        });
     }
 }

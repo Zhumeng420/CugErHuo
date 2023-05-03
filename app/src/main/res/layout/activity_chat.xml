@@ -154,14 +154,15 @@
 
         <ImageView
             android:id="@+id/speak"
-            android:layout_width="25dp"
+            android:layout_width="19dp"
             android:layout_height="25dp"
             android:layout_gravity="center"
             android:layout_marginRight="8dp"
             android:src="@drawable/icon_speak" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/edit_msg"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
@@ -187,6 +188,18 @@
                 tools:ignore="TouchTargetSizeCheck" />
 
         </LinearLayout>
+
+        <com.example.cugerhuo.views.RecordButton
+            android:visibility="gone"
+            android:id="@+id/btnAudio"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="30dp"
+            android:background="@drawable/shape_session_btn_voice"
+            android:text="按住说话"
+            android:textSize="13dp"
+            android:layout_gravity="center" />
 
 
         <Button
