@@ -10,8 +10,8 @@ import java.util.List;
  */
 public class RecommendInfo {
    static List<Commodity> commodityList;
-    static  List<PartUserInfo> partUserInfoList;
-    public static void setCommodityList(List<Commodity> a)
+   static  List<PartUserInfo> partUserInfoList;
+   public static void setCommodityList(List<Commodity> a)
     {
         commodityList=a;
     }
@@ -19,7 +19,7 @@ public class RecommendInfo {
     {
         partUserInfoList=b;
     }
-  public   static List<Commodity> getCommodityList()
+   public static List<Commodity> getCommodityList()
     {
         return commodityList;
     }

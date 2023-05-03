@@ -17,7 +17,6 @@ import com.example.cugerhuo.access.SetGlobalIDandUrl;
 import com.example.cugerhuo.activity.ErHuoActivity;
 import com.example.cugerhuo.login.login.OneKeyLoginActivity;
 import com.example.cugerhuo.oss.InitOS;
-import com.example.cugerhuo.tools.ImageAndBase64Util;
 
 import java.io.File;
 import java.text.ParseException;

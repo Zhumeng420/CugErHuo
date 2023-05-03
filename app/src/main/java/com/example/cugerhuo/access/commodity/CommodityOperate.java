@@ -6,17 +6,28 @@ import android.content.Context;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
+import com.example.cugerhuo.access.user.PartUserInfo;
+import com.example.cugerhuo.access.user.UserInfoOperate;
+import com.example.cugerhuo.tools.TracingHelper;
 import com.example.cugerhuo.tools.entity.RespBean;
 import com.example.cugerhuo.tools.entity.productParam;
 
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.lettuce.core.api.sync.RedisCommands;
+import io.opentracing.Scope;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
+import io.opentracing.util.GlobalTracer;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -29,6 +40,13 @@ import okhttp3.Response;
  * @time 2023/4/21
  */
 public class CommodityOperate {
+    /**
+     * 从redis获取商品数据
+     * @param connection
+     * @param id
+     * @param context
+     * @return
+     */
     public static Commodity getCommodityFromRedis(RedisCommands<String, String> connection, int id, Context context)
     {
         /**
@@ -47,12 +65,75 @@ public class CommodityOperate {
             connection.hset("Commodity",String.valueOf(id),userString);
             Log.i(TAG,"查询mysql for Commodity");
         }
-        if(user!=null)
-        {
-            user.setUserId(id);
-        }
+
         return user;
     }
+    /**
+     * 获取商品页推荐
+     */
+    public static  AbstractMap.SimpleEntry<List<Commodity>,List<PartUserInfo>> getRecommendComs(RedisCommands<String, String> con, int goodId, Context context)
+    {
+        Tracer tracer = GlobalTracer.get();
+        OkHttpClient okHttpClient = new OkHttpClient();
+        String ip=context.getString(R.string.Tuip);
+        String router=context.getString(R.string.GoodRecommend);
+        String page=context.getString(R.string.page1);
+        String goodid=context.getString(R.string.ProductId);
+        /**
+         * 发送请求
+         */
+        String url="http://"+ip+"/"+router+"?"+page+"&"+goodid+"="+goodId;
+        Request request = new Request.Builder().url(url).get().build();
+        Response response = null;
+        List<Integer> recommedCom=new ArrayList<>();
+        int result
+                =-1;
+        // 创建spann
+        Span span = tracer.buildSpan("获取首页推荐流程").withTag("SetCommodityInfo ：", "setInfo").start();
+        try (Scope ignored = tracer.scopeManager().activate(span,true)) {
+            try {
+                response = okHttpClient.newCall(request).execute();
+                JSONObject pa= JSONObject.parseObject(response.body().string());
+                System.out.println(result);
+                System.out.println("asdsa");
+                JSONArray a=JSONArray.parseArray(pa.getString("object"));
+                for(Object i:a)
+                {
+                    System.out.println("doashda"+i);
+                    recommedCom.add((Integer) i);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            TracingHelper.onError(e, span);
+            throw e;
+        } finally {
+            span.finish();
+        } // 创建spann
+        Span span1 = tracer.buildSpan("获取推荐商品和用户流程").withTag("SetCommodityInfo ：", "setInfo").start();
+        try (Scope ignored = tracer.scopeManager().activate(span1,true)) {
+            List<Commodity> tt = new ArrayList<>();
+            List<PartUserInfo> mm = new ArrayList<>();
+            long stime = System.currentTimeMillis();
+            for (Integer i : recommedCom) {
+                Commodity temp = CommodityOperate.getCommodityFromRedis(con, i, context);
+                int id = temp.getUserId();
+                System.out.println("userid" + id);
+                tt.add(temp);
+                mm.add(UserInfoOperate.getInfoFromRedis(con, id, context));
+            }
+            return new AbstractMap.SimpleEntry<>(tt, mm);
+        }  catch (Exception e) {
+        TracingHelper.onError(e, span1);
+        throw e;
+    } finally {
+        span1.finish();
+    }
+
+
+        }
     /**
      * 获取商品信息
      * @param id
@@ -122,7 +203,6 @@ public class CommodityOperate {
             e.printStackTrace();
         }return result;
     }
-
     /**
      * 插入发布关系到图数据库
      * @param userid 用户名

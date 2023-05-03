@@ -1,8 +1,9 @@
 package com.example.cugerhuo.access;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Commodity {
+public class Commodity  implements Serializable {
        /**
          * 商品id
          */

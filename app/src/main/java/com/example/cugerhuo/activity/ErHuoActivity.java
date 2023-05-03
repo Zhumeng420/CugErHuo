@@ -13,12 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.cugerhuo.fragment.ConcernFragment;
-import com.example.cugerhuo.fragment.ReginFragment;
-import com.example.cugerhuo.fragment.SuggestFragment;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.activity.adapter.ViewAdapter;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
+import com.example.cugerhuo.fragment.ConcernFragment;
+import com.example.cugerhuo.fragment.SuggestFragment;
 import com.example.cugerhuo.graph.GraphService;
 import com.google.android.material.tabs.TabLayout;
 
@@ -166,10 +165,8 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
              * @time 2023/3/20 16:28
              */
             case R.id.ll_tab_four:
-
                 startActivity(new Intent(getApplicationContext(), MessageActivity.class));
                 overridePendingTransition(0,0);
-
                 break;
             /**
              * 点击个人中心图标，进行跳转到个人中心界面， overridePendingTransition(0, 0):去掉进场动画

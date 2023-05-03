@@ -1,10 +1,6 @@
 package com.example.cugerhuo.activity;
 
-import static com.example.cugerhuo.activity.MyCenterActivity.focusNum;
 import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,13 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.cugerhuo.R;
-import com.example.cugerhuo.access.user.AddressInfo;
 import com.example.cugerhuo.access.user.PartUserInfo;
-import com.example.cugerhuo.activity.adapter.RecyclerViewAddressAdapter;
 import com.example.cugerhuo.activity.imessage.ChatActivity;
-import com.example.cugerhuo.activity.post.PostSellActivity;
-import com.example.cugerhuo.views.ConcernDialog;
+import com.example.cugerhuo.tools.entity.TradeInfo;
 import com.example.cugerhuo.views.EditDialog;
 import com.example.cugerhuo.views.KeyboardUtil;
 import com.example.cugerhuo.views.MyKeyBoardView;
@@ -210,6 +205,10 @@ public class CreatTradeActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.create_trade:
                 Intent intent=new Intent(CreatTradeActivity.this, ChatActivity.class);
+                TradeInfo tradeInfo=new TradeInfo();
+                tradeInfo.setPrice(Double.valueOf(priceText.getText().toString().replace("¥","")));
+                tradeInfo.setTradeTime(timeText.getText().toString());
+                tradeInfo.setTradePlace(positionText.getText().toString());
                 intent.putExtra("chatUser",chatUser);
                 int iWant = 0;
                 intent.putExtra("iWant",iWant);
@@ -219,6 +218,7 @@ public class CreatTradeActivity extends AppCompatActivity implements View.OnClic
                 /**订单id*/
                 int tradeId = 1;
                 intent.putExtra("tradeId",tradeId);
+                intent.putExtra("tradeInfo",tradeInfo);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
                 finish();

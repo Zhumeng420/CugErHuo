@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
+import com.example.cugerhuo.access.commodity.CommodityOperate;
 import com.example.cugerhuo.access.commodity.RecommendInfo;
 import com.example.cugerhuo.access.user.CommentInfo;
 import com.example.cugerhuo.access.user.PartUserInfo;
@@ -30,6 +31,7 @@ import com.example.cugerhuo.activity.adapter.RecyclerViewCommentAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewGoodsDisplayAdapter;
 import com.example.cugerhuo.activity.imessage.ChatActivity;
 import com.example.cugerhuo.activity.post.PostSellActivity;
+import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.example.cugerhuo.views.InputTextMsgDialog;
 import com.example.cugerhuo.views.PopComments;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -37,6 +39,9 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import io.lettuce.core.api.sync.RedisCommands;
 
 /**
  * 商品详情页
@@ -56,6 +61,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
      * 推荐商品
      */
     private List<Commodity> recommendCommodities;
+    private List<PartUserInfo> recommendUsersOfComs;
     /**
      * 卖家头像
      */
@@ -114,9 +120,25 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
         initData();
         // 开启线程
         new Thread(() -> {
+            if(commodity!=null) {
+                List<Integer> recommedCom = new ArrayList<>();
+                /**
+                 * 建立连接对象
+                 */
+                LettuceBaseCase lettuce = new LettuceBaseCase();
+                /**
+                 * 获取连接
+                 */
+                RedisCommands<String, String> con = lettuce.getSyncConnection();
+                Map.Entry<List<Commodity>, List<PartUserInfo>> result = CommodityOperate.getRecommendComs(con, commodity.getId(), GoodDetailActivity.this);
+                recommendCommodities = result.getKey();
+                recommendUsersOfComs = result.getValue();
+                lettuce.close();
+            }
             Message msg = Message.obtain();
             msg.arg1 = 1;
             MyHandler.sendMessage(msg);
+
         }).start();
     }
     /**
@@ -200,8 +222,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
         adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,0);
         commentRecyclerView.setAdapter(adapter);
         /**推荐商品模块*/
-        /**初始化adapter**/
-        goodsAdapter=new RecyclerViewGoodsDisplayAdapter(getActivity(),recommendCommodities,new ArrayList<>());
+
         goodsRecyclerView = findViewById(R.id.display_good);
         /**禁止recyclerView滑动**/
         goodsRecyclerView.setNestedScrollingEnabled(false);
@@ -209,7 +230,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
         goodsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         /**设置每个item之间的间距**/
         goodsRecyclerView.addItemDecoration(new RecyclerViewGoodsDisplayAdapter.spaceItem(10));
-        goodsRecyclerView.setAdapter(goodsAdapter);
+
         /**用户其他商品信息*/
         otherGoods = findViewById(R.id.other_goods);
         goodsInflater = LayoutInflater.from(this);
@@ -307,6 +328,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 Intent intent=new Intent(GoodDetailActivity.this, ChatActivity.class);
                 intent.putExtra("iWant",iWant);
                 intent.putExtra("chatUser",userInfo);
+                intent.putExtra("chatCommodity", commodity);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
                 break;
@@ -332,6 +354,9 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                     /**
                      * 点击item进行跳转并传值过去
                      */
+                    /**初始化adapter**/
+                    goodsAdapter=new RecyclerViewGoodsDisplayAdapter(getActivity(),recommendCommodities,recommendUsersOfComs);
+                    goodsRecyclerView.setAdapter(goodsAdapter);
                     goodsAdapter.setOnItemClickListener(new RecyclerViewGoodsDisplayAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {

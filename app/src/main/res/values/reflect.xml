@@ -66,9 +66,11 @@
     <string name="ProductId">productId</string>
 
     <string name="RedisMapImage">ImageBase64</string>
-
+    <string name="CommerceId">commerceid</string>
+    <string name="State">state</string>
     <string name="RedisMapUser">UserInfo</string>
-
+    <string name="InsertCommerce">/commerce/insert</string>
+    <string name="GoodRecommend">recommend/productpage</string>
 
     <string name="InsertCommodityTu">sell/sellproduuct</string>
     <string name="Token">token</string>

@@ -250,6 +250,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/pushPrice"
                     android:text="200"
                     android:textStyle="bold" />
 
@@ -269,6 +270,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/pushDate"
                     android:text="某年某月某天"
                     android:textStyle="bold" />
 
@@ -288,6 +290,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/pushPlace"
                     android:text="荷花池旁"
                     android:textStyle="bold" />
             </LinearLayout>

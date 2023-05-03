@@ -27,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.ServiceException;
@@ -43,6 +44,7 @@ import com.example.cugerhuo.access.user.Msg;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.oss.InitOS;
+import com.example.cugerhuo.tools.entity.TradeInfo;
 import com.luck.picture.lib.interfaces.OnItemClickListener;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -237,9 +239,21 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.rightLayout.setVisibility(View.GONE);
                 holder.confirmCard.setVisibility(View.GONE);
                 holder.leftPic.setVisibility(View.GONE);
+
                 holder.rightPic.setVisibility(View.GONE);
                 holder.leftAudio.setVisibility(View.GONE);
                 holder.rightAudio.setVisibility(View.GONE);
+                TextView priceView=                holder.rightCard.findViewById(R.id.pushPrice);
+                TextView dateView=                holder.rightCard.findViewById(R.id.pushDate);
+                TextView placeView=                holder.rightCard.findViewById(R.id.pushPlace);
+
+                String tradeString=list.get(position).getContent();
+                TradeInfo tradeInfo= JSON.parseObject(tradeString, TradeInfo.class);
+                if(tradeInfo!=null){
+                    priceView.setText(String.valueOf(tradeInfo.getPrice()));
+                    dateView.setText(tradeInfo.getTradeTime());
+                    placeView.setText(tradeInfo.getTradePlace());}
+
                 if (!"".equals(UserInfo.getUrl())&&UserInfo.getUrl()!=null)
                 {
                     holder.outcomingAvatarCard.setImageURI(Uri.fromFile(new File(UserInfo.getUrl())));

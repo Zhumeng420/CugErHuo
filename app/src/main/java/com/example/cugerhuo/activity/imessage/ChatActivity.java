@@ -1,11 +1,12 @@
 package com.example.cugerhuo.activity.imessage;
 
+import static com.example.cugerhuo.access.SetGlobalIDandUrl.getSandBoxPath;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,13 +34,12 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSON;
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.user.Msg;
 import com.example.cugerhuo.access.user.PartUserInfo;
-import com.example.cugerhuo.access.user.UserInfo;
-import com.example.cugerhuo.activity.AddressManageActivity;
 import com.example.cugerhuo.activity.CreatTradeActivity;
-import com.example.cugerhuo.activity.EditAddressActivity;
 import com.example.cugerhuo.activity.TradeDetailActivity;
 import com.example.cugerhuo.activity.adapter.MsgAdapter;
 import com.example.cugerhuo.activity.session.CustomAttachParser;
@@ -47,37 +47,30 @@ import com.example.cugerhuo.activity.session.CustomAttachment;
 import com.example.cugerhuo.activity.session.MyOrderAttachment;
 import com.example.cugerhuo.activity.session.ToBeConfirmedAttachment;
 import com.example.cugerhuo.tools.MyToast;
+import com.example.cugerhuo.tools.entity.TradeInfo;
 import com.example.cugerhuo.views.RecordButton;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
-import com.netease.nimlib.sdk.avsignalling.SignallingServiceObserver;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.attachment.AudioAttachment;
 import com.netease.nimlib.sdk.msg.attachment.ImageAttachment;
-import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
-import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 import com.netease.nimlib.sdk.util.NIMUtil;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import okhttp3.internal.http2.Header;
 
 /**
  * 聊天
@@ -104,6 +97,19 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
      * 聊天对象
      */
     private PartUserInfo chatUser=new PartUserInfo();
+    /**
+     * 商品信息
+     */
+    private Commodity charCommodity=new Commodity();
+    /**
+     * 订单信息
+     */
+    private TradeInfo tradeInfo;
+    /**
+     * 商品图片
+     */
+    private RoundedImageView tradeImages;
+    private TextView tradePrice;
     /**立即交易*/
     private LinearLayout tradeConfirm;
     /**是否从商品详情页跳过来的*/
@@ -136,6 +142,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             // 监听的注册，必须在主进程中。
             NIMClient.getService(MsgService.class).registerCustomAttachmentParser(new CustomAttachParser());
         }
+
         msgRecyclerView = findViewById(R.id.msg_recycler_view);
         msgRecyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -157,7 +164,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             //没有权限，向用户请求权限
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0x20);
         }
-
+        tradeImages=findViewById(R.id.img_trade_images);
+        tradePrice=findViewById(R.id.trade_price);
         inputText = findViewById(R.id.input_text);
         send = findViewById(R.id.send);
         returnImg = findViewById(R.id.return_chat);
@@ -231,7 +239,46 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
          * 从上个界面获取聊天对象信息
          */
         Intent intent =getIntent();
-        chatUser= (PartUserInfo) intent.getSerializableExtra("chatUser");
+        chatUser = (PartUserInfo) intent.getSerializableExtra("chatUser");
+        /**
+         * 获取商品信息
+         */
+        if(intent.getSerializableExtra("chatCommodity")!=null){
+
+        charCommodity= (Commodity) intent.getSerializableExtra("chatCommodity");
+        tradePrice.setText(String.valueOf(charCommodity.getPrice()));
+            if(!"".equals(charCommodity.getUrl1()))
+            {String url1=charCommodity.getUrl1();
+                String []urls=url1.split(";");
+                if(urls.length>0){
+                    url1=urls[0];}
+                int length=urls.length;
+                String result[]=new String[length];
+                result[length-1]=urls[length-1];
+// 从后往前依次减去后面一个元素
+                if(length>1){
+                    for (int i = length - 2; i >= 0; i--) {
+                        String current = urls[i];
+                        String next = result[i + 1];
+                        int index = current.lastIndexOf(next);
+                        if(index>0){
+                            result[i ] = current.substring(0, index);}
+                        else
+                        {
+                            result[i]=current;
+                        }
+                    }}
+// 将第一个元素赋值给结果数组
+                url1=result[0];
+                String newUrl1 = getSandBoxPath(ChatActivity.this) + url1;
+                System.out.println("imager2"+url1);
+                File f = new File(newUrl1);
+                if (f.exists())
+                {
+                    tradeImages.setImageURI(Uri.fromFile(f));
+                }
+            }
+        }
         if(intent.getSerializableExtra("iWant")!=null){
             iWant = (int)intent.getSerializableExtra("iWant");
         }else{
@@ -269,13 +316,15 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         /**发送订单确认信息*/
         if(confirmTrade==1){
             int tradeId = (int)intent.getSerializableExtra("tradeId");
-            SendConfirmTrade(tradeId);
+            TradeInfo tradeInfo=(TradeInfo)intent.getSerializableExtra("tradeInfo") ;
+            SendConfirmTrade(tradeInfo);
         }
 
         if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
         {
             chatUserImg.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
         }
+
         /**
          * 初始化聊天对象信息
          */
@@ -312,9 +361,17 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                 CustomAttachment attachment = (CustomAttachment)messages.get(0).getAttachment();
                                 int type = attachment.getType();
                                 if(type==10003){
-                                    msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_CONFIRM_CARD));
+                                    ToBeConfirmedAttachment attachment1= (ToBeConfirmedAttachment)attachment;
+                                    String tradeString=attachment1.getContent();
+                                    System.out.println("tradeinfo"+tradeString);
+                                    tradeInfo=JSON.parseObject(tradeString,TradeInfo.class);
+                                    msgList.add(new Msg(tradeString,Msg.TYPE_CONFIRM_CARD));
                                 }else if(type==10002){
-                                    msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_RECEIVED_CARD));
+                                    ToBeConfirmedAttachment attachment1= (ToBeConfirmedAttachment)attachment;
+                                    String tradeString=attachment1.getContent();
+                                    System.out.println("tradeinfo"+tradeString);
+                                    tradeInfo=JSON.parseObject(tradeString,TradeInfo.class);
+                                    msgList.add(new Msg(tradeString,Msg.TYPE_RECEIVED_CARD));
                                 }
                             }
 
@@ -367,9 +424,14 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                       if(result.get(i).getDirect()==MsgDirectionEnum.Out){
                           if(result.get(i).getAttachStr()!=null){
                               if(result.get(i).getAttachStr().indexOf("10003")!=-1){
-//                                  msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_SEND));
+                                  /**
+                                   * 读取历史消息中的订单信息
+                                   */
+                                  msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_SEND));
                               }else if(result.get(i).getAttachStr().indexOf("10002")!=-1){
-                                  msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_SEND_CARD));
+                                MyOrderAttachment a= ( MyOrderAttachment)result.get(i).getAttachment();
+
+                                  msgList.add(new Msg(a.getContent(),Msg.TYPE_SEND_CARD));
                               } else if(result.get(i).getAttachStr().indexOf("jpg")!=-1||result.get(i).getAttachStr().indexOf("png")!=-1){
                                   String path = result.get(i).getAttachStr();
                                   String filePath = subString(path,"\"url\":\"","\",\"size\"");
@@ -399,9 +461,19 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                       if(result.get(i).getDirect()==MsgDirectionEnum.In){
                           if(result.get(i).getAttachStr()!=null){
                               if(result.get(i).getAttachStr().indexOf("10003")!=-1){
-                                  msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_CONFIRM_CARD));}
+                                  ToBeConfirmedAttachment attachment1= (ToBeConfirmedAttachment)result.get(i).getAttachment();
+                                  String tradeString=attachment1.getContent();
+                                  System.out.println("tradeinfo"+tradeString);
+                                  tradeInfo=JSON.parseObject(tradeString,TradeInfo.class);
+                                  msgList.add(new Msg(tradeString,Msg.TYPE_CONFIRM_CARD));
+                              }
                               else if(result.get(i).getAttachStr().indexOf("10002")!=-1){
-                                  msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_RECEIVED_CARD));
+                                  ToBeConfirmedAttachment attachment1= (ToBeConfirmedAttachment)result.get(i).getAttachment();
+                                  String tradeString=attachment1.getContent();
+                                  System.out.println("tradeinfo"+tradeString);
+                                  tradeInfo=JSON.parseObject(tradeString,TradeInfo.class);
+                                  msgList.add(new Msg(tradeString,Msg.TYPE_RECEIVED_CARD));
+
                               }else if(result.get(i).getAttachStr().indexOf("jpg")!=-1||result.get(i).getAttachStr().indexOf("png")!=-1){
                                   String path = result.get(i).getAttachStr();
                                   String filePath = subString(path,"\"url\":\"","\",\"size\"");
@@ -571,6 +643,13 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         ToBeConfirmedAttachment customerAttachment = new ToBeConfirmedAttachment();
         //创建IMMessage，其中sessionId代表会话ID，sessionType会话类型，content代表消息内容，customerAttachment自定义消息
         IMMessage customMessage = MessageBuilder.createCustomMessage(account, sessionType, customerAttachment);
+        Intent a=getIntent();
+        /**
+         * 订单添加消息
+         */
+       TradeInfo trade= (TradeInfo) a.getSerializableExtra("tradeInfo");
+        customerAttachment.setContent(JSON.toJSON(trade).toString());
+
         customMessage.setConfig(config);
         // 发送给对方
         NIMClient.getService(MsgService.class).sendMessage(customMessage, false).setCallback(new RequestCallback<Void>() {
@@ -596,7 +675,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
      * @Author: 李柏睿
      * @Time: 2023/5/2 0:23
      */
-    public void SendConfirmTrade(int tradeId){
+    public void SendConfirmTrade(TradeInfo trade){
         // 给该账号发送消息
         String account = "cugerhuo"+chatUser.getId();
         // 以单聊类型为例
@@ -612,13 +691,14 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         MyOrderAttachment customerAttachment = new MyOrderAttachment();
         //创建IMMessage，其中sessionId代表会话ID，sessionType会话类型，content代表消息内容，customerAttachment自定义消息
         IMMessage customMessage = MessageBuilder.createCustomMessage(account, sessionType, customerAttachment);
+        customerAttachment.setContent(JSON.toJSON(trade).toString());
         customMessage.setConfig(config);
         // 发送给对方
         NIMClient.getService(MsgService.class).sendMessage(customMessage, false).setCallback(new RequestCallback<Void>() {
             @Override
             public void onSuccess(Void param) {
-                Msg customMsg = new Msg(String.valueOf(tradeId),Msg.TYPE_SEND_CARD);
-                msgList.add(customMsg);
+                Msg a=new Msg(JSON.toJSON(trade).toString(),Msg.TYPE_SEND_CARD);
+                msgList.add(a);
                 MyToast.toast(ChatActivity.this,"订单确认消息发送成功",3);
             }
 
@@ -654,8 +734,10 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                         public void onItemClick(View view, int position) {
                             int flag = 1;
                             Intent intent=new Intent(ChatActivity.this, TradeDetailActivity.class);
+                            intent.putExtra("tradeInfo",tradeInfo);
                             intent.putExtra("flag",flag);
                             intent.putExtra("chatUser",chatUser);
+                            intent.putExtra("chatCommodity", charCommodity);
                             //startActivity(intent);
                             startActivityForResult(intent,1);
                             finish();

@@ -99,6 +99,7 @@ public class SetCommodityInfo {
                 {
                     Commodity temp= CommodityOperate.getCommodityFromRedis(con,i,context);
                     int id=temp.getUserId();
+                    System.out.println("userid"+id);
                     tt.add(temp);
                     mm.add(UserInfoOperate.getInfoFromRedis(con,id,context));
                 }
@@ -185,6 +186,7 @@ return true;
                 {
                     Commodity temp= CommodityOperate.getCommodityFromRedis(con,i,context);
                     int id=temp.getUserId();
+                    System.out.println("userid"+id);
                     tt.add(temp);
                     mm.add(UserInfoOperate.getInfoFromRedis(con,id,context));
                 }
