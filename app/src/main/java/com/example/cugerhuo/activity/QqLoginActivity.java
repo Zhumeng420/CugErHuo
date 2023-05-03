@@ -145,6 +145,8 @@ public class QqLoginActivity extends AppCompatActivity {
                             } finally {
                                 span2.finish();
                             }
+                            SetGlobalIDandUrl.setByQq(openid,QqLoginActivity.this);
+
                             /**
                              * 被封处理
                              */

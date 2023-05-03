@@ -1,7 +1,6 @@
 package com.example.cugerhuo.access;
 
 import android.content.Context;
-import android.content.Intent;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -12,6 +11,7 @@ import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.access.util.MsgEvent1;
 import com.example.cugerhuo.tools.LettuceBaseCase;
+import com.example.cugerhuo.tools.TracingHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -20,6 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.lettuce.core.api.sync.RedisCommands;
+import io.opentracing.Scope;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
+import io.opentracing.util.GlobalTracer;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -27,11 +31,13 @@ import okhttp3.Response;
 public class SetCommodityInfo {
     public static boolean setInfo(int id, Context context)
     {
-        OkHttpClient okHttpClient = new OkHttpClient();
+        Tracer tracer = GlobalTracer.get();
 
+        OkHttpClient okHttpClient = new OkHttpClient();
         new Thread(new Runnable() {
             @Override
             public void run() {
+                long stime2 = System.currentTimeMillis();
                 List<Integer> recommedCom=new ArrayList<>();
                 /**
                  * 建立连接对象
@@ -56,6 +62,9 @@ public class SetCommodityInfo {
                 Response response = null;
                 int result
                         =-1;
+                // 创建spann
+                Span span = tracer.buildSpan("获取首页推荐流程").withTag("SetCommodityInfo ：", "setInfo").start();
+                try (Scope ignored = tracer.scopeManager().activate(span,true)) {
                 try {
                     response = okHttpClient.newCall(request).execute();
                     JSONObject pa= JSONObject.parseObject(response.body().string());
@@ -71,8 +80,21 @@ public class SetCommodityInfo {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            } catch (Exception e) {
+                TracingHelper.onError(e, span);
+                throw e;
+            } finally {
+                span.finish();
+            }
+                // 创建spann
+                Span span1 = tracer.buildSpan("获取推荐商品和用户流程").withTag("SetCommodityInfo ：", "setInfo").start();
+                try (Scope ignored = tracer.scopeManager().activate(span1,true)) {
+                long stime3 = System.currentTimeMillis();
+                System.out.println("time0"+(stime3-stime2));
+
                 List<Commodity>  tt=new ArrayList<>();
                 List<PartUserInfo> mm=new ArrayList<>();
+                long stime = System.currentTimeMillis();
                 for(Integer i:recommedCom)
                 {
                     Commodity temp= CommodityOperate.getCommodityFromRedis(con,i,context);
@@ -80,11 +102,20 @@ public class SetCommodityInfo {
                     tt.add(temp);
                     mm.add(UserInfoOperate.getInfoFromRedis(con,id,context));
                 }
+
+                long stime1 = System.currentTimeMillis();
+                System.out.println("time1"+(stime1-stime));
                 RecommendInfo.setCommodityList(tt);
                 RecommendInfo.setPartUserInfoList(mm);
+
                 // 构建广播Intent
-                Intent intent = new Intent("update");
-                intent.setAction("com.example.cugerhuo.fragment.SuggestFragment.BroadcastReceiver");
+                System.out.println(stime1);
+                } catch (Exception e) {
+                    TracingHelper.onError(e, span1);
+                    throw e;
+                } finally {
+                    span1.finish();
+                }
                 // 发送广播
                 EventBus.getDefault().post(new MsgEvent1("子线程发的消息1"));
             }
@@ -159,10 +190,9 @@ return true;
                 }
                 RecommendInfo.setCommodityList(tt);
                 RecommendInfo.setPartUserInfoList(mm);
-                // 构建广播Intent
-                Intent intent = new Intent("update");
-                intent.setAction("com.example.cugerhuo.fragment.SuggestFragment.BroadcastReceiver");
+
                 // 发送广播
+
                 EventBus.getDefault().post(new MsgEvent1("子线程发的消息1"));
             }
         }).start();

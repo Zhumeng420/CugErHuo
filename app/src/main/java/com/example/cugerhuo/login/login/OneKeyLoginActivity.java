@@ -289,6 +289,8 @@ public class OneKeyLoginActivity extends Activity {
                                         Span span2 = tracer.buildSpan("查询redis流程2").withTag("函数：getResultWithToken", "子追踪").start();
                                         try (Scope ignored1 = tracer.scopeManager().activate(span2,true)) {
                                             isPhoneBaned=UserOperate.isPhoneBanedBloom(phoneNumber,OneKeyLoginActivity.this);
+                                            SetGlobalIDandUrl.setByPhone(phoneNumber, OneKeyLoginActivity.this);
+
                                         } catch (Exception e) {
                                             TracingHelper.onError(e, span2);
                                             throw e;

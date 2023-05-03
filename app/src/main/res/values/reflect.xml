@@ -65,7 +65,12 @@
     <string name="ID">id</string>
     <string name="ProductId">productId</string>
 
-<string name="InsertCommodityTu">sell/sellproduuct</string>
+    <string name="RedisMapImage">ImageBase64</string>
+
+    <string name="RedisMapUser">UserInfo</string>
+
+
+    <string name="InsertCommodityTu">sell/sellproduuct</string>
     <string name="Token">token</string>
     <string name="PublicKey">publicKey</string>
 </resources>

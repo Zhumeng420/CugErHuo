@@ -190,6 +190,7 @@ dependencies {
 
     // 注意：分包之后不会有默认的Header和Footer需要手动添加！还是原来的三种方法！
     implementation  'com.scwang.smart:refresh-layout-kernel:2.0.1'      //核心必须依赖
+
     implementation  'com.scwang.smart:refresh-header-classics:2.0.1'    //经典刷新头
     implementation  'com.scwang.smart:refresh-header-radar:2.0.1'       //雷达刷新头
     implementation  'com.scwang.smart:refresh-header-falsify:2.0.1'     //虚拟刷新头

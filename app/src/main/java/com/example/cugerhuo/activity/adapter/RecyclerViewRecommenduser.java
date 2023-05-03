@@ -59,7 +59,6 @@ public class RecyclerViewRecommenduser extends RecyclerView.Adapter<RecyclerView
 
     public void setPartUserInfoPosition(int p,int concern){
         partUserInfo.get(p).setConcern(concern);
-
     }
     @NonNull
     @Override
@@ -149,7 +148,7 @@ public class RecyclerViewRecommenduser extends RecyclerView.Adapter<RecyclerView
              * 获取本地保存路径
              */
             String newUrl= getSandBoxPath(context) + url;
-
+            partUserInfo.get(position).setImageUrl(newUrl);
             System.out.println("newUrlhhhh"+newUrl);
             File f = new File(newUrl);
             if (!f.exists()) {
@@ -189,6 +188,7 @@ public class RecyclerViewRecommenduser extends RecyclerView.Adapter<RecyclerView
                                  * 下载完成，填写更新逻辑
                                  */
                                 holder.userRecImg.setImageURI(Uri.fromFile(new File(newUrl)));
+                                Log.e(TAG, "oss下载文件成功");
                             } catch (Exception e) {
                                 OSSLog.logInfo(e.toString());
                             }

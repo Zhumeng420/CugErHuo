@@ -17,6 +17,7 @@ import com.example.cugerhuo.access.SetGlobalIDandUrl;
 import com.example.cugerhuo.activity.ErHuoActivity;
 import com.example.cugerhuo.login.login.OneKeyLoginActivity;
 import com.example.cugerhuo.oss.InitOS;
+import com.example.cugerhuo.tools.ImageAndBase64Util;
 
 import java.io.File;
 import java.text.ParseException;
@@ -76,7 +77,6 @@ public class StartSplashActivity extends AppCompatActivity {
          */
         StatService.setDebugOn(true);
         StatService.autoTrace(this, true, false);
-
 
         /**
          * 链路追踪初始化以及对象存储初始化

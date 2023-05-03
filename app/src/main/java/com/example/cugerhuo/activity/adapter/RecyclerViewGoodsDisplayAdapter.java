@@ -32,11 +32,17 @@ import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.oss.InitOS;
 import com.example.cugerhuo.tools.GetFileNameUtil;
+import com.example.cugerhuo.tools.TracingHelper;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
+
+import io.opentracing.Scope;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
+import io.opentracing.util.GlobalTracer;
 
 /**
  * 首页商品展示recyclerView适配器
@@ -91,14 +97,19 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String firstCate= GetFileNameUtil.getCate(commodities.get(position).getCategory());
-    holder.goodItemTitle.setText(commodities.get(position).getDescription());
+        holder.goodItemTitle.setText(commodities.get(position).getDescription());
         commodities.get(position).setCategory(firstCate);
-    holder.goodsItemPrice.setText(String.valueOf(commodities.get(position).getPrice()));
-    holder.goodItemUsername.setText(userInfos.get(position).getUserName());
+        holder.goodsItemPrice.setText(String.valueOf(commodities.get(position).getPrice()));
+        holder.goodItemUsername.setText(userInfos.get(position).getUserName());
+        Tracer tracer = GlobalTracer.get();
+        // 创建spann
+        Span span = tracer.buildSpan("oss加载头像和商品主页图片（一次）").withTag("RecyclerViewGoodsDisplayAdapter：", "onBindViewHolder").start();
+        try (Scope ignored = tracer.scopeManager().activate(span,true)) {
+            // 业务逻辑写这里
         /**
          * 用户头像
          */
-    String url=userInfos.get(position).getImageUrl();
+        String url=userInfos.get(position).getImageUrl();
         {
             /**
              * 异步加载头像
@@ -184,119 +195,124 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
         {
             String []urls=url1.split(";");
             if(urls.length>0){
-            url1=urls[0];}
+                url1=urls[0];}
             int length=urls.length;
             String result[]=new String[length];
             result[length-1]=urls[length-1];
 // 从后往前依次减去后面一个元素
             if(length>1){
-            for (int i = length - 2; i >= 0; i--) {
-                String current = urls[i];
-                String next = result[i + 1];
-                int index = current.lastIndexOf(next);
-                if(index>0){
-                    result[i ] = current.substring(0, index);}
-                else
-                {
-                    result[i]=current;
-                }
-            }}
+                for (int i = length - 2; i >= 0; i--) {
+                    String current = urls[i];
+                    String next = result[i + 1];
+                    int index = current.lastIndexOf(next);
+                    if(index>0){
+                        result[i ] = current.substring(0, index);}
+                    else
+                    {
+                        result[i]=current;
+                    }
+                }}
 // 将第一个元素赋值给结果数组
             url1=result[0];
 
         }
 
 
-            /**
-             * 异步加载头像
-             */
-            /**
-             *  判断头像是否为空，如果为空则使用默认的头像进行显示
-             */
-            if (url1 != null && !"".equals(url1)) { /**@time 2023/4/26
-             * @author 唐小莉
-             * 异步更新头像,并实时更新
-             */
-                System.out.println("url11"+url1);
-                OSSClient oss = InitOS.getOssClient();
+        /**
+         * 异步加载头像
+         */
+        /**
+         *  判断头像是否为空，如果为空则使用默认的头像进行显示
+         */
+        if (url1 != null && !"".equals(url1)) { /**@time 2023/4/26
+         * @author 唐小莉
+         * 异步更新头像,并实时更新
+         */
+            System.out.println("url11"+url1);
+            OSSClient oss = InitOS.getOssClient();
 
+            /**
+             * 获取本地保存路径
+             */
+            String newUrl1 = getSandBoxPath(context) + url1;
+            System.out.println("imager2"+url1);
+            File f = new File(newUrl1);
+            if (!f.exists()) {
                 /**
-                 * 获取本地保存路径
+                 * 构建oss请求
                  */
-                String newUrl1 = getSandBoxPath(context) + url1;
-                System.out.println("imager2"+url1);
-                File f = new File(newUrl1);
-                if (!f.exists()) {
+                GetObjectRequest get = new GetObjectRequest("cugerhuo", url1);
+                /**
+                 * 异步任务
+                 */
+                oss.asyncGetObject(get, new OSSCompletedCallback<GetObjectRequest, GetObjectResult>() {
                     /**
-                     * 构建oss请求
+                     * 下载成功
+                     *
+                     * @param request
+                     * @param result
                      */
-                    GetObjectRequest get = new GetObjectRequest("cugerhuo", url1);
-                    /**
-                     * 异步任务
-                     */
-                    oss.asyncGetObject(get, new OSSCompletedCallback<GetObjectRequest, GetObjectResult>() {
-                        /**
-                         * 下载成功
-                         *
-                         * @param request
-                         * @param result
-                         */
-                        @Override
-                        public void onSuccess(GetObjectRequest request, GetObjectResult result) {
-                            // 开始读取数据。
-                            long length = result.getContentLength();
-                            if (length > 0) {
-                                byte[] buffer = new byte[(int) length];
-                                int readCount = 0;
-                                while (readCount < length) {
-                                    try {
-                                        readCount += result.getObjectContent().read(buffer, readCount, (int) length - readCount);
-                                    } catch (Exception e) {
-                                        OSSLog.logInfo(e.toString());
-                                    }
-                                }
-                                // 将下载后的文件存放在指定的本地路径，例如D:\\localpath\\exampleobject.jpg。
+                    @Override
+                    public void onSuccess(GetObjectRequest request, GetObjectResult result) {
+                        // 开始读取数据。
+                        long length = result.getContentLength();
+                        if (length > 0) {
+                            byte[] buffer = new byte[(int) length];
+                            int readCount = 0;
+                            while (readCount < length) {
                                 try {
-                                    FileOutputStream fout = new FileOutputStream(newUrl1);
-                                    fout.write(buffer);
-                                    fout.close();
-                                    /**
-                                     * 下载完成，填写更新逻辑
-                                     */
-                                    /**
-                                     * 设置商品图片圆角30度
-                                     */
-                                    System.out.println("image1"+newUrl1);
-                                    RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(30));
-                                    Glide.with(context).load(Uri.fromFile(new File(newUrl1)))
-                                            .apply(options)
-                                            .into(holder.goodItemImg);
+                                    readCount += result.getObjectContent().read(buffer, readCount, (int) length - readCount);
                                 } catch (Exception e) {
                                     OSSLog.logInfo(e.toString());
                                 }
                             }
+                            // 将下载后的文件存放在指定的本地路径，例如D:\\localpath\\exampleobject.jpg。
+                            try {
+                                FileOutputStream fout = new FileOutputStream(newUrl1);
+                                fout.write(buffer);
+                                fout.close();
+                                /**
+                                 * 下载完成，填写更新逻辑
+                                 */
+                                /**
+                                 * 设置商品图片圆角30度
+                                 */
+                                System.out.println("image1"+newUrl1);
+                                RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(30));
+                                Glide.with(context).load(Uri.fromFile(new File(newUrl1)))
+                                        .apply(options)
+                                        .into(holder.goodItemImg);
+                            } catch (Exception e) {
+                                OSSLog.logInfo(e.toString());
+                            }
                         }
+                    }
 
-                        @Override
-                        public void onFailure(GetObjectRequest request, ClientException clientException,
-                                              ServiceException serviceException) {
-                            System.out.println("image3"+newUrl1);
-                            Log.e(TAG, "oss下载文件失败");
-                        }
-                    });
-                } else {
-                    System.out.println("image2"+newUrl1);
-                    /**
-                     * 设置商品图片圆角30度
-                     */
-                    RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(30));
-                    Glide.with(context).load(Uri.fromFile(new File(newUrl1)))
-                            .apply(options)
-                            .into(holder.goodItemImg);
-                }
+                    @Override
+                    public void onFailure(GetObjectRequest request, ClientException clientException,
+                                          ServiceException serviceException) {
+                        System.out.println("image3"+newUrl1);
+                        Log.e(TAG, "oss下载文件失败");
+                    }
+                });
+            } else {
+                System.out.println("image2"+newUrl1);
+                /**
+                 * 设置商品图片圆角30度
+                 */
+                RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(30));
+                Glide.with(context).load(Uri.fromFile(new File(newUrl1)))
+                        .apply(options)
+                        .into(holder.goodItemImg);
             }
+        }
 
-
+    } catch (Exception e) {
+        TracingHelper.onError(e, span);
+        throw e;
+    } finally {
+        span.finish();
+    }
 
         /**
          * 点击事件

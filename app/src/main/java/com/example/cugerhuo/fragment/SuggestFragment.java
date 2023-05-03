@@ -25,7 +25,6 @@ import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.util.MsgEvent1;
 import com.example.cugerhuo.activity.GoodDetailActivity;
 import com.example.cugerhuo.activity.adapter.RecyclerViewGoodsDisplayAdapter;
-import com.scwang.smart.refresh.header.BezierRadarHeader;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
@@ -94,7 +93,8 @@ public class SuggestFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_suggest, container, false);
         smartRefreshLayout=view.findViewById(R.id.refresh_parent);
-
+        long stime2 = System.currentTimeMillis();
+        System.out.println("oncreatefra"+stime2);
 
 
         /**初始化adapter**/
@@ -125,6 +125,7 @@ public class SuggestFragment extends Fragment {
                     startActivityForResult(intent,1);
                 }
             });
+
         }
         /**
          * 下拉 刷新整个RecyclerView
@@ -146,7 +147,6 @@ public class SuggestFragment extends Fragment {
                     //adapter.notifyDataSetChanged();
                     adapter=new RecyclerViewGoodsDisplayAdapter(getContext(),commodities,userInfos);
                     goodsRecyclerView.setAdapter(adapter);
-
                 /*重新刷新列表控件的数据*/
                 smartRefreshLayout.finishRefresh(1500);
             }
@@ -206,6 +206,8 @@ public class SuggestFragment extends Fragment {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                long stime1 = System.currentTimeMillis();
+                System.out.println("onrecevie"+stime1);
                 // 在主线程上更新 UI
                 String content = msg.getMsg()
                         + "\n ThreadName: " + Thread.currentThread().getName()
@@ -229,6 +231,8 @@ public class SuggestFragment extends Fragment {
                         startActivityForResult(intent,1);
                     }
                 });
+                long stime11 = System.currentTimeMillis();
+                System.out.println("onfinish"+stime11);
                 isFirst=true;
             }
         });

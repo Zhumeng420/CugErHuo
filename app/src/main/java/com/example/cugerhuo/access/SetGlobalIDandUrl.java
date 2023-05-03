@@ -60,6 +60,7 @@ public class SetGlobalIDandUrl {
                 if(id!=-1)
                 {
                     UserInfo.setid(id);
+                    SetCommodityInfo.setInfo(id, context);
                     String imageUrl="";
                     Span span3 = tracer.buildSpan("通过id获取图片url").withTag("Oncreate函数：", "子追踪").start();
                     try (Scope ignored = tracer.scopeManager().activate(span,true)) {
@@ -118,7 +119,7 @@ public class SetGlobalIDandUrl {
                              * 设置全局URL，因为是异步下载图片，所以可能会直接忽略结果返回失败，因此直接默认会缓存成功
                              */
                             UserInfo.setUrl(getSandBoxPath(context)+imageUrl);
-                            SetCommodityInfo.setInfo(UserInfo.getid(), context);
+
 
                         }
                     }
@@ -176,6 +177,8 @@ public class SetGlobalIDandUrl {
                      * 设置全局ID
                      */
                     UserInfo.setid(id);
+                    SetCommodityInfo.setInfo(id, context);
+
                     /**
                      * 接收返回结果
                      */
