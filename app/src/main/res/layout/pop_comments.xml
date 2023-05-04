@@ -48,7 +48,7 @@
                     android:id="@+id/comments_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="14"
+                    android:text="0"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="@color/black"
