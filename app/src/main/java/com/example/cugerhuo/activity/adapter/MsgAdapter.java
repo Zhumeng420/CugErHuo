@@ -123,6 +123,21 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
         LinearLayout rightClickAudio;
         ImageView sendIvAudio;
 
+        /**左侧地理信息*/
+        LinearLayout leftLocation;
+        RoundedImageView incomingAvatarLocation;
+        TextView leftTextDetail;
+        TextView leftTextProvince;
+        LinearLayout leftClickLocation;
+        ImageView receiveMap;
+        /**右侧地理信息*/
+        LinearLayout rightLocation;
+        RoundedImageView outcomingAvatarLocation;
+        TextView rightTextDetail;
+        TextView rightTextProvince;
+        LinearLayout rightClickLocation;
+        ImageView sendMap;
+
         public ViewHolder(View view){
             super(view);
             leftLayout = view.findViewById(R.id.left_layout);
@@ -154,6 +169,18 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
             rightClickAudio = view.findViewById(R.id.send_rlAudio);
             receiveIvAudio = view.findViewById(R.id.receive_ivAudio);
             sendIvAudio = view.findViewById(R.id.send_ivAudio);
+            leftLocation = view.findViewById(R.id.left_location);
+            rightLocation = view.findViewById(R.id.right_location);
+            incomingAvatarLocation = view.findViewById(R.id.incoming_avatar_location);
+            outcomingAvatarLocation = view.findViewById(R.id.outcoming_avatar_location);
+            leftTextDetail = view.findViewById(R.id.receive_location_detail);
+            rightTextDetail = view.findViewById(R.id.send_location_detail);
+            leftTextProvince = view.findViewById(R.id.receive_location_not_detail);
+            rightTextProvince = view.findViewById(R.id.send_location_not_detail);
+            leftClickLocation = view.findViewById(R.id.receive_map);
+            rightClickLocation = view.findViewById(R.id.map_send);
+            sendMap = view.findViewById(R.id.mapview_send);
+            receiveMap = view.findViewById(R.id.mapview_receive);
         }
     }
 
@@ -182,6 +209,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.rightPic.setVisibility(View.GONE);
                 holder.leftAudio.setVisibility(View.GONE);
                 holder.rightAudio.setVisibility(View.GONE);
+                holder.leftLocation.setVisibility(View.GONE);
+                holder.rightLocation.setVisibility(View.GONE);
                 if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
                 {
                     holder.incomingAvatar.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
@@ -201,6 +230,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.rightPic.setVisibility(View.GONE);
                 holder.leftAudio.setVisibility(View.GONE);
                 holder.rightAudio.setVisibility(View.GONE);
+                holder.leftLocation.setVisibility(View.GONE);
+                holder.rightLocation.setVisibility(View.GONE);
                 if (!"".equals(UserInfo.getUrl())&&UserInfo.getUrl()!=null)
                 {
                     holder.outcomingAvatar.setImageURI(Uri.fromFile(new File(UserInfo.getUrl())));
@@ -218,6 +249,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.rightPic.setVisibility(View.GONE);
                 holder.leftAudio.setVisibility(View.GONE);
                 holder.rightAudio.setVisibility(View.GONE);
+                holder.leftLocation.setVisibility(View.GONE);
+                holder.rightLocation.setVisibility(View.GONE);
                 if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
                 {
                     holder.incomingAvatarCard.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
@@ -243,6 +276,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.rightPic.setVisibility(View.GONE);
                 holder.leftAudio.setVisibility(View.GONE);
                 holder.rightAudio.setVisibility(View.GONE);
+                holder.leftLocation.setVisibility(View.GONE);
+                holder.rightLocation.setVisibility(View.GONE);
                 TextView priceView=                holder.rightCard.findViewById(R.id.pushPrice);
                 TextView dateView=                holder.rightCard.findViewById(R.id.pushDate);
                 TextView placeView=                holder.rightCard.findViewById(R.id.pushPlace);
@@ -278,6 +313,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.rightPic.setVisibility(View.GONE);
                 holder.leftAudio.setVisibility(View.GONE);
                 holder.rightAudio.setVisibility(View.GONE);
+                holder.leftLocation.setVisibility(View.GONE);
+                holder.rightLocation.setVisibility(View.GONE);
                 /**点击待确认订单*/
                 holder.confirmCard.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -300,6 +337,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.rightCard.setVisibility(View.GONE);
                 holder.leftAudio.setVisibility(View.GONE);
                 holder.rightAudio.setVisibility(View.GONE);
+                holder.leftLocation.setVisibility(View.GONE);
+                holder.rightLocation.setVisibility(View.GONE);
                 if (!"".equals(UserInfo.getUrl())&&UserInfo.getUrl()!=null)
                 {
                     holder.outcomingAvatarPic.setImageURI(Uri.fromFile(new File(UserInfo.getUrl())));
@@ -318,6 +357,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.rightPic.setVisibility(View.GONE);
                 holder.leftAudio.setVisibility(View.GONE);
                 holder.rightAudio.setVisibility(View.GONE);
+                holder.leftLocation.setVisibility(View.GONE);
+                holder.rightLocation.setVisibility(View.GONE);
                 if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
                 {
                     holder.incomingAvatarPic.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
@@ -337,6 +378,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.rightCard.setVisibility(View.GONE);
                 holder.leftAudio.setVisibility(View.GONE);
                 holder.rightPic.setVisibility(View.GONE);
+                holder.leftLocation.setVisibility(View.GONE);
+                holder.rightLocation.setVisibility(View.GONE);
                 if (!"".equals(UserInfo.getUrl())&&UserInfo.getUrl()!=null)
                 {
                     holder.outcomingAvatarAudio.setImageURI(Uri.fromFile(new File(UserInfo.getUrl())));
@@ -378,6 +421,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.rightPic.setVisibility(View.GONE);
                 holder.leftPic.setVisibility(View.GONE);
                 holder.rightAudio.setVisibility(View.GONE);
+                holder.leftLocation.setVisibility(View.GONE);
+                holder.rightLocation.setVisibility(View.GONE);
                 if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
                 {
                     holder.incomingAvatarAudio.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
@@ -406,6 +451,57 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                         }
                     }
                 });
+                break;
+            case Msg.TYPE_SEND_LOCATION:
+                holder.rightLocation.setVisibility(View.VISIBLE);
+                String[] locationSend = msg.getContent().split("and");
+                String[] locationDetail = locationSend[1].split("区");
+                holder.rightTextDetail.setText(locationDetail[1]);
+                holder.rightTextProvince.setText(locationDetail[0]+"区");
+                String url = "https://restapi.amap.com/v3/staticmap?location="+locationSend[0]+"&zoom=15&size=1200*400&markers=mid,,A:"+locationSend[0]+"&key=0fba021d7503da0fe875a5aec8fc24a8";
+                Glide.with(context).load(url).into(holder.sendMap);
+                holder.sendMap.setDrawingCacheEnabled(true);
+                /**同样使用View.GONE*/
+                holder.leftLayout.setVisibility(View.GONE);
+                holder.leftCard.setVisibility(View.GONE);
+                holder.rightLayout.setVisibility(View.GONE);
+                holder.confirmCard.setVisibility(View.GONE);
+                holder.leftPic.setVisibility(View.GONE);
+                holder.rightCard.setVisibility(View.GONE);
+                holder.leftAudio.setVisibility(View.GONE);
+                holder.rightAudio.setVisibility(View.GONE);
+                holder.leftLocation.setVisibility(View.GONE);
+                holder.rightPic.setVisibility(View.GONE);
+                if (!"".equals(UserInfo.getUrl())&&UserInfo.getUrl()!=null)
+                {
+                    holder.outcomingAvatarLocation.setImageURI(Uri.fromFile(new File(UserInfo.getUrl())));
+                }
+                break;
+            case Msg.TYPE_RECEIVED_LOCATION:
+                holder.leftLocation.setVisibility(View.VISIBLE);
+
+                String[] locationReceive = msg.getContent().split("and");
+                String[] locationDetailTwo = locationReceive[1].split("区");
+                holder.leftTextDetail.setText(locationDetailTwo[1]);
+                holder.leftTextProvince.setText(locationDetailTwo[0]+"区");
+                String urlReceive = "https://restapi.amap.com/v3/staticmap?location="+locationReceive[0]+"&zoom=15&size=1200*400&markers=mid,,A:"+locationReceive[0]+"&key=0fba021d7503da0fe875a5aec8fc24a8";
+                Glide.with(context).load(urlReceive).into(holder.receiveMap);
+                holder.receiveMap.setDrawingCacheEnabled(true);
+                /**同样使用View.GONE*/
+                holder.rightLayout.setVisibility(View.GONE);
+                holder.leftLayout.setVisibility(View.GONE);
+                holder.rightCard.setVisibility(View.GONE);
+                holder.confirmCard.setVisibility(View.GONE);
+                holder.leftCard.setVisibility(View.GONE);
+                holder.rightPic.setVisibility(View.GONE);
+                holder.leftAudio.setVisibility(View.GONE);
+                holder.rightAudio.setVisibility(View.GONE);
+                holder.leftPic.setVisibility(View.GONE);
+                holder.rightLocation.setVisibility(View.GONE);
+                if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
+                {
+                    holder.incomingAvatarLocation.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
+                }
                 break;
             default:
                 break;
@@ -543,4 +639,6 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
             }
         });
     }
+
+
 }

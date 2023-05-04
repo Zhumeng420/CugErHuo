@@ -12,6 +12,7 @@ import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.user.XuanShangInfo;
 import com.example.cugerhuo.views.MyCustomImageLayout;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +57,14 @@ public class RecyclerViewXuanShangAdapter extends RecyclerView.Adapter<RecyclerV
         for (int i = 0; i < 6; i++){
             imageList.add(UserInfo.getUrl());
         }
+
         //设置数据
         holder.mPhotoGridView.setUrlListData(imageList);
-        System.out.println("nihaone");
+        holder.mPhotoGridView.setOnImageClickListener((i, imageGroupList, urlList) -> {
+            //图片下标+1
+            int index = (int)i.getTag() + 1;
+            //单个图片的点击事件
+        });
     }
 
 

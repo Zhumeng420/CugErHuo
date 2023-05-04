@@ -24,6 +24,10 @@ public class Msg {
     public static final int TYPE_RECEIVED_AUDIO = 7;
     /**TYPE_SEND_AUDIO 表示发出的语音信息*/
     public static final int TYPE_SEND_AUDIO = 8;
+    /**TYPE_RECEIVED_LOCATION 表示收到的语音信息*/
+    public static final int TYPE_RECEIVED_LOCATION = 9;
+    /**TYPE_SEND_LOCATION 表示发出的语音信息*/
+    public static final int TYPE_SEND_LOCATION = 10;
 
     /**content 表示消息的内容*/
     private String content;

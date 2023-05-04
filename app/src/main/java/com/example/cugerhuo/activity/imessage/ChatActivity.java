@@ -40,6 +40,7 @@ import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.user.Msg;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.activity.CreatTradeActivity;
+import com.example.cugerhuo.activity.LocationDetailActivity;
 import com.example.cugerhuo.activity.TradeDetailActivity;
 import com.example.cugerhuo.activity.adapter.MsgAdapter;
 import com.example.cugerhuo.activity.session.CustomAttachParser;
@@ -59,6 +60,7 @@ import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.attachment.AudioAttachment;
 import com.netease.nimlib.sdk.msg.attachment.ImageAttachment;
+import com.netease.nimlib.sdk.msg.attachment.LocationAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig;
@@ -127,10 +129,15 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private LinearLayout moreFunction;
     /**选择图片发送*/
     private LinearLayout selectPic;
+    /**选择地理位置发送*/
+    private LinearLayout selectPosition;
     /**按住说话*/
     private RecordButton recordButton;
     /**输入线性布局*/
     private LinearLayout editLayout;
+    /**是否发送地理位置*/
+    private int isSendLocation;
+
 
 
 
@@ -164,8 +171,16 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             //没有权限，向用户请求权限
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0x20);
         }
-        tradeImages=findViewById(R.id.img_trade_images);
-        tradePrice=findViewById(R.id.trade_price);
+
+        /**动态申请定位权限*/
+        int hasWriteStoragePermission2 = ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.ACCESS_FINE_LOCATION)&ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (hasWriteStoragePermission2 == PackageManager.PERMISSION_GRANTED) {
+            //拥有权限，执行操作
+        }else{
+            //没有权限，向用户请求权限
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0x20);
+        }
+
         inputText = findViewById(R.id.input_text);
         send = findViewById(R.id.send);
         returnImg = findViewById(R.id.return_chat);
@@ -184,6 +199,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         selectPic.setOnClickListener(this);
         recordButton = findViewById(R.id.btnAudio);
         editLayout = findViewById(R.id.edit_msg);
+        selectPosition = findViewById(R.id.chat_send_position);
+        selectPosition.setOnClickListener(this);
         ((RecordButton) recordButton).setOnFinishedRecordListener(new RecordButton.OnFinishedRecordListener() {
             @Override
             public void onFinishedRecord(String audioPath, int time) {
@@ -239,46 +256,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
          * 从上个界面获取聊天对象信息
          */
         Intent intent =getIntent();
-        chatUser = (PartUserInfo) intent.getSerializableExtra("chatUser");
-        /**
-         * 获取商品信息
-         */
-        if(intent.getSerializableExtra("chatCommodity")!=null){
-
-        charCommodity= (Commodity) intent.getSerializableExtra("chatCommodity");
-        tradePrice.setText(String.valueOf(charCommodity.getPrice()));
-            if(!"".equals(charCommodity.getUrl1()))
-            {String url1=charCommodity.getUrl1();
-                String []urls=url1.split(";");
-                if(urls.length>0){
-                    url1=urls[0];}
-                int length=urls.length;
-                String result[]=new String[length];
-                result[length-1]=urls[length-1];
-// 从后往前依次减去后面一个元素
-                if(length>1){
-                    for (int i = length - 2; i >= 0; i--) {
-                        String current = urls[i];
-                        String next = result[i + 1];
-                        int index = current.lastIndexOf(next);
-                        if(index>0){
-                            result[i ] = current.substring(0, index);}
-                        else
-                        {
-                            result[i]=current;
-                        }
-                    }}
-// 将第一个元素赋值给结果数组
-                url1=result[0];
-                String newUrl1 = getSandBoxPath(ChatActivity.this) + url1;
-                System.out.println("imager2"+url1);
-                File f = new File(newUrl1);
-                if (f.exists())
-                {
-                    tradeImages.setImageURI(Uri.fromFile(f));
-                }
-            }
-        }
+        chatUser= (PartUserInfo) intent.getSerializableExtra("chatUser");
         if(intent.getSerializableExtra("iWant")!=null){
             iWant = (int)intent.getSerializableExtra("iWant");
         }else{
@@ -320,6 +298,24 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             SendConfirmTrade(tradeInfo);
         }
 
+        /**
+         * 地理信息
+         */
+        if(intent.getSerializableExtra("isSendLocation")!=null){
+            isSendLocation = (int)intent.getSerializableExtra("isSendLocation");
+        }else{
+            isSendLocation = 0;
+        }
+
+        if(isSendLocation==1){
+            double lat = (double) intent.getSerializableExtra("lat");
+            double lng = (double) intent.getSerializableExtra("lng");
+            String poiName = (String) intent.getSerializableExtra("poiName");
+
+            SendPosition(lat,lng,poiName);
+
+        }
+
         if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
         {
             chatUserImg.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
@@ -357,6 +353,12 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                 String uri=msgAttachment.getUrl();
                                 long timeReceive = msgAttachment.getDuration();
                                 msgList.add(new Msg(uri+",and time is"+timeReceive/1000,Msg.TYPE_RECEIVED_AUDIO));
+                            }else if(messages.get(0).getAttachment().toString().indexOf("LocationAttachment")!=-1){
+                                LocationAttachment locationAttachment = (LocationAttachment) messages.get(0).getAttachment();
+                                double lat = locationAttachment.getLatitude();
+                                double lng = locationAttachment.getLongitude();
+                                String title = locationAttachment.getAddress();
+                                msgList.add(new Msg(lng+","+ lat+"and"+title,Msg.TYPE_RECEIVED_LOCATION));
                             }else{//自定义消息消息
                                 CustomAttachment attachment = (CustomAttachment)messages.get(0).getAttachment();
                                 int type = attachment.getType();
@@ -427,17 +429,19 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                   /**
                                    * 读取历史消息中的订单信息
                                    */
-                                  msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_SEND));
+//                                  msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_SEND));
                               }else if(result.get(i).getAttachStr().indexOf("10002")!=-1){
                                 MyOrderAttachment a= ( MyOrderAttachment)result.get(i).getAttachment();
-
-                                  msgList.add(new Msg(a.getContent(),Msg.TYPE_SEND_CARD));
-                              } else if(result.get(i).getAttachStr().indexOf("jpg")!=-1||result.get(i).getAttachStr().indexOf("png")!=-1){
+                                String tradeString=a.getContent();
+                                System.out.println("tradeinfo"+tradeString);
+                                tradeInfo=JSON.parseObject(tradeString,TradeInfo.class);
+                                msgList.add(new Msg(tradeString,Msg.TYPE_SEND_CARD));
+                              } else if(result.get(i).getAttachment().toString().indexOf("ImageAttachment")!=-1){
                                   String path = result.get(i).getAttachStr();
                                   String filePath = subString(path,"\"url\":\"","\",\"size\"");
                                   String filePathTo = filePath.replace("\\/","/");
                                   msgList.add(new Msg(filePathTo+"&thumbnail=350x350&imageView",Msg.TYPE_SEND_PIC));
-                              } else if(result.get(i).getAttachStr().indexOf("mp3")!=-1){
+                              } else if(result.get(i).getAttachment().toString().indexOf("AudioAttachment")!=-1){
                                   String path = result.get(i).getAttachStr();
                                   String filePath = subString(path,"\"url\":\"","\",\"size\"");
                                   String filePathTo = filePath.replace("\\/","/");
@@ -450,6 +454,12 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                   }
                                   int timeAudio = mediaPlayer.getDuration();
                                   msgList.add(new Msg(filePathTo+",and time is"+timeAudio/1000,Msg.TYPE_SEND_AUDIO));
+                              }else if(result.get(i).getAttachment().toString().indexOf("LocationAttachment")!=-1){
+                                  String attachStr = result.get(i).getAttachStr();
+                                  String lat = subString(attachStr,"\"lat\":",",\"lng\"");
+                                  String lng = subString(attachStr,"\"lng\":",",\"title\"");
+                                  String title = subString(attachStr,"title\":\"","\"}");
+                                  msgList.add(new Msg(lng+","+ lat+"and"+title,Msg.TYPE_SEND_LOCATION));
                               }
                           }else{
                               msgList.add(new Msg(result.get(i).getContent(),Msg.TYPE_SEND));
@@ -468,18 +478,18 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                   msgList.add(new Msg(tradeString,Msg.TYPE_CONFIRM_CARD));
                               }
                               else if(result.get(i).getAttachStr().indexOf("10002")!=-1){
-                                  ToBeConfirmedAttachment attachment1= (ToBeConfirmedAttachment)result.get(i).getAttachment();
+                                  MyOrderAttachment attachment1= (MyOrderAttachment)result.get(i).getAttachment();
                                   String tradeString=attachment1.getContent();
                                   System.out.println("tradeinfo"+tradeString);
                                   tradeInfo=JSON.parseObject(tradeString,TradeInfo.class);
                                   msgList.add(new Msg(tradeString,Msg.TYPE_RECEIVED_CARD));
 
-                              }else if(result.get(i).getAttachStr().indexOf("jpg")!=-1||result.get(i).getAttachStr().indexOf("png")!=-1){
+                              }else if(result.get(i).getAttachment().toString().indexOf("ImageAttachment")!=-1){
                                   String path = result.get(i).getAttachStr();
                                   String filePath = subString(path,"\"url\":\"","\",\"size\"");
                                   String filePathTo = filePath.replace("\\/","/");
                                   msgList.add(new Msg(filePathTo+"&thumbnail=350x350&imageView",Msg.TYPE_RECEIVED_PIC));
-                              }else if(result.get(i).getAttachStr().indexOf("mp3")!=-1){
+                              }else if(result.get(i).getAttachment().toString().indexOf("AudioAttachment")!=-1){
                                   String path = result.get(i).getAttachStr();
                                   String filePath = subString(path,"\"url\":\"","\",\"size\"");
                                   String filePathTo = filePath.replace("\\/","/");
@@ -492,6 +502,12 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                   }
                                   int timeAudio = mediaPlayer.getDuration();
                                   msgList.add(new Msg(filePathTo+",and time is"+timeAudio/1000,Msg.TYPE_RECEIVED_AUDIO));
+                              }else if(result.get(i).getAttachment().toString().indexOf("LocationAttachment")!=-1){
+                                  String attachStr = result.get(i).getAttachStr();
+                                  String lat = subString(attachStr,"\"lat\":",",\"lng\"");
+                                  String lng = subString(attachStr,"\"lng\":",",\"title\"");
+                                  String title = subString(attachStr,"title\":\"","\"}");
+                                  msgList.add(new Msg(lng+","+ lat+"and"+title,Msg.TYPE_RECEIVED_LOCATION));
                               }
                           }else{
                               msgList.add(new Msg(result.get(i).getContent(),Msg.TYPE_RECEIVED));
@@ -597,6 +613,12 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                     //访问相册
                     InputPicture();
                 }
+                break;
+            case R.id.chat_send_position:
+                Intent intentPosition=new Intent(ChatActivity.this, LocationDetailActivity.class);
+                intentPosition.putExtra("chatUser",chatUser);
+                startActivity(intentPosition);
+                overridePendingTransition(0, 0);
                 break;
             case R.id.speak:
                 if(editLayout.getVisibility()!=View.GONE){
@@ -936,4 +958,58 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             }
         });
     }
+
+
+    /**
+     * 发送地理位置
+     * @Author: 李柏睿
+     * @Time: 2023/5/4
+     */
+    public void SendPosition(double lat,double lng,String poiName){
+        // 给该账号发送消息
+        String account = "cugerhuo"+chatUser.getId();
+        // 以单聊类型为例
+        SessionTypeEnum sessionType = SessionTypeEnum.P2P;
+        // 消息的配置选项
+        CustomMessageConfig config = new CustomMessageConfig();
+        // 该消息保存到服务器
+        config.enableHistory = true;
+        // 该消息漫游
+        config.enableRoaming = true;
+        // 该消息同步
+        config.enableSelfSync = true;
+//        // 纬度
+//        double lat = 30.3;
+//        // 经度
+//        double lng = 120.2;
+        // 地理位置描述信息
+        String addr = "杭州";
+        // 创建地理位置信息
+        IMMessage message = MessageBuilder.createLocationMessage(account, sessionType, lat, lng, poiName);
+        // 创建一个图片消息
+        message.setConfig(config);
+        // 发送给对方
+        NIMClient.getService(MsgService.class).sendMessage(message, false).setCallback(new RequestCallback<Void>() {
+            @Override
+            public void onSuccess(Void param) {
+//                message.getAttachment();
+                LocationAttachment msgAttachment=(LocationAttachment)message.getAttachment();
+                String poi=msgAttachment.getAddress();
+                Msg customMsg = new Msg(msgAttachment.getLongitude()+","+ msgAttachment.getLatitude()+"and"+poi,Msg.TYPE_SEND_LOCATION);
+                msgList.add(customMsg);
+                MyToast.toast(ChatActivity.this,"地理信息发送成功",3);
+            }
+
+            @Override
+            public void onFailed(int code) {
+                MyToast.toast(ChatActivity.this,"地理信息发送失败",1);
+            }
+            @Override
+            public void onException(Throwable exception) {
+                MyToast.toast(ChatActivity.this,"地理信息发送异常",1);
+            }
+        });
+
+    }
+
 }
