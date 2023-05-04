@@ -67,7 +67,9 @@
     <string name="ID">id</string>
     <string name="ProductId">productId</string>
     <string name="CommodityId">commodityid</string>
-
+    <string name="BuyerId">buyerid</string>
+    <string name="SellerId">sellerid</string>
+    <string name="GetCommerce"> /commerce/get</string>
     <string name="RedisMapImage">ImageBase64</string>
     <string name="CommerceId">commerceid</string>
     <string name="State">state</string>

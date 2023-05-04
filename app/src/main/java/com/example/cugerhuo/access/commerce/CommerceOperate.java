@@ -63,7 +63,7 @@ public class CommerceOperate {
      * @param context
      * @return  是否成功
      */
-    public static boolean setState(int id,int state1, Context context)
+    public static int setState(int id,int state1, Context context)
     {
         OkHttpClient okHttpClient = new OkHttpClient();
         /**
@@ -81,17 +81,55 @@ public class CommerceOperate {
         //构建formBody，将其传入Request请求中
         Request request = new Request.Builder().url(url).get().build();
         Response response = null;
-        boolean isSeted=false;
+        int isSeted=-1;
         try {
             response = okHttpClient.newCall(request).execute();
-            org.json.JSONObject obj=new org.json.JSONObject(response.body().string());
-            isSeted="true".equals(obj.getString("object"));
+            RespBean a= JSON.parseObject(response.body().toString(),RespBean.class);
+            isSeted= (int) a.getObject();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
             e.printStackTrace();
         }
         return isSeted;
+    }
+
+    /**
+     * 查询订单状态
+     * @param commodity 商品id
+     * @param sellerid 出售者id
+     * @param buyerid 买家id
+     * @param context
+     * @return
+     */
+    public static Commerce getCommerce(int commodity,int sellerid,int buyerid, Context context)
+    {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.ip);
+        String router=context.getString(R.string.GetCommerce);
+        String commodid=context.getString(R.string.CommodityId);
+        String selleri=context.getString(R.string.SellerId);
+        String buyeri=context.getString(R.string.BuyerId);
+        Commerce commerce=null;
+
+        /**
+         * 发送请求
+         */
+        String url="http://"+ip+"/"+router+"?"+selleri+"="+sellerid+"&"+commodid+"="+commodity+"&"+buyeri+"="+buyerid;
+        //循环form表单，将表单内容添加到form builder中
+        //构建formBody，将其传入Request请求中
+        Request request = new Request.Builder().url(url).get().build();
+        Response response = null;
+        boolean isSeted=false;
+        try {
+            response = okHttpClient.newCall(request).execute();
+        commerce=  JSON.parseObject(response.body().string(),Commerce.class);
+           return commerce;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return commerce;
     }
 
 
