@@ -42,7 +42,9 @@
     <string name="recommendCom">recommend/homepage</string>
     <string name="page1">page=1</string>
     <string name="page">page</string>
-    
+    <string name="num">num</string>
+    <string name="InsertComment">comment/insert</string>
+    <string name="InsertPrcing">pricing/insert</string>
     <string name="FocusNum">focus/myfocusnum</string>
     <string name="FansNum">focus/myfansnum</string>
     <string name="Focus">/focus/myfocus</string>
@@ -64,6 +66,7 @@
     <string name="endId">endId</string>
     <string name="ID">id</string>
     <string name="ProductId">productId</string>
+    <string name="CommodityId">commodityid</string>
 
     <string name="RedisMapImage">ImageBase64</string>
     <string name="CommerceId">commerceid</string>
@@ -71,7 +74,10 @@
     <string name="RedisMapUser">UserInfo</string>
     <string name="InsertCommerce">/commerce/insert</string>
     <string name="GoodRecommend">recommend/productpage</string>
-
+    <string name="RewardInsert">/reward/insert</string>
+    <string name="RewardGet">/reward/get</string>
+    <string name="CommentGet">comment/get</string>
+    <string name="PricingGet">pricing/get</string>
     <string name="InsertCommodityTu">sell/sellproduuct</string>
     <string name="Token">token</string>
     <string name="PublicKey">publicKey</string>

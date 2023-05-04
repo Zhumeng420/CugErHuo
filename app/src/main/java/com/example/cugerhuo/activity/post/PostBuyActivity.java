@@ -1,5 +1,7 @@
 package com.example.cugerhuo.activity.post;
 
+import static com.example.cugerhuo.activity.adapter.GridImageAdapter.TAG;
+
 import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -20,15 +22,13 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,13 +56,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.cugerhuo.R;
-import com.example.cugerhuo.access.api.Nlp;
+import com.example.cugerhuo.access.Reward;
+import com.example.cugerhuo.access.reward.RewardOperate;
 import com.example.cugerhuo.access.user.UserInfo;
-import com.example.cugerhuo.activity.AddressManageActivity;
-import com.example.cugerhuo.activity.EditAddressActivity;
 import com.example.cugerhuo.activity.adapter.GridImageAdapter;
 import com.example.cugerhuo.activity.listener.OnItemLongClickListener;
+import com.example.cugerhuo.tools.GetFileNameUtil;
 import com.example.cugerhuo.tools.MyToast;
+import com.example.cugerhuo.tools.OssOperate;
 import com.example.cugerhuo.tools.TracingHelper;
 import com.example.cugerhuo.tools.photoselect.GlideEngine;
 import com.example.cugerhuo.tools.photoselect.ImageLoaderUtils;
@@ -72,8 +73,6 @@ import com.luck.lib.camerax.CameraImageEngine;
 import com.luck.lib.camerax.SimpleCameraX;
 import com.luck.picture.lib.PictureSelectorPreviewFragment;
 import com.luck.picture.lib.animators.AnimationType;
-import com.luck.picture.lib.basic.FragmentInjectManager;
-import com.luck.picture.lib.basic.IBridgePictureBehavior;
 import com.luck.picture.lib.basic.IBridgeViewLifecycle;
 import com.luck.picture.lib.basic.PictureSelectionCameraModel;
 import com.luck.picture.lib.basic.PictureSelectionModel;
@@ -131,17 +130,36 @@ import com.luck.picture.lib.utils.SdkVersionUtils;
 import com.luck.picture.lib.utils.StyleUtils;
 import com.luck.picture.lib.utils.ToastUtils;
 import com.luck.picture.lib.widget.MediumBoldTextView;
+import com.tencent.cos.xml.CIService;
+import com.tencent.cos.xml.CosXmlServiceConfig;
+import com.tencent.cos.xml.exception.CosXmlClientException;
+import com.tencent.cos.xml.exception.CosXmlServiceException;
+import com.tencent.cos.xml.listener.CosXmlResultListener;
+import com.tencent.cos.xml.model.CosXmlRequest;
+import com.tencent.cos.xml.model.CosXmlResult;
+import com.tencent.cos.xml.model.ci.audit.GetTextAuditRequest;
+import com.tencent.cos.xml.model.ci.audit.PostTextAuditRequest;
+import com.tencent.cos.xml.model.ci.audit.TextAuditResult;
+import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
+import com.tencent.qcloud.core.auth.QCloudSelfSigner;
+import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
+import com.tencent.qcloud.core.common.QCloudClientException;
+import com.tencent.qcloud.core.http.HttpConstants;
+import com.tencent.qcloud.core.http.QCloudHttpRequest;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropImageEngine;
-
-import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import io.opentracing.Scope;
 import io.opentracing.Span;
@@ -163,10 +181,18 @@ public class PostBuyActivity extends AppCompatActivity implements  View.OnClickL
     private TextView cancelXuanShang;
     /**发布*/
     private Button postBuy;
+    /**
+     * 悬赏
+     */
+    private Reward reward;
     /**悬赏输入框*/
     private EditText inputNeed;
     /**地理位置*/
     private TextView locationText;
+    /**
+     * 线程池
+     */
+    private ThreadPoolExecutor executor = null;
     /**定位*/
     private String location;
     /**定位服务*/
@@ -201,6 +227,22 @@ public class PostBuyActivity extends AppCompatActivity implements  View.OnClickL
         requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 100);
         setContentView(R.layout.activity_post_buy);
         paths=new ArrayList<String>();
+        /**
+         * 创建线程池
+         */
+        executor=new ThreadPoolExecutor(
+                //核心线程数
+                0,
+                //最大线程数
+                2,
+                //等待时间
+                1L,
+                //时间单位
+                TimeUnit.SECONDS,
+                //最大任务数
+                new ArrayBlockingQueue<>(10),
+                //饱和策略
+                new ThreadPoolExecutor.CallerRunsPolicy());
         initView();
         try {
             getLocation();
@@ -459,6 +501,36 @@ public class PostBuyActivity extends AppCompatActivity implements  View.OnClickL
              * @Time: 2023/5/3
              */
             case R.id.publishXuanShang:
+                Reward reward=new Reward();
+                if(inputNeed.getText()==null||inputNeed.getText().length()==0)
+                {
+                    MyToast.toast(PostBuyActivity.this,"请填写物品描述",0);
+                    break;
+                }
+                else
+                {
+
+                }
+                StringBuilder tempU=new StringBuilder();
+                for( int i=0;i<paths.size();++i)
+                {
+                    tempU.append("specific_"+ GetFileNameUtil.getFileName((String) paths.get(i)));
+                    tempU.append(";");
+
+                }
+                if(tempU!=null){
+                    reward.setUrl(tempU.toString());
+                }
+                reward.setState(1);
+                Date date = new Date(System.currentTimeMillis());
+                reward.setDescription(inputNeed.getText().toString());
+                reward.setLocation(location);
+                reward.setTime(date);
+                reward.setUserid(UserInfo.getid());
+                MyToast.toast(PostBuyActivity.this,"正在审核",2);
+                this.reward=reward;
+                AuditTask auditTask=new PostBuyActivity.AuditTask(inputNeed.getText().toString());
+                executor.execute(auditTask);
                 break;
             default:
                 break;
@@ -471,7 +543,144 @@ public class PostBuyActivity extends AppCompatActivity implements  View.OnClickL
     private String[] arrayOf(String accessFineLocation, String accessBackgroundLocation) {
         return new String[]{accessBackgroundLocation,accessFineLocation};
     }
+    /**
+     * 执行文本审核线程
+     * @author 施立豪
+     */
+    public  class AuditTask implements Runnable {
 
+        //private PublishTask publish;
+        /**
+         * 待审核文本
+         */
+        private String text;
+
+        /**
+         * 构造函数传参
+         * @param text  审核文本
+         */
+        public AuditTask(String text) {
+            this.text=text;
+        }
+        @Override
+        public void run() {
+            String secretId = "AKIDZzNl3Dv33zjW9iF4vkoihXGn7FI7g4GH"; //用户的 SecretId，建议使用子账号密钥，授权遵循最小权限指引，降低使用风险。子账号密钥获取可参见 https://cloud.tencent.com/document/product/598/37140
+            String secretKey = "PgmiWAduzwqWH3FLHQSIsCKK6eyH9b0T"; //用户的 SecretKey，建议使用子账号密钥，授权遵循最小权限指引，降低使用风险。子账号密钥获取可参见 https://cloud.tencent.com/document/product/598/37140
+// keyDuration 为请求中的密钥有效期，单位为秒
+            QCloudCredentialProvider myCredentialProvider =
+                    new ShortTimeCredentialProvider(secretId, secretKey, 300);
+            QCloudSelfSigner myQCloudSelfSigner = new QCloudSelfSigner() {
+                /**
+                 * 对请求进行签名
+                 *
+                 * @param request 需要签名的请求
+                 * @throws QCloudClientException 客户端异常
+                 */
+                @Override
+                public void sign(QCloudHttpRequest request) throws QCloudClientException {
+                    // 1. 把 request 的请求参数传给服务端计算签名
+                    String auth = "get auth from server";
+                    // 2. 给请求添加签名
+                    request.addHeader(HttpConstants.Header.AUTHORIZATION, auth);
+                }
+            };
+            // 存储桶所在地域简称，例如广州地区是 ap-guangzhou
+            String region = "ap-beijing";
+// 创建 CosXmlServiceConfig 对象，根据需要修改默认的配置参数
+            CosXmlServiceConfig serviceConfig = new CosXmlServiceConfig.Builder()
+                    .setRegion(region)
+                    .isHttps(true) // 使用 HTTPS 请求, 默认为 HTTP 请求
+                    .builder();
+            CIService ciService=new CIService(PostBuyActivity.this,serviceConfig,myCredentialProvider);
+            // 存储桶名称，格式为 BucketName-APPID
+            String bucket = "cug-erhuo-1314485188";
+            // 对象键，是对象在 COS 上的完整路径，如果带目录的话，格式为 "dir1/object1"
+            String cosPath = "exampleobject.txt";
+            //文本的链接地址,Object 和 Url 只能选择其中一种
+            String url = "https://myqcloud.com/%205text.txt";
+            //当传入的内容为纯文本信息，需要先经过 base64 编码，文本编码前的原文长度不能超过10000个 utf8 编码字符。若超出长度限制，接口将会报错。
+            String content = Base64.encodeToString((text).getBytes(Charset.forName("UTF-8")), Base64.NO_WRAP);
+            PostTextAuditRequest request = new PostTextAuditRequest(bucket);
+            request.setObject(cosPath);
+            request.setUrl(url);
+            request.setContent(content);
+            //设置原始内容，长度限制为512字节，该字段会在响应中原样返回
+            request.setDataId("DataId");
+            //回调地址，以http://或者https://开头的地址。
+            request.setCallback("https://github.com");
+            //回调内容的结构，有效值：Simple（回调内容包含基本信息）、Detail（回调内容包含详细信息）。默认为 Simple。
+            request.setCallbackVersion("Detail");
+            //审核的场景类型，有效值：Porn（涉黄）、Ads（广告），可以传入多种类型，不同类型以逗号分隔，例如：Porn,Ads。
+            request.setDetectType("Porn,Ads");
+            // CIService 是 CosXmlService 的子类，初始化方法和 CosXmlService 一致
+            ciService.postTextAuditAsync(request, new CosXmlResultListener() {
+                @Override
+                public void onSuccess(CosXmlRequest request, CosXmlResult cosResult) {
+                    // result 提交文本审核任务的结果
+                    // 详细字段请查看api文档或者SDK源码
+                    TextAuditResult result = (TextAuditResult) cosResult;
+                    String jobId ;
+                    jobId= result.textAuditJobResponse.jobsDetail.jobId;
+                    System.out.println(jobId);
+                    GetTextAuditRequest request1 = new GetTextAuditRequest(bucket, jobId);
+                    // CIService 是 CosXmlService 的子类，初始化方法和 CosXmlService 一致
+                    ciService.getTextAuditAsync(request1, new CosXmlResultListener() {
+                        @Override
+                        public void onSuccess(CosXmlRequest request, CosXmlResult cosResult) {
+                            // result 查询文本审核任务的结果
+                            // 详细字段请查看 API 文档或者 SDK 源码
+                            TextAuditResult result = (TextAuditResult) cosResult;
+                            Message msg =new Message();
+                            msg.arg1=6;
+                            /**
+                             * 判断审核结果是否正确
+                             */
+                            switch (result.textAuditJobResponse.jobsDetail.label)
+                            {
+                                case "Normal":
+                                    msg.arg2=0;
+                                    break;
+                                case "Porn":
+                                    msg.arg2=1;
+                                    break;
+                                case "Ads":
+                                    msg.arg2=2;
+                                    break;
+                                default:
+                                    msg.arg2=3;
+                                    break;
+                            };
+                            MyHandler.sendMessage(msg);
+
+                        }
+                        @Override
+                        public void onFail(CosXmlRequest request, CosXmlClientException clientException, CosXmlServiceException serviceException) {
+                            Message msg =new Message();
+                            msg.arg1=7;
+                            MyHandler.sendMessage(msg);
+                            if (clientException != null) {
+                                clientException.printStackTrace();
+                            } else {
+                                serviceException.printStackTrace();
+                            }
+                        }
+                    });
+                }
+                @Override
+                public void onFail(CosXmlRequest request, CosXmlClientException clientException, CosXmlServiceException serviceException) {
+                    Message msg =new Message();
+                    msg.arg1=7;
+                    MyHandler.sendMessage(msg);
+                    if (clientException != null) {
+                        clientException.printStackTrace();
+                    } else {
+                        serviceException.printStackTrace();
+                    }
+                }
+            });
+        }
+
+    }
     /**
      * 判断权限是否存在
      */
@@ -600,12 +809,156 @@ public class PostBuyActivity extends AppCompatActivity implements  View.OnClickL
                         mLocationClient.stopLocation();
                     }
                     break;
+                case 4:
+                    MyToast.toast(PostBuyActivity.this,"发布成功",3);
+                    break;
+                case 7:
+                    MyToast.toast(PostBuyActivity.this,"抱歉,文本审核功能遇到了问题！",0);
+                    break;
+                case 6:
+                    //TODO 处理发布
+                    switch (msg.arg2)
+                    {
+                        case 0:
+                            MyToast.toast(PostBuyActivity.this,"正在上传",2);
+                            PublishTask publishTask=new PublishTask(reward,UserInfo.getid());
+                            executor.execute(publishTask);
+                            break;
+                        case 1:
+                            MyToast.toast(PostBuyActivity.this,"您的输入存在色情内容，禁止发布",0);
+                            break;
+                        case 2:
+                            MyToast.toast(PostBuyActivity.this,"您的输入中检测到广告，禁止发布",0);
+                            break;
+                        default:
+                            MyToast.toast(PostBuyActivity.this,"抱歉,未知错误",1);
+                            break;
+                    }
+
+                    break;
                 default:
                     break;
             }
         }
     }
 
+
+    /**
+     * 执行发布任务线程
+     */
+    public class PublishTask implements Runnable
+    {
+        private int id;
+        private Reward reward;
+
+        /**
+         * 发布构造，传参
+         * @param reward  商品信息
+         * @param userId    用户id
+         */
+        public PublishTask(Reward reward,int userId)
+        {
+            this.reward=reward;
+            id=userId;
+        }
+        @Override
+        public void run() {
+            {
+                Tracer tracer = GlobalTracer.get();
+                int result =0;
+                // 创建spann
+                Span span = tracer.buildSpan("发布流程").withTag("onBtnClickedListener：", "子踪").start();
+                try (Scope ignored = tracer.scopeManager().activate(span,true)) {
+                    // 插入mysql并获取id
+                    result= RewardOperate.insertReward(reward,PostBuyActivity.this);
+                    if(result>0)
+                    {
+                        Log.i(TAG,"插入商品至mysql成功");
+                        //插入图数据库
+                        boolean result1=false;
+
+                        {
+
+                            /**
+                             * 上传商品信息
+                             */
+                            List<String> imageSearch=new ArrayList<>();
+
+                            for(int i=0;i< paths.size();++i)
+                            {             imageSearch.add((String) paths.get(i));
+
+                                {
+                                    String fileName = "specific_"+GetFileNameUtil.getFileName((String) paths.get(i));
+                                    boolean isUped=false;
+                                    Span span1 = tracer.buildSpan("上传悬赏到oss流程").withTag("onChangeImage函数：", "子追踪").start();
+                                    try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
+                                        // 业务逻辑写这里
+                                        isUped= OssOperate.up(fileName, Uri.fromFile(new File((String) paths.get(i))));
+                                        if(isUped) {
+                                            Log.i(TAG, "上传商品oss上传成功");
+                                        }
+                                        else{
+                                            Log.e(TAG,"上传商品oss上传失败");
+                                        }
+                                        //UserInfo.setUrl(fileName);
+                                    } catch (Exception e) {
+                                        TracingHelper.onError(e, span);
+                                        throw e;
+                                    } finally {
+                                        span.finish();
+                                    }
+                                }
+                            }
+//                            Span span1 = tracer.buildSpan("上传到oss流程").withTag("onChangeImage函数：", "子追踪").start();
+//                            try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
+//                                // 业务逻辑写这里
+//                                Boolean a= GraphOperate.productAdd1(imageSearch,result);
+//                                if(a) {
+//                                    Log.i(TAG, "上传成功");
+//                                }
+//                                else{
+//                                    Log.e(TAG,"oss上传失败");
+//                                }
+//                            } catch (Exception e) {
+//                                TracingHelper.onError(e, span);
+//                                throw e;
+//                            } finally {
+//                                span.finish();
+//                            }
+                            /**
+                             * 通知UI发生提醒
+                             */
+                            Message msg = Message.obtain();
+                            msg.arg1 = 4;
+                            MyHandler.sendMessage(msg);
+
+                        }
+
+                    }
+                    else
+                    {
+                        Log.e(TAG,"插入商品至mysql失败");
+                    }
+                    //插入图数据库
+
+                } catch (Exception e) {
+                    TracingHelper.onError(e, span);
+
+                } finally {
+                    span.finish();
+                }
+                if(result>0)
+                {
+                    Log.i(TAG,"发布成功");
+                }else
+                {
+                    Log.e(TAG,"发布失败");
+                }
+
+            }
+
+        }
+    }
     /**
      * 图片选择
      */

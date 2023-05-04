@@ -522,7 +522,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
      * 执行文本审核线程
      * @author 施立豪
      */
-    public class AuditTask implements Runnable {
+    public  class AuditTask implements Runnable {
 
         //private PublishTask publish;
         /**

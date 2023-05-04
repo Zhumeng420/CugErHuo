@@ -15,8 +15,16 @@ public class GetFileNameUtil {
     {
         String filePath = fileAbsolutePath;
         int lastIndex = filePath.lastIndexOf("/");
-        String fileName = filePath.substring(lastIndex
-                + 1, filePath.length());
+        int lastIndex1=filePath.lastIndexOf("\\");
+        String fileName;
+        if(lastIndex<lastIndex1){
+         fileName = filePath.substring(lastIndex1
+                + 1, filePath.length());}
+        else
+        {
+            fileName = filePath.substring(lastIndex
+                    + 1, filePath.length());
+        }
         return fileName;
     }
 

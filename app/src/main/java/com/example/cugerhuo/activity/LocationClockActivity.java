@@ -1,12 +1,8 @@
 package com.example.cugerhuo.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -32,12 +32,11 @@ import com.amap.api.maps2d.model.CircleOptions;
 import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.example.cugerhuo.R;
-import com.example.cugerhuo.activity.imessage.ChatActivity;
+import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.tools.MyToast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 
 /**
  * 范围打卡
@@ -89,6 +88,13 @@ public class LocationClockActivity extends AppCompatActivity implements Location
                     if (distance <= radius) {
                         // 这里模拟把打卡的信息提交到服务器，服务器并且把打卡成功信息返回给客户端
                         MyToast.toast(LocationClockActivity.this,"打卡成功",3);
+                       PartUserInfo a= (PartUserInfo) getIntent().getSerializableExtra("chatUser");
+                        Intent intent1 = new Intent();
+                        setResult(0x11,intent1);
+                        intent1.putExtra("location","1");
+                        intent1.putExtra("chatUser",a);
+
+                        finish();
                     } else {
                         MyToast.toast(LocationClockActivity.this,"当前位置不打卡范围内，打卡失败",1);
                     }

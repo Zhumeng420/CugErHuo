@@ -1,9 +1,10 @@
 package com.example.cugerhuo.activity;
 
-import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
@@ -15,12 +16,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
-import com.example.cugerhuo.access.user.XuanShangInfo;
+import com.example.cugerhuo.access.Reward;
+import com.example.cugerhuo.access.reward.RewardOperate;
+import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.activity.adapter.RecyclerViewXuanShangAdapter;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
+import com.example.cugerhuo.tools.LettuceBaseCase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import io.lettuce.core.api.sync.RedisCommands;
 
 public class XuanShangActivity extends AppCompatActivity implements View.OnClickListener{
     /**
@@ -35,16 +42,46 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
     private LinearLayout ll_tab_four;
     private LinearLayout ll_tab_five;
     private RecyclerView recyclerView;
-    private List<XuanShangInfo> xuanShangInfos =new ArrayList<>();
+    private List<Reward> rewardInfos =new ArrayList<>();
+    private List<PartUserInfo> userInfos=new ArrayList<>();
+    private final MyHandler MyHandler =new MyHandler(Looper.getMainLooper());
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_xuan_shang);
         initView();
+        loadData();
     }
+    /**
+     * 加载数据
+     */
+    public void loadData()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                                LettuceBaseCase lettuce=new LettuceBaseCase();
+                //获取连接
+                RedisCommands<String, String> con=lettuce.getSyncConnection();
+                //通过连接调用查询
+//                System.out.println(part.getImageUrl());
+                //关闭连接
 
+
+                Map.Entry<List<Reward>, List<PartUserInfo>> result= RewardOperate.getRewards(con,1,10,XuanShangActivity.this);
+                rewardInfos=result.getKey();
+                userInfos=result.getValue();
+                lettuce.close();
+
+                Message msg = Message.obtain();
+                msg.arg1 = 1;
+                MyHandler.sendMessage(msg);
+            }
+        }).start();
+    }
     /**
      * 初始化各个控件，找到对应的组件
      * @author 唐小莉
@@ -64,13 +101,8 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
         recyclerView = findViewById(R.id.recyclerView_xuanhsang);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        for(int i=0;i<12;i++){
-            XuanShangInfo part= new XuanShangInfo();
-            xuanShangInfos.add(part);
-        }
 
-        RecyclerViewXuanShangAdapter adapter = new RecyclerViewXuanShangAdapter(XuanShangActivity.this, xuanShangInfos);
-        recyclerView.setAdapter(adapter);
+
     }
     /**
      * 重写finish方法，去掉出场动画
@@ -141,6 +173,38 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
         }
 
     }
+    /**
+     * 消息发送接收，异步更新UI
+     * @author 施立豪
+     * @time 2023/4/19
+     */
+    private class MyHandler extends Handler {
+        public MyHandler(Looper mainLooper) {
+
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.arg1) {
+                /**
+                 * 定位信息更新
+                 */
+                case 1:
+
+                    RecyclerViewXuanShangAdapter adapter = new RecyclerViewXuanShangAdapter(XuanShangActivity.this, rewardInfos,userInfos);
+                    recyclerView.setAdapter(adapter);
+                    break;
+
+                case 6:
+
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
 
 
 

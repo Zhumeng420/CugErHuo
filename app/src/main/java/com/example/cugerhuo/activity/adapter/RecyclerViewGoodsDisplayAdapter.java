@@ -29,6 +29,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
+import com.example.cugerhuo.access.commodity.RecommendInfo;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.oss.InitOS;
 import com.example.cugerhuo.tools.GetFileNameUtil;
@@ -127,7 +128,7 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
                  * 获取本地保存路径
                  */
                 String newUrl = getSandBoxPath(context) + url;
-                userInfos.get(position).setImageUrl(newUrl);
+
                 File f = new File(newUrl);
                 if (!f.exists()) {
                     /**
@@ -168,7 +169,7 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
                                      */
                                     System.out.println("image"+newUrl);
                                     holder.goodItemUserImg.setImageURI(Uri.fromFile(new File(newUrl)));
-                                    userInfos.get(position).setImageUrl(newUrl);
+
                                 } catch (Exception e) {
                                     OSSLog.logInfo(e.toString());
                                 }

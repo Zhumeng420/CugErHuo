@@ -24,7 +24,6 @@ import com.alibaba.sdk.android.oss.common.OSSLog;
 import com.alibaba.sdk.android.oss.model.GetObjectRequest;
 import com.alibaba.sdk.android.oss.model.GetObjectResult;
 import com.example.cugerhuo.R;
-import com.example.cugerhuo.access.Comment;
 import com.example.cugerhuo.access.Pricing;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.oss.InitOS;
@@ -39,21 +38,17 @@ import java.util.Map;
  * @Author: 李柏睿
  * @Time: 2023/4/27
  */
-public class RecyclerViewCommentAdapter extends RecyclerView.Adapter<RecyclerViewCommentAdapter.ViewHolder> {
+public class RecyclerViewPricingAdapter extends RecyclerView.Adapter<RecyclerViewPricingAdapter.ViewHolder> {
     private Context context;
     private int count;
     private static int switchFragment;
-    List<Comment> comments;
+    List<Pricing> comments;
     List<PartUserInfo> users;
-    //出价用户
-    List<PartUserInfo> pusers;
-    List<Pricing> pricings;
-    public RecyclerViewCommentAdapter(Context context, Map.Entry<List<Comment>, List<PartUserInfo>> commentInfos, Map.Entry<List<Pricing>, List<PartUserInfo>> pricingInfos, int switchFlag) {
+
+    public RecyclerViewPricingAdapter(Context context, Map.Entry<List<Pricing>, List<PartUserInfo>> commentInfos, int switchFlag) {
         this.context = context;
         count=commentInfos.getKey().size();
         comments=commentInfos.getKey();
-        pricings=pricingInfos.getKey();
-        pusers=pricingInfos.getValue();
         users=commentInfos.getValue();
         switchFragment = switchFlag;
     }
@@ -70,15 +65,15 @@ public class RecyclerViewCommentAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     @Override
-    public RecyclerViewCommentAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewPricingAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_comment, parent, false);
-        return new RecyclerViewCommentAdapter.ViewHolder(view);
+        return new RecyclerViewPricingAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewCommentAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewPricingAdapter.ViewHolder holder, int position) {
     holder.userName.setText(users.get(position).getUserName());
-    holder.comment.setText(comments.get(position).getContent());
+    holder.comment.setText(String.valueOf(comments.get(position).getPrice()));
         /**
          * 用户头像设置
          */

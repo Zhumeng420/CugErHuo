@@ -1,10 +1,8 @@
 package com.example.cugerhuo.views;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
 import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -20,12 +18,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
-import com.example.cugerhuo.access.user.CommentInfo;
-import com.example.cugerhuo.activity.GoodDetailActivity;
+import com.example.cugerhuo.access.Comment;
+import com.example.cugerhuo.access.Pricing;
+import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.activity.adapter.RecyclerViewCommentAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 更多留言弹出
@@ -42,7 +41,8 @@ public class PopComments extends AppCompatDialog {
     /**全部留言展示*/
     private RecyclerView commentsRecyclerView;
     /**留言信息列表*/
-    private List<CommentInfo> commentInfos =new ArrayList<>();
+    private Map.Entry<List<Comment>, List<PartUserInfo>> commentInfos ;
+    private Map.Entry<List<Pricing>, List<PartUserInfo>> pricingInfos ;
     /**留言RecyclerView适配器*/
     private RecyclerViewCommentAdapter adapter;
     /**关闭当前dialog*/
@@ -51,9 +51,11 @@ public class PopComments extends AppCompatDialog {
     private LinearLayout popCommentsView;
     private int mLastDiff = 0;
 
-    public PopComments(@NonNull Context context, int theme) {
+    public PopComments(@NonNull Context context, int theme, Map.Entry<List<Comment>, List<PartUserInfo>> a,Map.Entry<List<Pricing>, List<PartUserInfo>> b) {
         super(context, theme);
         this.mContext = context;
+        commentInfos=a;
+        pricingInfos=b;
         this.getWindow().setWindowAnimations(R.style.main_menu_animstyle);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         init();
@@ -66,11 +68,8 @@ public class PopComments extends AppCompatDialog {
         pleaseComment = findViewById(R.id.please_comment);
         commentsRecyclerView = findViewById(R.id.comments_display);
         commentsRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        for(int i=0;i<14;i++){
-            CommentInfo part= new CommentInfo();
-            commentInfos.add(part);
-        }
-        adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,0);
+
+        adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,0);
         commentsRecyclerView.setAdapter(adapter);
         closeDialog = findViewById(R.id.close_comments);
         popCommentsView = findViewById(R.id.rl_pop_comments_view);

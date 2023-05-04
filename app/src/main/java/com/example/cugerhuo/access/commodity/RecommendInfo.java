@@ -9,6 +9,8 @@ import java.util.List;
  * 存储推荐信息
  */
 public class RecommendInfo {
+    static List<PartUserInfo> newUserInfoList;
+    public static void setNewUserInfoList(List<PartUserInfo> a){newUserInfoList=a;}
    static List<Commodity> commodityList;
    static  List<PartUserInfo> partUserInfoList;
    public static void setCommodityList(List<Commodity> a)

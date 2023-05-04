@@ -1,5 +1,6 @@
 package com.example.cugerhuo.activity;
 
+import static com.example.cugerhuo.access.SetGlobalIDandUrl.getSandBoxPath;
 import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 
 import android.content.Context;
@@ -22,11 +23,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.access.Comment;
 import com.example.cugerhuo.access.Commodity;
+import com.example.cugerhuo.access.Pricing;
+import com.example.cugerhuo.access.comment.CommentOperate;
 import com.example.cugerhuo.access.commodity.CommodityOperate;
-import com.example.cugerhuo.access.commodity.RecommendInfo;
-import com.example.cugerhuo.access.user.CommentInfo;
+import com.example.cugerhuo.access.pricing.PricingOperate;
 import com.example.cugerhuo.access.user.PartUserInfo;
+import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.activity.adapter.RecyclerViewCommentAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewGoodsDisplayAdapter;
 import com.example.cugerhuo.activity.imessage.ChatActivity;
@@ -71,6 +75,20 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
      */
     private TextView sellerName;
     private TextView sellerDescripe;
+    private TextView priceView;
+    /**
+     * 评论头像
+     */
+    private RoundedImageView myImage;
+    /**
+     * 卖家头像
+     */
+    private RoundedImageView sellerImage1;
+    /**
+     * 描述框
+     */
+    private TextView sellerName1;
+    private TextView sellerDescripe1;
     private TextView goodCate;
     private TextView goodBrand;
     private TextView goodOldNew;
@@ -94,11 +112,12 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
     /**0为留言，1为出价*/
     private int switchFlag = 0;
     /**留言RecyclerView，商品推荐RecyclerView*/
-    private RecyclerView commentRecyclerView,goodsRecyclerView;
+    private RecyclerView commentRecyclerView,goodsRecyclerView,pricingRecyclerView;
+
     /**留言信息列表*/
-    private List<CommentInfo> commentInfos =new ArrayList<>();
+    Map.Entry<List<Comment>, List<PartUserInfo>> commentInfos;
     /**出价信息列表*/
-    private List<CommentInfo> bidInfos =new ArrayList<>();
+    Map.Entry<List<Pricing>, List<PartUserInfo>> pricingInfos;
     /**留言RecyclerView适配器*/
     private RecyclerViewCommentAdapter adapter;
     /**商品推荐RecyclerView适配器*/
@@ -121,7 +140,6 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
         // 开启线程
         new Thread(() -> {
             if(commodity!=null) {
-                List<Integer> recommedCom = new ArrayList<>();
                 /**
                  * 建立连接对象
                  */
@@ -133,35 +151,56 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 Map.Entry<List<Commodity>, List<PartUserInfo>> result = CommodityOperate.getRecommendComs(con, commodity.getId(), GoodDetailActivity.this);
                 recommendCommodities = result.getKey();
                 recommendUsersOfComs = result.getValue();
-                lettuce.close();
+                commentInfos= CommentOperate.getRewards(con,commodity.getId(),GoodDetailActivity.this);
+                pricingInfos= PricingOperate.getRewards(con,commodity.getId(),GoodDetailActivity.this);
+
             }
             Message msg = Message.obtain();
             msg.arg1 = 1;
             MyHandler.sendMessage(msg);
-
         }).start();
+        // 开启线程
+        new Thread(() -> {
+            if(commodity!=null) {
+                /**
+                 * 建立连接对象
+                 */
+                LettuceBaseCase lettuce = new LettuceBaseCase();
+                /**
+                 * 获取连接
+                 */
+                RedisCommands<String, String> con = lettuce.getSyncConnection();
+                commentInfos= CommentOperate.getRewards(con,commodity.getId(),GoodDetailActivity.this);
+                pricingInfos= PricingOperate.getRewards(con,commodity.getId(),GoodDetailActivity.this);
+
+
+            }
+            Message msg = Message.obtain();
+            msg.arg1 = 2;
+            MyHandler.sendMessage(msg);
+        }).start();
+
     }
     /**
      * 初始化商品数据和用户数据
      */
     public void initData() {
         Intent temp=getIntent();
-        int position=temp.getIntExtra("position",-1);
-        if(position!=-1)
+        commodity= (Commodity) temp.getSerializableExtra("commodity");
+        userInfo= (PartUserInfo) temp.getSerializableExtra("user");
+        if(commodity!=null&&userInfo!=null)
         {
-            commodity= RecommendInfo.getCommodityList().get(position);
-            userInfo=RecommendInfo.getPartUserInfoList().get(position);
             sellerDescripe.setText(userInfo.getSignature());
-            sellerImage.setImageURI(Uri.fromFile(new File(userInfo.getImageUrl())));
+            sellerDescripe1.setText(userInfo.getSignature());
+            sellerImage1.setImageURI(Uri.fromFile(new File(getSandBoxPath(GoodDetailActivity.this)+userInfo.getImageUrl())));
+            sellerImage.setImageURI(Uri.fromFile(new File(getSandBoxPath(GoodDetailActivity.this)+userInfo.getImageUrl())));
             sellerName.setText(userInfo.getUserName());
+            sellerName1.setText(userInfo.getUserName());
+            priceView.setText(String.valueOf(commodity.getPrice()));
+            myImage.setImageURI(Uri.fromFile(new File(UserInfo.getUrl())));
             goodDetail.setText(commodity.getDescription());
             goodCate.setText(commodity.getCategory());
             goodBrand.setText(commodity.getBrand());
-        }
-        else
-        {
-            commodity=new Commodity();
-            userInfo=new PartUserInfo();
         }
     }
     /**
@@ -176,6 +215,11 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
         sellerDescripe=findViewById(R.id.userDescription_top);
         sellerName=findViewById(R.id.userName_top);
         sellerImage=findViewById(R.id.userImg_top);
+        sellerDescripe1=findViewById(R.id.userDescription_top);
+        sellerImage1=findViewById(R.id.userImg_2);
+        sellerName1=findViewById(R.id.username_2);
+        myImage=findViewById(R.id.userImg);
+        priceView=findViewById(R.id.detail_price);
         goodBrand=findViewById(R.id.brand_information);
         goodCate=findViewById(R.id.cate_information);
         goodOldNew=findViewById(R.id.old_new_information);
@@ -214,13 +258,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 return false;
             }
         });
-        for(int i=0;i<6;i++){
-            CommentInfo part= new CommentInfo();
-            commentInfos.add(part);
-            bidInfos.add(part);
-        }
-        adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,0);
-        commentRecyclerView.setAdapter(adapter);
+
         /**推荐商品模块*/
 
         goodsRecyclerView = findViewById(R.id.display_good);
@@ -294,7 +332,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 SpannableString s1 = new SpannableString("留言问更多细节~");
                 msgText.setHint(s1);
                 switchFlag = 0;
-                adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,switchFlag);
+                adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,switchFlag);
                 commentRecyclerView.setAdapter(adapter);
                 break;
             /**出价模块*/
@@ -307,12 +345,12 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 SpannableString s2 = new SpannableString("感兴趣就出个价看看吧~");
                 msgText.setHint(s2);
                 switchFlag = 1;
-                adapter = new RecyclerViewCommentAdapter(getActivity(), bidInfos,switchFlag);
+                adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,switchFlag);
                 commentRecyclerView.setAdapter(adapter);
                 break;
             /**查看更多留言*/
             case R.id.click_look_more:
-                final PopComments popComments = new PopComments(GoodDetailActivity.this, R.style.dialog_center_comment);
+                final PopComments popComments = new PopComments(GoodDetailActivity.this, R.style.dialog_center_comment,commentInfos,pricingInfos);
                 popComments.show();
                 InputMethodManager imm = (InputMethodManager) GoodDetailActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -362,12 +400,21 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                         public void onItemClick(View view, int position) {
                             int flag = 1;
                             Intent intent=new Intent(GoodDetailActivity.this, GoodDetailActivity.class);
+                            intent.putExtra("commodity",recommendCommodities.get(position));
+                            intent.putExtra("user",recommendUsersOfComs.get(position));
                             intent.putExtra("flag",flag);
+                            intent.putExtra("position",position);
                             //startActivity(intent);
                             startActivityForResult(intent,1);
                         }
                     });
                     break;
+                case 2:
+
+                    adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,0);
+                    commentRecyclerView.setAdapter(adapter);
+                    break;
+
                 default:
                     break;
             }

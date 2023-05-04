@@ -183,7 +183,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             //没有权限，向用户请求权限
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0x20);
         }
-
+        tradeImages=findViewById(R.id.img_trade_images);
+        tradePrice=findViewById(R.id.trade_price);
         inputText = findViewById(R.id.input_text);
         send = findViewById(R.id.send);
         returnImg = findViewById(R.id.return_chat);
@@ -261,9 +262,51 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
          * 从上个界面获取聊天对象信息
          */
         Intent intent =getIntent();
+        chatUser = (PartUserInfo) intent.getSerializableExtra("chatUser");
+        /**
+         * 获取商品信息
+         */
+        if(intent.getSerializableExtra("chatCommodity")!=null){
+
+            charCommodity= (Commodity) intent.getSerializableExtra("chatCommodity");
+            if(charCommodity!=null){
+            tradePrice.setText(charCommodity.getPrice().toString());
+            if(!"".equals(charCommodity.getUrl1()))
+            {String url1=charCommodity.getUrl1();
+                String []urls=url1.split(";");
+                if(urls.length>0){
+                    url1=urls[0];}
+                int length=urls.length;
+                String result[]=new String[length];
+                result[length-1]=urls[length-1];
+// 从后往前依次减去后面一个元素
+                if(length>1){
+                    for (int i = length - 2; i >= 0; i--) {
+                        String current = urls[i];
+                        String next = result[i + 1];
+                        int index = current.lastIndexOf(next);
+                        if(index>0){
+                            result[i ] = current.substring(0, index);}
+                        else
+                        {
+                            result[i]=current;
+                        }
+                    }}
+// 将第一个元素赋值给结果数组
+                url1=result[0];
+                String newUrl1 = getSandBoxPath(ChatActivity.this) + url1;
+                System.out.println("imager2"+url1);
+                File f = new File(newUrl1);
+                if (f.exists())
+                {
+                    tradeImages.setImageURI(Uri.fromFile(f));
+                }
+            }
+        }}
         chatUser= (PartUserInfo) intent.getSerializableExtra("chatUser");
         if(intent.getSerializableExtra("iWant")!=null){
             iWant = (int)intent.getSerializableExtra("iWant");
+
         }else{
             iWant = 0;
         }
@@ -288,7 +331,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
         /**展示顶部交易模块*/
         tradeLayout.setVisibility(View.VISIBLE);
-//        if(iWant==1){tradeLayout.setVisibility(View.VISIBLE);}
+        if(iWant==1){tradeLayout.setVisibility(View.VISIBLE);}
 
         /**发送订单*/
         if(isTrade==1){
@@ -316,7 +359,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             double lat = (double) intent.getSerializableExtra("lat");
             double lng = (double) intent.getSerializableExtra("lng");
             String poiName = (String) intent.getSerializableExtra("poiName");
-
             SendPosition(lat,lng,poiName);
 
         }
@@ -374,7 +416,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                     tradeInfo=JSON.parseObject(tradeString,TradeInfo.class);
                                     msgList.add(new Msg(tradeString,Msg.TYPE_CONFIRM_CARD));
                                 }else if(type==10002){
-                                    ToBeConfirmedAttachment attachment1= (ToBeConfirmedAttachment)attachment;
+                                    MyOrderAttachment attachment1= (MyOrderAttachment)attachment;
                                     String tradeString=attachment1.getContent();
                                     System.out.println("tradeinfo"+tradeString);
                                     tradeInfo=JSON.parseObject(tradeString,TradeInfo.class);
@@ -434,7 +476,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                   /**
                                    * 读取历史消息中的订单信息
                                    */
-//                                  msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_SEND));
+                                  msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_SEND));
                               }else if(result.get(i).getAttachStr().indexOf("10002")!=-1){
                                 MyOrderAttachment a= ( MyOrderAttachment)result.get(i).getAttachment();
                                 String tradeString=a.getContent();
@@ -640,9 +682,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             case R.id.chat_clock:
                 Intent intentClock=new Intent(ChatActivity.this, LocationClockActivity.class);
                 intentClock.putExtra("chatUser",chatUser);
-                startActivity(intentClock);
+                startActivityForResult(intentClock,0x11);
                 overridePendingTransition(0, 0);
-                finish();
                 break;
             default:
                 break;
@@ -846,6 +887,14 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             String picturePath = cursor.getString(columnIndex);
             Log.e("TAG", "onActivityResult: " + picturePath);
             SendPic(picturePath,data);
+        }
+        if(requestCode==0x11&&null!=data)
+        {
+            String a= data.getStringExtra("location");
+            if(a!=null&&"1".equals(a))
+            {
+                System.out.println("successlocation");
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
