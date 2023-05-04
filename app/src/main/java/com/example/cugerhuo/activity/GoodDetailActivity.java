@@ -1,7 +1,9 @@
 package com.example.cugerhuo.activity;
 
+import static android.content.ContentValues.TAG;
 import static com.example.cugerhuo.access.SetGlobalIDandUrl.getSandBoxPath;
 import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
+import static com.tencent.beacon.event.UserAction.mContext;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -22,6 +25,16 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.sdk.android.oss.ClientException;
+import com.alibaba.sdk.android.oss.OSSClient;
+import com.alibaba.sdk.android.oss.ServiceException;
+import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
+import com.alibaba.sdk.android.oss.common.OSSLog;
+import com.alibaba.sdk.android.oss.model.GetObjectRequest;
+import com.alibaba.sdk.android.oss.model.GetObjectResult;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Comment;
 import com.example.cugerhuo.access.Commodity;
@@ -35,12 +48,19 @@ import com.example.cugerhuo.activity.adapter.RecyclerViewCommentAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewGoodsDisplayAdapter;
 import com.example.cugerhuo.activity.imessage.ChatActivity;
 import com.example.cugerhuo.activity.post.PostSellActivity;
+import com.example.cugerhuo.oss.InitOS;
 import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.example.cugerhuo.views.InputTextMsgDialog;
 import com.example.cugerhuo.views.PopComments;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.Transformer;
+import com.youth.banner.listener.OnBannerListener;
+import com.youth.banner.loader.ImageLoader;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +72,7 @@ import io.lettuce.core.api.sync.RedisCommands;
  * @Author: 李柏睿
  * @Time: 2023/4/27 17:33
  */
-public class GoodDetailActivity extends AppCompatActivity implements View.OnClickListener{
+public class GoodDetailActivity extends AppCompatActivity implements View.OnClickListener, OnBannerListener {
     /**
      *当前商品
      */
@@ -131,6 +151,9 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
     private LinearLayout lookMoreComments;
     /**卖同款和我想要*/
     private LinearLayout sellSame,iWant;
+    /**轮播图*/
+    private Banner banner;
+    private ArrayList<String> list_path;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -201,6 +224,14 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
             goodDetail.setText(commodity.getDescription());
             goodCate.setText(commodity.getCategory());
             goodBrand.setText(commodity.getBrand());
+            /**设置轮播图*/
+            setBanner();
+            if(commentInfos==null){
+                commentNum.setText("0");
+            }else{
+                commentNum.setText(commentInfos.getKey().size());
+            }
+
         }
     }
     /**
@@ -285,6 +316,8 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
         sellSame.setOnClickListener(this);
         iWant = findViewById(R.id.want);
         iWant.setOnClickListener(this);
+        /**轮播图*/
+        banner = findViewById(R.id.banner);
     }
 
     /**
@@ -418,6 +451,151 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 default:
                     break;
             }
+        }
+    }
+
+    /**
+     * 设置轮播图
+     */
+    private void setBanner() {
+        //放图片地址的集合
+        list_path = new ArrayList<>();
+        String url1 = commodity.getUrl1();
+
+        if(url1!=null&&!"".equals(url1))
+        {
+            String []urls=url1.split(";");
+            if(urls.length>0){
+                url1=urls[0];}
+            int length=urls.length;
+            String result[]=new String[length];
+            result[length-1]=urls[length-1];
+            // 从后往前依次减去后面一个元素
+            if(length>1){
+                for (int i = length - 2; i >= 0; i--) {
+                    String current = urls[i];
+                    String next = result[i + 1];
+                    int index = current.lastIndexOf(next);
+                    if(index>0){
+                        result[i] = current.substring(0, index);}
+                    else
+                    {
+                        result[i]=current;
+
+                    }
+                }}
+        }
+
+        if (url1 != null && !"".equals(url1)) {
+            System.out.println("url11"+url1);
+            OSSClient oss = InitOS.getOssClient();
+
+            /**
+             * 获取本地保存路径
+             */
+            String newUrl1 = getSandBoxPath(getActivity()) + url1;
+            System.out.println("imager2"+url1);
+            File f = new File(newUrl1);
+            if (!f.exists()) {
+                /**
+                 * 构建oss请求
+                 */
+                GetObjectRequest get = new GetObjectRequest("cugerhuo", url1);
+                /**
+                 * 异步任务
+                 */
+                oss.asyncGetObject(get, new OSSCompletedCallback<GetObjectRequest, GetObjectResult>() {
+                    /**
+                     * 下载成功
+                     *
+                     * @param request
+                     * @param result
+                     */
+                    @Override
+                    public void onSuccess(GetObjectRequest request, GetObjectResult result) {
+                        // 开始读取数据。
+                        long length = result.getContentLength();
+                        if (length > 0) {
+                            byte[] buffer = new byte[(int) length];
+                            int readCount = 0;
+                            while (readCount < length) {
+                                try {
+                                    readCount += result.getObjectContent().read(buffer, readCount, (int) length - readCount);
+                                } catch (Exception e) {
+                                    OSSLog.logInfo(e.toString());
+                                }
+                            }
+                            // 将下载后的文件存放在指定的本地路径，例如D:\\localpath\\exampleobject.jpg。
+                            try {
+                                FileOutputStream fout = new FileOutputStream(newUrl1);
+                                fout.write(buffer);
+                                fout.close();
+                                /**
+                                 * 下载完成，填写更新逻辑
+                                 */
+                                /**
+                                 * 设置商品图片圆角30度
+                                 */
+                                System.out.println("image1"+newUrl1);
+                                RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(30));
+                               list_path.add(Uri.fromFile(new File(newUrl1)).toString());
+
+                            } catch (Exception e) {
+                                OSSLog.logInfo(e.toString());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(GetObjectRequest request, ClientException clientException,
+                                          ServiceException serviceException) {
+                        System.out.println("image3"+newUrl1);
+                        Log.e(TAG, "oss下载文件失败");
+                    }
+                });
+            } else {
+                System.out.println("image2"+newUrl1);
+                /**
+                 * 设置商品图片圆角30度
+                 */
+                RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(30));
+                list_path.add(Uri.fromFile(new File(newUrl1)).toString());
+            }
+        }
+        //设置内置样式，共有六种可以点入方法内逐一体验使用。
+        banner.setBannerStyle(BannerConfig.NUM_INDICATOR);
+        //设置图片加载器，图片加载器在下方
+        banner.setImageLoader(new ImgLoader());
+        //设置图片网址或地址的集合
+        banner.setImages(list_path);
+        //设置轮播的动画效果，内含多种特效，可点入方法内查找后内逐一体验
+        banner.setBannerAnimation(Transformer.Default);
+        //设置轮播间隔时间
+        banner.setDelayTime(3000);
+        //设置是否为自动轮播，默认是“是”
+        banner.isAutoPlay(true);
+        //设置指示器的位置，小点点，左中右。
+        banner.setIndicatorGravity(BannerConfig.CENTER)
+                //以上内容都可写成链式布局，这是轮播图的监听。比较重要。方法在下面。
+                .setOnBannerListener(this)
+                //必须最后调用的方法，启动轮播图。
+                .start();
+    }
+
+    //轮播图的监听方法
+    @Override
+    public void OnBannerClick(int position) {
+        Intent intent = new Intent(this, BigImgActivity.class);
+        intent.putStringArrayListExtra("imgData", list_path);
+        intent.putExtra("clickPosition", position);
+        startActivity(intent);
+    }
+
+    //自定义的图片加载器
+    private class ImgLoader extends ImageLoader {
+        @Override
+        public void displayImage(Context context, Object path, ImageView imageView) {
+            Glide.with(context).load((String) path).into(imageView);
         }
     }
 }

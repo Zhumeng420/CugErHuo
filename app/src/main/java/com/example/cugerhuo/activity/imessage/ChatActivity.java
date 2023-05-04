@@ -37,8 +37,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alibaba.fastjson.JSON;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
+import com.example.cugerhuo.access.commerce.Commerce;
+import com.example.cugerhuo.access.commerce.CommerceOperate;
 import com.example.cugerhuo.access.user.Msg;
 import com.example.cugerhuo.access.user.PartUserInfo;
+import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.activity.CreatTradeActivity;
 import com.example.cugerhuo.activity.LocationClockActivity;
 import com.example.cugerhuo.activity.LocationDetailActivity;
@@ -72,6 +75,7 @@ import com.netease.nimlib.sdk.util.NIMUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -87,6 +91,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private EditText inputText;
     private Button send;
     private LinearLayoutManager layoutManager;
+    private Commerce commerce;
     private MsgAdapter adapter;
     private ImageView returnImg;
     private ImageView speakImg;
@@ -270,6 +275,15 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
             charCommodity= (Commodity) intent.getSerializableExtra("chatCommodity");
             if(charCommodity!=null){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                       commerce= CommerceOperate.getCommerce(charCommodity.getId(),charCommodity.getUserId(), UserInfo.getid(),ChatActivity.this);
+                        Message msg = Message.obtain();
+                        msg.arg1 = 2;
+                        MyHandler.sendMessage(msg);
+                    }
+                }).start();
             tradePrice.setText(charCommodity.getPrice().toString());
             if(!"".equals(charCommodity.getUrl1()))
             {String url1=charCommodity.getUrl1();
@@ -303,7 +317,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 }
             }
         }}
-        chatUser= (PartUserInfo) intent.getSerializableExtra("chatUser");
+
         if(intent.getSerializableExtra("iWant")!=null){
             iWant = (int)intent.getSerializableExtra("iWant");
 
@@ -525,6 +539,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                   msgList.add(new Msg(tradeString,Msg.TYPE_CONFIRM_CARD));
                               }
                               else if(result.get(i).getAttachStr().indexOf("10002")!=-1){
+//                                  ToBeConfirmedAttachment attachment1= (ToBeConfirmedAttachment)result.get(i).getAttachment();
+
                                   MyOrderAttachment attachment1= (MyOrderAttachment)result.get(i).getAttachment();
                                   String tradeString=attachment1.getContent();
                                   System.out.println("tradeinfo"+tradeString);
@@ -846,7 +862,16 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                             finish();
                         }
                     });
-
+                    break;
+                case 2:
+                    Date a=commerce.getTime();
+                    Date now = new Date();
+                    Date otherTime = new Date(now.getTime() - 10 * 60 * 1000); // 早10分钟的时间
+                     Date otherTime1 = new Date(now.getTime() + 10 * 60 * 1000); // 晚10分钟的时间
+                    // 比较时间
+                    if (a.before(otherTime1)&&a.after(otherTime)) {
+                        System.out.println("can da ka");
+                    }
                     break;
                 default:
                     break;
@@ -894,6 +919,20 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             if(a!=null&&"1".equals(a))
             {
                 System.out.println("successlocation");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int result=CommerceOperate.setState(commerce.getCommerceid(),1,ChatActivity.this);
+                        if(result==3)
+                        {
+                            MyToast.toast(ChatActivity.this,"交易已完成",3);
+                        }
+                        if(result==2)
+                        {
+                            MyToast.toast(ChatActivity.this,"等待对方确认交易",2);
+                        }
+                    }
+                }).start();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

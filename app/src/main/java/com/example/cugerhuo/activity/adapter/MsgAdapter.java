@@ -257,6 +257,17 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.rightAudio.setVisibility(View.GONE);
                 holder.leftLocation.setVisibility(View.GONE);
                 holder.rightLocation.setVisibility(View.GONE);
+                TextView priceView1=holder.rightCard.findViewById(R.id.pushPrice);
+                TextView dateView1=holder.rightCard.findViewById(R.id.pushDate);
+                TextView placeView1=holder.rightCard.findViewById(R.id.pushPlace);
+
+                String tradeString=list.get(position).getContent();
+                TradeInfo tradeInfo= JSON.parseObject(tradeString, TradeInfo.class);
+                if(tradeInfo!=null){
+                    priceView1.setText(String.valueOf(tradeInfo.getPrice()));
+                    dateView1.setText(tradeInfo.getTradeTime());
+                    placeView1.setText(tradeInfo.getTradePlace());
+                }
                 if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
                 {
                     holder.incomingAvatarCard.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
@@ -288,12 +299,13 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 TextView dateView=holder.rightCard.findViewById(R.id.pushDate);
                 TextView placeView=holder.rightCard.findViewById(R.id.pushPlace);
 
-                String tradeString=list.get(position).getContent();
-                TradeInfo tradeInfo= JSON.parseObject(tradeString, TradeInfo.class);
-                if(tradeInfo!=null){
-                    priceView.setText(String.valueOf(tradeInfo.getPrice()));
-                    dateView.setText(tradeInfo.getTradeTime());
-                    placeView.setText(tradeInfo.getTradePlace());}
+                String tradeString1=list.get(position).getContent();
+                TradeInfo tradeInfo1= JSON.parseObject(tradeString1, TradeInfo.class);
+                if(tradeInfo1!=null){
+                    priceView.setText(String.valueOf(tradeInfo1.getPrice()));
+                    dateView.setText(tradeInfo1.getTradeTime());
+                    placeView.setText(tradeInfo1.getTradePlace());
+                }
 
                 if (!"".equals(UserInfo.getUrl())&&UserInfo.getUrl()!=null)
                 {
