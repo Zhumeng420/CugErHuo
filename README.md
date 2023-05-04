@@ -3,6 +3,7 @@
 ## 一、项目描述：
 
 ​	这是一个校园二手交易平台的项目，具备和“咸鱼”类似的功能。它以以DevOps+持续交付+微服务+容器的云原生思想为核心，利用Jenkins+Docker持续集成，具备推荐系统（Spark+Redis+Kafka+MongoDB+Neo4j)，链路追踪系统（阿里巴巴TracingAnalysis），监控系统（百度移动统计），搜索引擎（Elasticsearch集群），后台管理系统（vue+springboot+mybatis+nginx)、图像检索（百度图像检索）等核心功能。集成了手机号码一键登录、商品品牌预测、商品类目识别、文本审核、手机短信等第三方服务。
+
 <img width="416" alt="image" src="https://user-images.githubusercontent.com/76473360/235689799-009b5a4a-400d-4227-84de-ff0049064f2e.png">
 
 ## 二、用户故事：
@@ -163,11 +164,18 @@
 
 ## 六、项目地址：
 
+客户端：https://github.com/Zhumeng420/CugErHuo 
+
 推荐系统：https://github.com/cugzjr/recommend
+
+推荐系统数据访问层：
 
 服务端：https://github.com/slhcodes/EHMall
 
-后台管理系统：
+后台管理系统前端：https://github.com/cugzjr/FrontErhuo
+
+后台管理系统后端：https://github.com/cugzjr/BackSystem
+
 
 ## 七、第三方服务：
 
@@ -177,7 +185,39 @@
 
 ## 八、开源组件
 
+Okhttp：网络请求框架，用于发起对外部接口的请求。
 
+RxGalleryFinal：图片选择库，用于图片或视频的拍照、裁剪和压缩等。
+
+Spark：分布式计算框架，用于推荐系统中数据的实时处理与计算。
+
+Kafka：分布式消息队列，用于推荐系统中实时计算流量削峰。 
+
+MongoDB：文档型数据库，用于存储实时和离线的推荐结果。
+
+ElasticSearch：分布式搜索引擎，用于用户和商品信息的模糊检索。
+
+Docker：应用容器引擎，用于持续集成中软件环境的快速部署与发布。
+
+Jenkins：持续集成工具，用于持续集成中项目编译打包并推送到部署环境。
+
+Neo4j: 高性能的 NoSQL 图数据库，用于存储用户-商品关系等复杂数据。
+
+Log4j：日志记录库，用于记录用户在使用过程中的评分数据。
+
+MySQL：关系型数据库，用于存储用户、商品、交易等信息。
+
+Redis: 基于内存的键值对存储数据库，用于缓存用户头像、商品图片等信息。
+
+Minio：分布式的对象存储系统，用于存储系统中的图片资源。
+
+Nginx：高性能代理服务器，用于反向代理部署后台管理系统和用作虚拟子网网关。
+
+SpringBoot: Spring应用开发的框架，用于搭建后台管理系统的后端。
+
+Vue: 渐进式的 JavaScript 框架，用于搭建后台管理系统的前端。
+
+Canal：数据同步组件，用户Mysql数据库直接的主从同步。
 
 
 ## 九、开发团队：
