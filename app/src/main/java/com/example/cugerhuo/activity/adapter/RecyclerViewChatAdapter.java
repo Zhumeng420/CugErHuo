@@ -95,101 +95,103 @@ public class RecyclerViewChatAdapter extends RecyclerView.Adapter<RecyclerViewCh
      */
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewChatAdapter.ViewHolder holder, int position) {
+       if(partUserInfos.get(position)!=null){
+           holder.userChat.setOnClickListener(new View.OnClickListener() {
+               /**
+                * 点击每个RecyclerView子组件进行相应的响应事件,点击跳转至编辑界面@Author: 李柏睿
+                * @Time: 2023/4/26
+                */
+               @Override
+               public void onClick(View v) {
+                   mClickListener.onItemClick(v,position);
+               }
+           });
+           /**
+            * 设置聊天对应的用户名
+            * @author 唐小莉
+            * @time 2023/4/30
+            */
 
-        holder.userChat.setOnClickListener(new View.OnClickListener() {
-            /**
-             * 点击每个RecyclerView子组件进行相应的响应事件,点击跳转至编辑界面@Author: 李柏睿
-             * @Time: 2023/4/26
-             */
-            @Override
-            public void onClick(View v) {
-                mClickListener.onItemClick(v,position);
-            }
-        });
-        /**
-         * 设置聊天对应的用户名
-         * @author 唐小莉
-         * @time 2023/4/30
-         */
-        holder.userChatName.setText(partUserInfos.get(position).getUserName());
-        /**
-         * 获取oss路径
-         */
-        String url = partUserInfos.get(position).getImageUrl();
-        /**
-         *  判断头像是否为空，如果为空则使用默认的头像进行显示
-         */
-        if(url!=null&&!"".equals(url))
-        { /**@time 2023/4/30
-         * @author 唐小莉
-         * 异步更新头像,并实时更新
-         */
-            OSSClient oss = InitOS.getOssClient();
+           holder.userChatName.setText(partUserInfos.get(position).getUserName());
+           /**
+            * 获取oss路径
+            */
+           String url = partUserInfos.get(position).getImageUrl();
+           /**
+            *  判断头像是否为空，如果为空则使用默认的头像进行显示
+            */
+           if(url!=null&&!"".equals(url))
+           { /**@time 2023/4/30
+            * @author 唐小莉
+            * 异步更新头像,并实时更新
+            */
+               OSSClient oss = InitOS.getOssClient();
 
-            /**
-             * 获取本地保存路径
-             */
-            String newUrl= getSandBoxPath(context) + url;
-            partUserInfos.get(position).setImageUrl(newUrl);
-            File f = new File(newUrl);
-            if (!f.exists()) {
-                /**
-                 * 构建oss请求
-                 */
-                GetObjectRequest get = new GetObjectRequest("cugerhuo", url);
-                /**
-                 * 异步任务
-                 */
-                oss.asyncGetObject(get, new OSSCompletedCallback<GetObjectRequest, GetObjectResult>() {
-                    /**
-                     * 下载成功
-                     * @param request
-                     * @param result
-                     */
-                    @Override
-                    public void onSuccess(GetObjectRequest request, GetObjectResult result) {
-                        // 开始读取数据。
-                        long length = result.getContentLength();
-                        if (length > 0) {
-                            byte[] buffer = new byte[(int) length];
-                            int readCount = 0;
-                            while (readCount < length) {
-                                try {
-                                    readCount += result.getObjectContent().read(buffer, readCount, (int) length - readCount);
-                                } catch (Exception e) {
-                                    OSSLog.logInfo(e.toString());
-                                }
-                            }
-                            // 将下载后的文件存放在指定的本地路径，例如D:\\localpath\\exampleobject.jpg。
-                            try {
-                                FileOutputStream fout = new FileOutputStream(newUrl);
-                                fout.write(buffer);
-                                fout.close();
-                                /**
-                                 * 下载完成，填写更新逻辑
-                                 */
-                                holder.userChatImg.setImageURI(Uri.fromFile(new File(newUrl)));
-                            } catch (Exception e) {
-                                OSSLog.logInfo(e.toString());
-                            }
-                        }
-                    }
-                    @Override
-                    public void onFailure(GetObjectRequest request, ClientException clientException,
-                                          ServiceException serviceException) {
-                        Log.e(TAG, "oss下载文件失败");
-                    }
-                });
-            } else {
-                holder.userChatImg.setImageURI(Uri.fromFile(new File(newUrl)));}}
+               /**
+                * 获取本地保存路径
+                */
+               String newUrl= getSandBoxPath(context) + url;
+               partUserInfos.get(position).setImageUrl(newUrl);
+               File f = new File(newUrl);
+               if (!f.exists()) {
+                   /**
+                    * 构建oss请求
+                    */
+                   GetObjectRequest get = new GetObjectRequest("cugerhuo", url);
+                   /**
+                    * 异步任务
+                    */
+                   oss.asyncGetObject(get, new OSSCompletedCallback<GetObjectRequest, GetObjectResult>() {
+                       /**
+                        * 下载成功
+                        * @param request
+                        * @param result
+                        */
+                       @Override
+                       public void onSuccess(GetObjectRequest request, GetObjectResult result) {
+                           // 开始读取数据。
+                           long length = result.getContentLength();
+                           if (length > 0) {
+                               byte[] buffer = new byte[(int) length];
+                               int readCount = 0;
+                               while (readCount < length) {
+                                   try {
+                                       readCount += result.getObjectContent().read(buffer, readCount, (int) length - readCount);
+                                   } catch (Exception e) {
+                                       OSSLog.logInfo(e.toString());
+                                   }
+                               }
+                               // 将下载后的文件存放在指定的本地路径，例如D:\\localpath\\exampleobject.jpg。
+                               try {
+                                   FileOutputStream fout = new FileOutputStream(newUrl);
+                                   fout.write(buffer);
+                                   fout.close();
+                                   /**
+                                    * 下载完成，填写更新逻辑
+                                    */
+                                   holder.userChatImg.setImageURI(Uri.fromFile(new File(newUrl)));
+                               } catch (Exception e) {
+                                   OSSLog.logInfo(e.toString());
+                               }
+                           }
+                       }
+                       @Override
+                       public void onFailure(GetObjectRequest request, ClientException clientException,
+                                             ServiceException serviceException) {
+                           Log.e(TAG, "oss下载文件失败");
+                       }
+                   });
+               } else {
+                   holder.userChatImg.setImageURI(Uri.fromFile(new File(newUrl)));}}
 
-        Timestamp timestamp=new Timestamp(messageInfos.get(position).getChatTime());
-        /**
-         * 将时间毫秒数与标准日期时间的相互转换
-         */
-        String time=timestamp.toString().split("\\.")[0];
-        holder.userChatTime.setText(time);
-        holder.userChatInfo.setText(messageInfos.get(position).getContent());
+           Timestamp timestamp=new Timestamp(messageInfos.get(position).getChatTime());
+           /**
+            * 将时间毫秒数与标准日期时间的相互转换
+            */
+           String time=timestamp.toString().split("\\.")[0];
+           holder.userChatTime.setText(time);
+           holder.userChatInfo.setText(messageInfos.get(position).getContent());
+       }
     }
 
 

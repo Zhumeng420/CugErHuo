@@ -81,4 +81,8 @@
     <string name="InsertCommodityTu">sell/sellproduuct</string>
     <string name="Token">token</string>
     <string name="PublicKey">publicKey</string>
+    <string name="searchCommodity">search/commodity</string>
+    <string name="commodity">commodity</string>
+    <string name="searchUser">search/user</string>
+
 </resources>

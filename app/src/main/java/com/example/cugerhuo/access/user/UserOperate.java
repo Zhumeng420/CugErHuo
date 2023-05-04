@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.alibaba.fastjson.JSONArray;
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.access.Commodity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -754,4 +755,45 @@ public class UserOperate {
         }
         return isFocus;
     }
+
+    /**
+     * 用户模糊搜索
+     * @param userName 搜索用户名
+     * @param context 获取映射文件
+     * @return 返回用户列表
+     * @author 唐小莉
+     * @time 2023/5/4
+     */
+    public static List<PartUserInfo> getSearchUser(String userName,Context context){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        List<PartUserInfo> partUserInfos=new ArrayList<>();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.ip);
+        String router=context.getString(R.string.searchUser);
+        String username=context.getString(R.string.Username);
+        /**
+         * 发送请求
+         */
+        String url="http://"+ip+"/"+router;
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add(username, String.valueOf(userName));
+        /**
+         * 循环form表单，将表单内容添加到form builder中
+         * 构建formBody，将其传入Request请求中
+         */
+
+        FormBody body = builder.build();
+        Request request = new Request.Builder().url(url).post(body).build();
+        Response response = null;
+        try {
+            response = okHttpClient.newCall(request).execute();
+            partUserInfos=JSONArray.parseArray(response.body().string(),PartUserInfo.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return partUserInfos;
+    }
+
 }

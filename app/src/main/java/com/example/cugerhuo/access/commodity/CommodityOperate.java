@@ -28,6 +28,7 @@ import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.util.GlobalTracer;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -244,8 +245,52 @@ public class CommodityOperate {
             e.printStackTrace();
         }return result==200;
     }
+
+    /**
+     * 模糊搜索商品接口
+     * @param search 搜索的内容
+     * @param context 获取映射文件
+     * @return 返回商品实体类
+     * @author 唐小莉
+     * @time 2023/5/4
+     */
+    public static List<Commodity> getSearchCommodity(String search,Context context){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        List<Commodity> commodities=new ArrayList<>();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.ip);
+        String router=context.getString(R.string.searchCommodity);
+        String cCommodity=context.getString(R.string.commodity);
+        /**
+         * 发送请求
+         */
+       // String url="http://"+ip+"/"+router+"?"+cCommodity+"="+search;
+        String url="http://"+ip+"/"+router;
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add(cCommodity, String.valueOf(search));
+        /**
+         * 循环form表单，将表单内容添加到form builder中
+         * 构建formBody，将其传入Request请求中
+         */
+
+        FormBody body = builder.build();
+        Request request = new Request.Builder().url(url).post(body).build();
+        Response response = null;
+        try {
+            response = okHttpClient.newCall(request).execute();
+            commodities=JSONArray.parseArray(response.body().string(),Commodity.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return commodities;
+    }
+
+
     public static void remove(RedisCommands<String, String> connection, int id, Context context)
     {
         connection.hdel("Commodity",String.valueOf(id));
     }
+
 }

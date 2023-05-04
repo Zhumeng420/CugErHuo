@@ -160,7 +160,6 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         llTabFive.setOnClickListener(this);
         ivTabThree = (ImageView) findViewById(R.id.iv_tab_three);
         ivTabThree.setOnClickListener(this);
-
         chatRecyclerView=findViewById(R.id.re_chat);
     }
     /**
