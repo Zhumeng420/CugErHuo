@@ -168,7 +168,7 @@
 
 推荐系统：https://github.com/cugzjr/recommend
 
-推荐系统数据访问层：
+推荐系统数据访问层：https://github.com/cugzjr/myrecommend
 
 服务端：https://github.com/slhcodes/EHMall
 
