@@ -10,131 +10,141 @@
     android:clipChildren="false"
     android:orientation="vertical"
     tools:context=".activity.SearchResultActivity">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal">
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_weight="1"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="8"
-            android:orientation="horizontal"
-            android:background="@drawable/btn_radius_white_orange_decoration"
-            android:id="@+id/linear_search_item">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="22dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/icon_search_black" />
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/icon_part"
-                android:layout_gravity="center"/>
-
-            <EditText
-                android:id="@+id/result_search_text"
-                android:layout_width="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:hint="输入关键字搜索"
-                android:gravity="center_vertical"
-                android:background="@null"
-                android:textSize="16sp"
-                android:singleLine="true"
-                android:imeOptions="actionSearch"
-                />
-            <Button
-                android:id="@+id/result_btn_search"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:orientation="horizontal"
                 android:layout_weight="1"
-                android:text="搜索"
-                android:textSize="16sp"
-                android:background="@drawable/btn_radius_orange_decoration"/>
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="8"
+                    android:orientation="horizontal"
+                    android:background="@drawable/btn_radius_white_orange_decoration"
+                    android:id="@+id/linear_search_item">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/icon_search_black" />
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/icon_part"
+                        android:layout_gravity="center"/>
+
+                    <EditText
+                        android:id="@+id/result_search_text"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:hint="输入关键字搜索"
+                        android:gravity="center_vertical"
+                        android:background="@null"
+                        android:textSize="16sp"
+                        android:singleLine="true"
+                        android:imeOptions="actionSearch"
+                        />
+                    <Button
+                        android:id="@+id/result_btn_search"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="搜索"
+                        android:textSize="16sp"
+                        android:background="@drawable/btn_radius_orange_decoration"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="相关用户"/>
+                <TextView
+                    android:id="@+id/no_search_user"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="未搜索到相关用户"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/search_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="相关商品"/>
+                <TextView
+                    android:id="@+id/no_search_goods"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="未搜索到相关商品"
+                    android:visibility="gone"
+                    android:gravity="center"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/search_goods"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    />
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
-    </LinearLayout>
-
-
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="vertical">
-       <LinearLayout
-           android:layout_marginTop="50dp"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:padding="10dp"
-           android:orientation="vertical">
-
-           <TextView
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_marginBottom="5dp"
-               android:layout_marginLeft="5dp"
-               android:text="相关用户"/>
-           <TextView
-               android:id="@+id/no_search_user"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:text="未搜索到相关用户"
-               android:layout_marginLeft="5dp"
-               android:gravity="center"
-               android:visibility="gone"
-               />
-           <androidx.recyclerview.widget.RecyclerView
-               android:id="@+id/search_user"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:padding="5dp"
-               android:gravity="center"/>
-
-       </LinearLayout>
-
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:orientation="vertical"
-           android:padding="5dp">
-           <TextView
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_marginLeft="10dp"
-               android:layout_marginBottom="5dp"
-               android:text="相关商品"/>
-           <TextView
-               android:id="@+id/no_search_goods"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_marginLeft="10dp"
-               android:layout_marginBottom="5dp"
-               android:text="未搜索到相关商品"
-               android:visibility="gone"
-               android:gravity="center"
-               />
-
-           <androidx.recyclerview.widget.RecyclerView
-               android:id="@+id/search_goods"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:padding="5dp"
-               />
-       </LinearLayout>
-
-   </LinearLayout>
+</ScrollView>
 
 
 </RelativeLayout>
