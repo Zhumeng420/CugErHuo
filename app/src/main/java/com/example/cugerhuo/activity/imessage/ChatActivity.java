@@ -303,7 +303,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 }
             }
         }}
-        chatUser= (PartUserInfo) intent.getSerializableExtra("chatUser");
+
         if(intent.getSerializableExtra("iWant")!=null){
             iWant = (int)intent.getSerializableExtra("iWant");
 
@@ -525,6 +525,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                   msgList.add(new Msg(tradeString,Msg.TYPE_CONFIRM_CARD));
                               }
                               else if(result.get(i).getAttachStr().indexOf("10002")!=-1){
+//                                  ToBeConfirmedAttachment attachment1= (ToBeConfirmedAttachment)result.get(i).getAttachment();
+
                                   MyOrderAttachment attachment1= (MyOrderAttachment)result.get(i).getAttachment();
                                   String tradeString=attachment1.getContent();
                                   System.out.println("tradeinfo"+tradeString);

@@ -235,7 +235,7 @@ public void initData()
                     int tradeId = 1;
                     intent.putExtra("tradeId",tradeId);
                     TradeInfo a=new TradeInfo();
-                    a.setTradePlace(tradeDetailPrice.getText().toString().replace("¥",""));
+                    a.setPrice(Double.parseDouble(tradeDetailPrice.getText().toString().replace("¥","")));
                     a.setTradePlace(tradeDetailPosition.getText().toString());
                     a.setTradeTime(tradeDetailTime.getText().toString());
                     intent.putExtra("tradeInfo",a);
