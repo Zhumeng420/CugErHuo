@@ -40,6 +40,7 @@ import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.user.Msg;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.activity.CreatTradeActivity;
+import com.example.cugerhuo.activity.LocationClockActivity;
 import com.example.cugerhuo.activity.LocationDetailActivity;
 import com.example.cugerhuo.activity.TradeDetailActivity;
 import com.example.cugerhuo.activity.adapter.MsgAdapter;
@@ -137,6 +138,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     private LinearLayout editLayout;
     /**是否发送地理位置*/
     private int isSendLocation;
+    /**打卡*/
+    private LinearLayout clockLocation;
 
 
 
@@ -201,6 +204,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         editLayout = findViewById(R.id.edit_msg);
         selectPosition = findViewById(R.id.chat_send_position);
         selectPosition.setOnClickListener(this);
+        clockLocation = findViewById(R.id.chat_clock);
+        clockLocation.setOnClickListener(this);
         ((RecordButton) recordButton).setOnFinishedRecordListener(new RecordButton.OnFinishedRecordListener() {
             @Override
             public void onFinishedRecord(String audioPath, int time) {
@@ -619,6 +624,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 intentPosition.putExtra("chatUser",chatUser);
                 startActivity(intentPosition);
                 overridePendingTransition(0, 0);
+                finish();
                 break;
             case R.id.speak:
                 if(editLayout.getVisibility()!=View.GONE){
@@ -630,6 +636,13 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                     recordButton.setVisibility(View.GONE);
                     editLayout.setVisibility(View.VISIBLE);
                 }
+                break;
+            case R.id.chat_clock:
+                Intent intentClock=new Intent(ChatActivity.this, LocationClockActivity.class);
+                intentClock.putExtra("chatUser",chatUser);
+                startActivity(intentClock);
+                overridePendingTransition(0, 0);
+                finish();
                 break;
             default:
                 break;
