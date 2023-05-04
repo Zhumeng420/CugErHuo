@@ -5,9 +5,11 @@ import static com.example.cugerhuo.access.SetGlobalIDandUrl.getSandBoxPath;
 import static com.hanks.htextview.base.DisplayUtils.getScreenWidth;
 import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 import static com.netease.nim.highavailable.HighAvailableObject.getContext;
+import static com.tencent.beacon.event.UserAction.mContext;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
@@ -43,6 +45,10 @@ import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.user.Msg;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfo;
+import com.example.cugerhuo.activity.CreatTradeActivity;
+import com.example.cugerhuo.activity.LocationDetailActivity;
+import com.example.cugerhuo.activity.LocationViewActivity;
+import com.example.cugerhuo.activity.imessage.ChatActivity;
 import com.example.cugerhuo.oss.InitOS;
 import com.example.cugerhuo.tools.entity.TradeInfo;
 import com.luck.picture.lib.interfaces.OnItemClickListener;
@@ -278,9 +284,9 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.rightAudio.setVisibility(View.GONE);
                 holder.leftLocation.setVisibility(View.GONE);
                 holder.rightLocation.setVisibility(View.GONE);
-                TextView priceView=                holder.rightCard.findViewById(R.id.pushPrice);
-                TextView dateView=                holder.rightCard.findViewById(R.id.pushDate);
-                TextView placeView=                holder.rightCard.findViewById(R.id.pushPlace);
+                TextView priceView=holder.rightCard.findViewById(R.id.pushPrice);
+                TextView dateView=holder.rightCard.findViewById(R.id.pushDate);
+                TextView placeView=holder.rightCard.findViewById(R.id.pushPlace);
 
                 String tradeString=list.get(position).getContent();
                 TradeInfo tradeInfo= JSON.parseObject(tradeString, TradeInfo.class);
@@ -476,6 +482,15 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 {
                     holder.outcomingAvatarLocation.setImageURI(Uri.fromFile(new File(UserInfo.getUrl())));
                 }
+                holder.rightClickLocation.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(getActivity(), LocationViewActivity.class);
+                        intent.putExtra("latlng",locationSend[0]);
+                        intent.putExtra("poi",locationSend[1]);
+                        getActivity().startActivity(intent);
+                    }
+                });
                 break;
             case Msg.TYPE_RECEIVED_LOCATION:
                 holder.leftLocation.setVisibility(View.VISIBLE);
@@ -502,6 +517,15 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 {
                     holder.incomingAvatarLocation.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
                 }
+                holder.leftClickLocation.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(getActivity(), LocationViewActivity.class);
+                        intent.putExtra("latlng",locationReceive[0]);
+                        intent.putExtra("poi",locationReceive[1]);
+                        getActivity().startActivity(intent);
+                    }
+                });
                 break;
             default:
                 break;
