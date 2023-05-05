@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
+import com.example.cugerhuo.access.ConcernCommodity;
 import com.example.cugerhuo.access.GetFocusRequest;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfoOperate;
@@ -313,6 +314,44 @@ public class CommodityOperate {
         FormBody body = builder.build();
         Request request = new Request.Builder().url(url).post(body).build();
         Response response = null;
+        try {
+            response = okHttpClient.newCall(request).execute();
+            commodities=JSONArray.parseArray(response.body().string(),Commodity.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return commodities;
+    }
+
+    /**
+     * 获取关注的人发布的商品
+     * @param concernCommodity 关注的人列表
+     * @param context 获取映射文件
+     * @return 返回商品列表
+     * @author 唐小莉
+     * @time 2023/5/5
+     */
+    public static List<Commodity> getConcernCommodity(ConcernCommodity concernCommodity,Context context){
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        List<Commodity> commodities=new ArrayList<>();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.ip);
+        String router=context.getString(R.string.commodityByConcern);
+        String getFocusRequest=context.getString(R.string.getFocusRequest);
+        /**
+         * 发送请求
+         */
+        // String url="http://"+ip+"/"+router+"?"+cCommodity+"="+search;
+        String url="http://"+ip+"/"+router;
+        RequestBody body = RequestBody.create(
+                JSONObject.toJSONString(concernCommodity), MediaType.parse("application/json")
+        );
+        Request request = new Request.Builder().url(url).post(body).build();
+        Response response = null;
+
         try {
             response = okHttpClient.newCall(request).execute();
             commodities=JSONArray.parseArray(response.body().string(),Commodity.class);

@@ -87,5 +87,7 @@
     <string name="searchCommodity">search/commodity</string>
     <string name="commodity">commodity</string>
     <string name="searchUser">search/user</string>
+    <string name="commodityByConcern">commodity/getfocus</string>
+    <string name="getFocusRequest">getFocusRequest</string>
 
 </resources>

@@ -234,6 +234,36 @@ public class SearchResultActivity extends AppCompatActivity {
                     adapterGoods=new RecyclerViewGoodsDisplayAdapter(SearchResultActivity.this,commodityList,commodityUser);
                     searchRecyclerView.setAdapter(adapterUser);
                     searchGoodsRecyclerView.setAdapter(adapterGoods);
+                    /**
+                     * 点击用户列表进行跳转
+                     * @author 唐小莉
+                     * @time 2023/5/4
+                     */
+                    adapterUser.setOnItemUserClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            Intent intent=new Intent(getActivity(), OtherPeopleActivity.class);
+                            intent.putExtra("concernUser",partUserInfos.get(position));
+                            intent.putExtra("focusNum",focusNum);
+                            //startActivity(intent);
+                            startActivityForResult(intent,3);
+                        }
+                    });
+
+                    /**
+                     * 点击item进行跳转并传值过去
+                     */
+                    adapterGoods.setOnItemClickListener(new RecyclerViewGoodsDisplayAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            int flag = 1;
+                            Intent intent=new Intent(getActivity(), GoodDetailActivity.class);
+                            intent.putExtra("commodity",commodityList.get(position));
+                            intent.putExtra("user",commodityUser.get(position));
+                            //startActivity(intent);
+                            startActivityForResult(intent,1);
+                        }
+                    });
                     break;
                 default:
                     break;
