@@ -165,6 +165,7 @@ dependencies {
 
 
     // 权限请求框架：https://github.com/getActivity/XXPermissions
+
     implementation 'com.github.getActivity:XXPermissions:16.8' // 权限请求框架：https://github.com/getActivity/XXPermissions
 
     //阿里云链路追踪

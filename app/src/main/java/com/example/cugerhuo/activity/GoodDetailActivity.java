@@ -3,7 +3,6 @@ package com.example.cugerhuo.activity;
 import static android.content.ContentValues.TAG;
 import static com.example.cugerhuo.access.SetGlobalIDandUrl.getSandBoxPath;
 import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
-import static com.tencent.beacon.event.UserAction.mContext;
 
 import android.content.Context;
 import android.content.Intent;
@@ -231,7 +230,6 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
             }else{
                 commentNum.setText(commentInfos.getKey().size());
             }
-
         }
     }
     /**
@@ -398,6 +396,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 int iWant = 1;
                 Intent intent=new Intent(GoodDetailActivity.this, ChatActivity.class);
                 intent.putExtra("iWant",iWant);
+                userInfo.setImageUrl(getSandBoxPath(GoodDetailActivity.this)+userInfo.getImageUrl());
                 intent.putExtra("chatUser",userInfo);
                 intent.putExtra("chatCommodity", commodity);
                 startActivity(intent);

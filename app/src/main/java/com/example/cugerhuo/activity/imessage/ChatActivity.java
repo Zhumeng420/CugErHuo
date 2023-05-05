@@ -437,7 +437,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                     msgList.add(new Msg(tradeString,Msg.TYPE_RECEIVED_CARD));
                                 }
                             }
-
                         }else{
                             // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
                             msgList.add(new Msg(messages.get(0).getContent(),Msg.TYPE_RECEIVED));
@@ -490,7 +489,9 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                                   /**
                                    * 读取历史消息中的订单信息
                                    */
-                                  msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_SEND));
+//                                  msgList.add(new Msg(result.get(i).getAttachStr(),Msg.TYPE_SEND));
+                                 ToBeConfirmedAttachment a= (ToBeConfirmedAttachment) result.get(i).getAttachment();
+                                  msgList.add(new Msg(a.content,Msg.TYPE_SEND_CARD));
                               }else if(result.get(i).getAttachStr().indexOf("10002")!=-1){
                                 MyOrderAttachment a= ( MyOrderAttachment)result.get(i).getAttachment();
                                 String tradeString=a.getContent();

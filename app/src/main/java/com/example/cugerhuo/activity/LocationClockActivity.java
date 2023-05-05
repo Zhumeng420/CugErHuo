@@ -72,7 +72,6 @@ public class LocationClockActivity extends AppCompatActivity implements Location
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_clock);
-
         mapView = findViewById(R.id.map);
         btn_check_in = findViewById(R.id.btn_check_in);
         // 启动新的线程
@@ -100,7 +99,6 @@ public class LocationClockActivity extends AppCompatActivity implements Location
                     }
                 } else {
                     MyToast.toast(LocationClockActivity.this,"位置初始化异常，打卡失败",1);
-
                 }
             }
         });
