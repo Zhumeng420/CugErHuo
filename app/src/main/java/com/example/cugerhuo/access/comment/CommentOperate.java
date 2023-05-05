@@ -67,12 +67,6 @@ public class CommentOperate {
     }
 
     /**
-     * 获取悬赏
-     * @param page 第几页
-     * @param num  每页个数
-     * @param context
-     */
-    /**
      * 获取评论
      * @param con
      * @param id 商品id

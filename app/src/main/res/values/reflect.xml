@@ -65,6 +65,7 @@
     <string name="startId">startId</string>
     <string name="endId">endId</string>
     <string name="ID">id</string>
+    <string name="GetUsersCommodity">commodity/getfocus</string>
     <string name="ProductId">productId</string>
     <string name="CommodityId">commodityid</string>
     <string name="BuyerId">buyerid</string>

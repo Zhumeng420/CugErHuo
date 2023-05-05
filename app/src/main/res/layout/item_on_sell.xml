@@ -81,7 +81,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1290"
+                    android:text="0"
                     android:textSize="11sp"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -96,7 +96,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="81"
+                    android:text="0"
                     android:textSize="11sp"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -111,7 +111,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1"
+                    android:text="0"
                     android:textSize="11sp"/>
             </LinearLayout>
             <LinearLayout

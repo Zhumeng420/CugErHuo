@@ -509,6 +509,9 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
             if(result>0)
             {
                 Log.i(TAG,"发布成功");
+                Message msg = Message.obtain();
+                msg.arg1 = 4;
+                MyHandler.sendMessage(msg);
             }else
             {
                 Log.e(TAG,"发布失败");
@@ -1587,9 +1590,7 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
                     MyToast.toast(PostSellActivity.this,"请选择成色",1);
                     break;
                 }
-                EditText temp1=findViewById(R.id.fakeid);
-                int uid= Integer.parseInt(temp1.getText().toString());
-                commodity.setUserId(uid);
+                commodity.setUserId(UserInfo.getid());
                 commodity.setId(0);
                 postText=  postInput.getText().toString();
                 MyToast.toast(PostSellActivity.this,"正在审核",2);

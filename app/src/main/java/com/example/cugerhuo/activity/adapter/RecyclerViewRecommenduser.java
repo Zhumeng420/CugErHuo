@@ -148,7 +148,6 @@ public class RecyclerViewRecommenduser extends RecyclerView.Adapter<RecyclerView
              * 获取本地保存路径
              */
             String newUrl= getSandBoxPath(context) + url;
-            partUserInfo.get(position).setImageUrl(newUrl);
             System.out.println("newUrlhhhh"+newUrl);
             File f = new File(newUrl);
             if (!f.exists()) {

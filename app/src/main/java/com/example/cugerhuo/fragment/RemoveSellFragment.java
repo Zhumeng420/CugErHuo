@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.activity.adapter.RecyclerViewOnSellAdapter;
 
+import java.util.ArrayList;
+
 /**
  * 已下架
  * @author carollkarry
@@ -38,7 +40,7 @@ public class RemoveSellFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_remove_sell, container, false);
         recyclerViewRemoveSell=view.findViewById(R.id.recyclerViewRemoveSell);
         recyclerViewRemoveSell.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter=new RecyclerViewOnSellAdapter(getActivity());
+        adapter=new RecyclerViewOnSellAdapter(getActivity(),new ArrayList<>());
         recyclerViewRemoveSell.setAdapter(adapter);
         return view;
     }

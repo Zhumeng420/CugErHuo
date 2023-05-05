@@ -864,6 +864,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                     });
                     break;
                 case 2:
+                    if(commerce!=null){
                     Date a=commerce.getTime();
                     Date now = new Date();
                     Date otherTime = new Date(now.getTime() - 10 * 60 * 1000); // 早10分钟的时间
@@ -871,7 +872,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                     // 比较时间
                     if (a.before(otherTime1)&&a.after(otherTime)) {
                         System.out.println("can da ka");
-                    }
+                    }}
                     break;
                 default:
                     break;
@@ -919,7 +920,8 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             if(a!=null&&"1".equals(a))
             {
                 System.out.println("successlocation");
-                new Thread(new Runnable() {
+                if(commerce!=null)
+                {              new Thread(new Runnable() {
                     @Override
                     public void run() {
                         int result=CommerceOperate.setState(commerce.getCommerceid(),1,ChatActivity.this);
@@ -933,7 +935,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                         }
                     }
                 }).start();
-            }
+            }}
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

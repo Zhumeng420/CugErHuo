@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
+import com.example.cugerhuo.access.GetFocusRequest;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.tools.TracingHelper;
@@ -69,6 +70,40 @@ public class CommodityOperate {
 
         return user;
     }
+
+    public static List<Commodity> getUsersCommodity(RedisCommands<String, String> connection,int []users,int page,Context context) throws JSONException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.ip);
+        String router=context.getString(R.string.GetUsersCommodity);
+        GetFocusRequest a=new GetFocusRequest();
+        a.setPage(page);
+        a.setUsers(users);
+        List<Commodity> result=new ArrayList<>();
+        /**
+         * 发送请求
+         */
+        String url="http://"+ip+"/"+router;
+        //循环form表单，将表单内容添加到form builder中
+        //构建formBody，将其传入Request请求中
+        RequestBody body = RequestBody.create(
+                JSONObject.toJSONString(a), MediaType.parse("application/json")
+        );
+        Request request = new Request.Builder().url(url).post(body).build();
+        Response response = null;
+
+        try {
+            response = okHttpClient.newCall(request).execute();
+            result= (List<Commodity>) JSON.parseArray(response.body().string(), Commodity.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }return result;
+
+    }
+
+
     /**
      * 获取商品页推荐
      */
