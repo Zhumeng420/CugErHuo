@@ -63,6 +63,7 @@ import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -315,7 +316,61 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
         /**轮播图*/
         banner = findViewById(R.id.banner);
     }
+/**
+ * 展示留言
+ */
+void showComment()
+{
+    if(switchFlag==0)
+    {
+        if(commentInfos==null){
+            commentNum.setText("");
+        }else{
+            commentNum.setText(String.valueOf(commentInfos.getKey().size()));
+        }
+        if(commentInfos.getKey().size()>3)
+        {
+            List tempCom=new ArrayList<>(),tempPri=new ArrayList<>();
+            for(int i=0;i<3;++i)
+            {
+                tempCom.add(commentInfos.getKey().get(i));
+                tempPri.add(commentInfos.getValue().get(i));
+            }
+            Map.Entry<List<Comment>, List<PartUserInfo>> commentInfo= new AbstractMap.SimpleEntry<List<Comment>, List<PartUserInfo>>(tempCom,tempPri);
+            adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfo,pricingInfos,switchFlag);
+            commentRecyclerView.setAdapter(adapter);
+            lookMoreComments.setVisibility(View.VISIBLE);
+        }else
+        {
+            lookMoreComments.setVisibility(View.GONE);
+        }
+    }
+    else
+    {
+        if(pricingInfos==null){
+            bidNum .setText("");
+        }else{
+            bidNum.setText(String.valueOf(pricingInfos.getKey().size()));
+        }
+        if(pricingInfos.getKey().size()>3)
+        {
+            List tempCom=new ArrayList<>(),tempPri=new ArrayList<>();
 
+            for(int i=0;i<3;++i)
+            {
+                tempCom.add(pricingInfos.getKey().get(i));
+                tempPri.add(pricingInfos.getValue().get(i));
+            }
+            Map.Entry<List<Pricing>, List<PartUserInfo>> pricingInfo= new AbstractMap.SimpleEntry<List<Pricing>, List<PartUserInfo>>(tempCom,tempPri);
+
+            adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfo,switchFlag);
+            commentRecyclerView.setAdapter(adapter);
+            lookMoreComments.setVisibility(View.VISIBLE);
+        }else {
+            lookMoreComments.setVisibility(View.GONE);
+        }
+    }
+}
     /**
      * 点击事件
      * @Author: 李柏睿
@@ -388,15 +443,22 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 commentNum.setVisibility(View.VISIBLE);
                 SpannableString s1 = new SpannableString("留言问更多细节~");
                 msgText.setHint(s1);
+                if(commentInfos!=null)
+                {
+                    commentNum.setText(String.valueOf(commentInfos.getKey().size()));
+                }
                 switchFlag = 0;
-                adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,switchFlag);
-                commentRecyclerView.setAdapter(adapter);
+               showComment();
                 break;
             /**出价模块*/
             case R.id.bid_fragment:
                 commentRecyclerView.removeAllViews();
                 bidText.setTextAppearance(this,R.style.good_fragment_selected);
                 bidNum.setVisibility(View.VISIBLE);
+                if(pricingInfos!=null)
+                {
+                    bidNum.setText(String.valueOf(pricingInfos.getKey().size()));
+                }
                 commentText.setTextAppearance(this,R.style.good_fragment_unselected);
                 commentNum.setVisibility(View.GONE);
                 SpannableString s2 = new SpannableString("感兴趣就出个价看看吧~");
@@ -404,6 +466,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 switchFlag = 1;
                 adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,switchFlag);
                 commentRecyclerView.setAdapter(adapter);
+                showComment();
                 break;
             /**查看更多留言*/
             case R.id.click_look_more:
@@ -469,14 +532,9 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                     break;
                 case 2:
 
-                    adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,0);
-                    commentRecyclerView.setAdapter(adapter);
-                    if(commentInfos==null){
-                        commentNum.setText("0");
-                    }else{
-                        commentNum.setText(String.valueOf(commentInfos.getKey().size()));
 
-                    }
+                   showComment();
+
                     break;
                 /**
                  * 留言模块，留言后更新留言列表
@@ -514,7 +572,6 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                             MyToast.toast(GoodDetailActivity.this,"留言失败",1);
                             break;
                     }
-
                     break;
                 default:
                     break;
@@ -551,7 +608,8 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                         result[i]=current;
 
                     }
-                }}
+                }
+            }
         }
 
         if (url1 != null && !"".equals(url1)) {

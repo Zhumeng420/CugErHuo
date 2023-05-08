@@ -47,6 +47,8 @@ public class PopComments extends AppCompatDialog {
     private RecyclerViewCommentAdapter adapter;
     /**关闭当前dialog*/
     private ImageView closeDialog;
+    /**留言数量**/
+    private TextView numView;
     /**全局*/
     private LinearLayout popCommentsView;
     private int mLastDiff = 0;
@@ -64,11 +66,12 @@ public class PopComments extends AppCompatDialog {
 
     private void init() {
         setContentView(R.layout.pop_comments);
+        numView=findViewById(R.id.comments_num);
         mAddComment = findViewById(R.id.add_comment);
         pleaseComment = findViewById(R.id.please_comment);
         commentsRecyclerView = findViewById(R.id.comments_display);
         commentsRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-
+        numView.setText(String.valueOf(commentInfos.getValue().size()));
         adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,0);
         commentsRecyclerView.setAdapter(adapter);
         closeDialog = findViewById(R.id.close_comments);

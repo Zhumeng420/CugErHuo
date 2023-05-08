@@ -44,16 +44,17 @@
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="17sp"/>
+
                 <TextView
                     android:id="@+id/comments_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:text="0"
                     android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="17sp"/>
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <ImageView
