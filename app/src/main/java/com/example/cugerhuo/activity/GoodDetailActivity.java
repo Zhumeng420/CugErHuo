@@ -475,6 +475,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                         commentNum.setText("0");
                     }else{
                         commentNum.setText(String.valueOf(commentInfos.getKey().size()));
+
                     }
                     break;
                 /**
