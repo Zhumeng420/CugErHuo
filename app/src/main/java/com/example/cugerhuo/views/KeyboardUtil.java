@@ -27,7 +27,7 @@ import java.util.Random;
 public class KeyboardUtil {
     private Activity mActivity;
     private boolean  mIfRandom;
-    private MyKeyBoardView mKeyboardView;
+    public static MyKeyBoardView mKeyboardView;
     /**数字键盘*/
     private Keyboard       mKeyboardNumber;
     private EditText       mEditText;

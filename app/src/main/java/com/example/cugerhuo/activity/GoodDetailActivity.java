@@ -18,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -51,6 +52,7 @@ import com.example.cugerhuo.oss.InitOS;
 import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.example.cugerhuo.tools.MyToast;
 import com.example.cugerhuo.views.InputTextMsgDialog;
+import com.example.cugerhuo.views.KeyboardDialog;
 import com.example.cugerhuo.views.PopComments;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.youth.banner.Banner;
@@ -425,9 +427,54 @@ void showComment()
                 break;
             /**底部出价*/
             case R.id.bid_layout:
+                final KeyboardDialog keyboardDialog = new KeyboardDialog(GoodDetailActivity.this, R.style.dialog_center);
+                keyboardDialog.setmOnPriceSendListener(new KeyboardDialog.OnTextSendListener() {
+                    @Override
+                    public void onPriceSend(String msg) {
+                        Toast.makeText(GoodDetailActivity.this, msg, Toast.LENGTH_LONG).show();
+                    }
+                });
+                keyboardDialog.show();
                 break;
             /**底部评论*/
             case R.id.message_layout:
+                final InputTextMsgDialog inputTextMsgDialog = new InputTextMsgDialog(GoodDetailActivity.this, R.style.dialog_center);
+                inputTextMsgDialog.setmOnTextSendListener(new InputTextMsgDialog.OnTextSendListener() {
+                    @Override
+                    public void onTextSend(String msg) {
+                        if(msg!=null&&!"".equals(msg)){
+                            Date a=new Date(System.currentTimeMillis());
+                            Comment temp=new Comment();
+                            temp.setTime(a);
+                            temp.setContent(msg);
+                            temp.setUserid(UserInfo.getid());
+                            temp.setCommodityid(commodity.getId());
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Message a=Message.obtain();
+                                    try {
+                                        boolean res=false;
+                                        res=CommentOperate.insertComment(temp,GoodDetailActivity.this);
+                                        if(res){
+                                            a.arg2=1;
+                                        }
+                                        else{a.arg2=0;}
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    a.arg1=3;
+                                    MyHandler.sendMessage(a);
+                                }
+                            }).start();
+                        }
+                        else
+                        {
+                            MyToast.toast(GoodDetailActivity.this,"留言不能为空",0);
+                        }
+                    }
+                });
+                inputTextMsgDialog.show();
                 break;
             /**底部收藏*/
             case R.id.collection_layout:

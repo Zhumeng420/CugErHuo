@@ -76,6 +76,14 @@
         android:theme="@style/Theme.CugErHuo"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <activity
+            android:name=".activity.BigImgActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".activity.SearchResultActivity"
             android:exported="false">
