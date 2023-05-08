@@ -49,6 +49,7 @@ import com.example.cugerhuo.activity.imessage.ChatActivity;
 import com.example.cugerhuo.activity.post.PostSellActivity;
 import com.example.cugerhuo.oss.InitOS;
 import com.example.cugerhuo.tools.LettuceBaseCase;
+import com.example.cugerhuo.tools.MyToast;
 import com.example.cugerhuo.views.InputTextMsgDialog;
 import com.example.cugerhuo.views.PopComments;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -58,9 +59,12 @@ import com.youth.banner.Transformer;
 import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
 
+import org.json.JSONException;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -159,7 +163,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_good_detail);
         initView();
         initData();
-        // 开启线程
+        // 获取推荐商品
         new Thread(() -> {
             if(commodity!=null) {
                 /**
@@ -181,7 +185,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
             msg.arg1 = 1;
             MyHandler.sendMessage(msg);
         }).start();
-        // 开启线程
+        // 获取评论数据
         new Thread(() -> {
             if(commodity!=null) {
                 /**
@@ -194,8 +198,6 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 RedisCommands<String, String> con = lettuce.getSyncConnection();
                 commentInfos= CommentOperate.getRewards(con,commodity.getId(),GoodDetailActivity.this);
                 pricingInfos= PricingOperate.getRewards(con,commodity.getId(),GoodDetailActivity.this);
-
-
             }
             Message msg = Message.obtain();
             msg.arg1 = 2;
@@ -225,11 +227,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
             goodBrand.setText(commodity.getBrand());
             /**设置轮播图*/
             setBanner();
-            if(commentInfos==null){
-                commentNum.setText("0");
-            }else{
-                commentNum.setText(commentInfos.getKey().size());
-            }
+
         }
     }
     /**
@@ -333,14 +331,42 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                     inputTextMsgDialog.setmOnTextSendListener(new InputTextMsgDialog.OnTextSendListener() {
                         @Override
                         public void onTextSend(String msg) {
-
+                            if(msg!=null&&!"".equals(msg)){
+                            Date a=new Date(System.currentTimeMillis());
+                            Comment temp=new Comment();
+                            temp.setTime(a);
+                            temp.setContent(msg);
+                            temp.setUserid(UserInfo.getid());
+                            temp.setCommodityid(commodity.getId());
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Message a=Message.obtain();
+                                    try {
+                                        boolean res=false;
+                                        res=CommentOperate.insertComment(temp,GoodDetailActivity.this);
+                                        if(res){
+                                            a.arg2=1;
+                                        }
+                                        else{a.arg2=0;}
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    a.arg1=3;
+                                    MyHandler.sendMessage(a);
+                                }
+                            }).start();
+                            }
+                            else
+                            {
+                                MyToast.toast(GoodDetailActivity.this,"留言不能为空",0);
+                            }
                         }
                     });
                     inputTextMsgDialog.show();
                 }else{
 
                 }
-
                 break;
             /**底部出价*/
             case R.id.bid_layout:
@@ -445,8 +471,50 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
 
                     adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,0);
                     commentRecyclerView.setAdapter(adapter);
+                    if(commentInfos==null){
+                        commentNum.setText("0");
+                    }else{
+                        commentNum.setText(String.valueOf(commentInfos.getKey().size()));
+                    }
                     break;
+                /**
+                 * 留言模块，留言后更新留言列表
+                 */
+                    case 3:
+                    switch (msg.arg2)
+                    {
+                        case 1:MyToast.toast(GoodDetailActivity.this,"留言成功",3);
+                            /**
+                             * 刷新留言列表
+                             */
+                            new Thread(() -> {
+                                if(commodity!=null) {
+                                    /**
+                                     * 建立连接对象
+                                     */
+                                    LettuceBaseCase lettuce = new LettuceBaseCase();
+                                    /**
+                                     * 获取连接
+                                     */
+                                    RedisCommands<String, String> con = lettuce.getSyncConnection();
+                                    Map.Entry<List<Commodity>, List<PartUserInfo>> result = CommodityOperate.getRecommendComs(con, commodity.getId(), GoodDetailActivity.this);
+                                    recommendCommodities = result.getKey();
+                                    recommendUsersOfComs = result.getValue();
+                                    commentInfos= CommentOperate.getRewards(con,commodity.getId(),GoodDetailActivity.this);
+                                    pricingInfos= PricingOperate.getRewards(con,commodity.getId(),GoodDetailActivity.this);
 
+                                }
+                                Message ms = Message.obtain();
+                                ms.arg1 = 2;
+                                MyHandler.sendMessage(ms);
+                            }).start();
+                            break;
+                        default:
+                            MyToast.toast(GoodDetailActivity.this,"留言失败",1);
+                            break;
+                    }
+
+                    break;
                 default:
                     break;
             }
