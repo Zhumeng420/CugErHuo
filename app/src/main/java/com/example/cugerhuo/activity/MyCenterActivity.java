@@ -1,5 +1,7 @@
 package com.example.cugerhuo.activity;
 
+import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,7 +18,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.evaluate.CommodityEvaluateOperate;
+import com.example.cugerhuo.access.evaluate.EvaluationInfo;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.user.UserInfoOperate;
@@ -29,6 +33,9 @@ import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import io.lettuce.core.api.sync.RedisCommands;
@@ -61,6 +68,9 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
     private LinearLayout leUserFans;
     private LinearLayout toEvaluate;
     private  PartUserInfo part;
+    private List<EvaluationInfo> evaluationInfoList=new ArrayList<>();
+    private List<PartUserInfo> evaluationUser=new ArrayList<>();
+    private List<Commodity> commodities=new ArrayList<>();
     public static int focusNum;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,8 +208,37 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
      * @time 2023/5/9
      */
     public void evaluateClick(View  view){
-        Intent intent=new Intent(MyCenterActivity.this, EvaluateActivity.class);
-        startActivity(intent);
+        /**
+         * 获取商品评价信息
+         */
+        new Thread(()->{
+            Message msg = Message.obtain();
+            msg.arg1 = 4;
+
+            evaluationInfoList=CommodityEvaluateOperate.getEvaluate(UserInfo.getid(),MyCenterActivity.this);
+
+            /**
+             * 建立连接对象
+             */
+            LettuceBaseCase lettuce=new LettuceBaseCase();
+            /**
+             * 获取连接
+             */
+            RedisCommands<String, String> con=lettuce.getSyncConnection();
+            /**
+             * 通过连接调用查询
+             */
+            for(int i=0;i<evaluationInfoList.size();i++){
+               if(evaluationInfoList.get(i).getEvaluation().getState()==0){
+                   PartUserInfo user= UserInfoOperate.getInfoFromRedis(con,evaluationInfoList.get(i).getEvaluation().getUserid(), MyCenterActivity.this);
+                   evaluationUser.add(user);
+                   commodities.add(evaluationInfoList.get(i).getCommodity());
+               }
+            }
+            //4、发送消息
+            MyHandler.sendMessage(msg);
+        }).start();
+
     }
 
     /**
@@ -346,6 +385,17 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                     break;
                 case 3:
                     username.setText(part.getUserName());
+                    break;
+                case 4:
+                    /**
+                     * 跳转至待评价界面并传参
+                     */
+                    Intent intent1=new Intent(getActivity(), EvaluateActivity.class);
+                    Bundle bundle1=new Bundle();
+                    bundle1.putSerializable("eCommodityList", (Serializable) commodities);
+                    bundle1.putSerializable("ePartUserInfos", (Serializable) evaluationUser);
+                    intent1.putExtras(bundle1);
+                    startActivity(intent1);
                     break;
                 default:
                     break;

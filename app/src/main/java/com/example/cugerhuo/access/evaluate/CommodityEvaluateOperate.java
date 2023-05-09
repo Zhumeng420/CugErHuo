@@ -24,9 +24,9 @@ import okhttp3.Response;
  */
 public class CommodityEvaluateOperate {
 
-    public static List<Commodity> getEvaluate(int id, Context context){
+    public static List<EvaluationInfo> getEvaluate(int id, Context context){
         OkHttpClient okHttpClient = new OkHttpClient();
-        List<Commodity> commodities=new ArrayList<>();
+        List<EvaluationInfo> evaluationInfos=new ArrayList<>();
         /**
          * 获取XML文本
          */
@@ -44,11 +44,10 @@ public class CommodityEvaluateOperate {
 
         try {
             response = okHttpClient.newCall(request).execute();
-            JSONObject pa= JSONObject.parseObject(response.body().string());
-            commodities= JSONArray.parseArray(pa.getString("commodity"),Commodity.class);
+            evaluationInfos= JSONArray.parseArray(response.body().string(),EvaluationInfo.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return commodities;
+        return evaluationInfos;
     }
 }
