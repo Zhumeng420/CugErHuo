@@ -340,8 +340,10 @@ void showComment()
             adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfo,pricingInfos,switchFlag);
             commentRecyclerView.setAdapter(adapter);
             lookMoreComments.setVisibility(View.VISIBLE);
-        }else
-        {
+        }
+        else
+        { adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,switchFlag);
+            commentRecyclerView.setAdapter(adapter);
             lookMoreComments.setVisibility(View.GONE);
         }
     }
@@ -367,6 +369,8 @@ void showComment()
             commentRecyclerView.setAdapter(adapter);
             lookMoreComments.setVisibility(View.VISIBLE);
         }else {
+            adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,switchFlag);
+            commentRecyclerView.setAdapter(adapter);
             lookMoreComments.setVisibility(View.GONE);
         }
     }
@@ -420,7 +424,14 @@ void showComment()
                     });
                     inputTextMsgDialog.show();
                 }else{
-
+                    final KeyboardDialog keyboardDialog = new KeyboardDialog(GoodDetailActivity.this, R.style.dialog_center);
+                    keyboardDialog.setmOnPriceSendListener(new KeyboardDialog.OnTextSendListener() {
+                        @Override
+                        public void onPriceSend(String msg) {
+                            Toast.makeText(GoodDetailActivity.this, msg, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    keyboardDialog.show();
                 }
                 break;
             /**底部出价*/
