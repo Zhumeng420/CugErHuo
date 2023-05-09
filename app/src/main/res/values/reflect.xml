@@ -29,6 +29,8 @@
 
     <string name="GetCommodity">commodity/get</string>
     <string name="InsertCommodity">commodity/insert</string>
+    <string name="InsertEVALUATION">evaluation/insert</string>
+    <string name="UpdateEVALUATION">evaluation/update</string>
 
     <string name="GetOss">secret/oos</string>
 

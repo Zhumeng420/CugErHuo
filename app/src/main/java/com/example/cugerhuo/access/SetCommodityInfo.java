@@ -101,7 +101,8 @@ public class SetCommodityInfo {
                     int id=temp.getUserId();
                     System.out.println("userid"+id);
                     tt.add(temp);
-                    mm.add(UserInfoOperate.getInfoFromRedis(con,id,context));
+                    PartUserInfo tempUser=UserInfoOperate.getInfoFromRedis(con,id,context);
+                    mm.add(tempUser);
                 }
 
                 long stime1 = System.currentTimeMillis();

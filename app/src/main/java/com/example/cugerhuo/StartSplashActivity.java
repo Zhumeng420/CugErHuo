@@ -14,11 +14,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.airbnb.lottie.LottieAnimationView;
 import com.baidu.mobstat.StatService;
 import com.example.cugerhuo.access.SetGlobalIDandUrl;
+import com.example.cugerhuo.access.evaluate.CommodityEvaluateOperate;
+import com.example.cugerhuo.access.evaluate.Evaluation;
 import com.example.cugerhuo.activity.ErHuoActivity;
 import com.example.cugerhuo.login.login.OneKeyLoginActivity;
 import com.example.cugerhuo.oss.InitOS;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -84,8 +87,14 @@ public class StartSplashActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-
-
+                Evaluation empty=new Evaluation();
+                empty.setCommerid(59);
+                empty.setUserid(5);
+                empty.setState(0);
+                empty.setScore(0);
+                empty.setTime(new Timestamp(System.currentTimeMillis()));
+                empty.setContent("");
+                CommodityEvaluateOperate.insertEmptyEvlution(empty, StartSplashActivity.this);
                 //List<String> a=new ArrayList<String>();
               //  a.add("/storage/emulated/0/Android/data/com.example.cugerhuo/cache/luban_disk_cache/CMP_20230429162710476.jpg");
 //                List<Integer> a=GraphOperate.productSearch("/storage/emulated/0/Android/data/com.example.cugerhuo/cache/luban_disk_cache/CMP_20230429162710476.jpg");

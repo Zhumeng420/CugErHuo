@@ -39,6 +39,8 @@ import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.commerce.Commerce;
 import com.example.cugerhuo.access.commerce.CommerceOperate;
+import com.example.cugerhuo.access.evaluate.CommodityEvaluateOperate;
+import com.example.cugerhuo.access.evaluate.Evaluation;
 import com.example.cugerhuo.access.user.Msg;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfo;
@@ -74,6 +76,7 @@ import com.netease.nimlib.sdk.util.NIMUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -146,7 +149,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
     /**打卡*/
     private LinearLayout clockLocation;
 
-
+    private Commerce curCommerce=null;
 
 
     @Override
@@ -157,7 +160,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             // 监听的注册，必须在主进程中。
             NIMClient.getService(MsgService.class).registerCustomAttachmentParser(new CustomAttachParser());
         }
-
         msgRecyclerView = findViewById(R.id.msg_recycler_view);
         msgRecyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -170,7 +172,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 return false;
             }
         });
-
         /**动态申请语音权限*/
         int hasWriteStoragePermission = ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.RECORD_AUDIO);
         if (hasWriteStoragePermission == PackageManager.PERMISSION_GRANTED) {
@@ -179,7 +180,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             //没有权限，向用户请求权限
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0x20);
         }
-
         /**动态申请定位权限*/
         int hasWriteStoragePermission2 = ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.ACCESS_FINE_LOCATION)&ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.ACCESS_COARSE_LOCATION);
         if (hasWriteStoragePermission2 == PackageManager.PERMISSION_GRANTED) {
@@ -272,9 +272,11 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
          * 获取商品信息
          */
         if(intent.getSerializableExtra("chatCommodity")!=null){
-
             charCommodity= (Commodity) intent.getSerializableExtra("chatCommodity");
             if(charCommodity!=null){
+                /**
+                 * 获取交易信息
+                 */
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -316,6 +318,12 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                     tradeImages.setImageURI(Uri.fromFile(f));
                 }
             }
+                /**
+                 * 获取交易信息
+                 */
+//            new Thread(()->{
+//           curCommerce=CommerceOperate.getCommerce(charCommodity.getId(),charCommodity.getUserId(),UserInfo.getid(),ChatActivity.this);
+//            }).start();
         }}
 
         if(intent.getSerializableExtra("iWant")!=null){
@@ -344,7 +352,6 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         }
 
         /**展示顶部交易模块*/
-        tradeLayout.setVisibility(View.VISIBLE);
         if(iWant==1){tradeLayout.setVisibility(View.VISIBLE);}
 
         /**发送订单*/
@@ -865,7 +872,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                     });
                     break;
                 case 2:
-                    if(commerce!=null){
+                    if(commerce!=null&&commerce.getTime()!=null){
                     Date a=commerce.getTime();
                     Date now = new Date();
                     Date otherTime = new Date(now.getTime() - 10 * 60 * 1000); // 早10分钟的时间
@@ -873,7 +880,11 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                     // 比较时间
                     if (a.before(otherTime1)&&a.after(otherTime)) {
                         System.out.println("can da ka");
-                    }}
+                    }}else
+                    {
+                        tradeLayout.setVisibility(View.INVISIBLE);
+
+                    }
                     break;
                 default:
                     break;
@@ -929,6 +940,23 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                         if(result==3)
                         {
                             MyToast.toast(ChatActivity.this,"交易已完成",3);
+                                boolean res=false;
+                                Evaluation empty=new Evaluation();
+                                empty.setCommerid(commerce.getCommerceid());
+                                empty.setUserid(UserInfo.getid());
+                                empty.setState(0);
+                                empty.setScore(0);
+                                empty.setTime((Timestamp) new Date(System.currentTimeMillis()));
+                                empty.setContent("");
+                                res= CommodityEvaluateOperate.insertEmptyEvlution(empty,ChatActivity.this);
+                                if(res)
+                                {
+                                    MyToast.toast(ChatActivity.this,"期待您对本次交易的评价！",3);
+                                }
+                                else
+                                {
+                                    MyToast.toast(ChatActivity.this,"评价异常",0);
+                                }
                         }
                         if(result==2)
                         {

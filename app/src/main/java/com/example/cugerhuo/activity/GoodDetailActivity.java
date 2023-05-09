@@ -39,6 +39,8 @@ import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.Pricing;
 import com.example.cugerhuo.access.comment.CollectOperate;
 import com.example.cugerhuo.access.comment.CommentOperate;
+import com.example.cugerhuo.access.commerce.Commerce;
+import com.example.cugerhuo.access.commerce.CommerceOperate;
 import com.example.cugerhuo.access.commodity.CommodityOperate;
 import com.example.cugerhuo.access.pricing.PricingOperate;
 import com.example.cugerhuo.access.user.PartUserInfo;
@@ -606,13 +608,49 @@ void showComment()
             /**我想要*/
             case R.id.want:
                 int iWant = 1;
-                Intent intent=new Intent(GoodDetailActivity.this, ChatActivity.class);
-                intent.putExtra("iWant",iWant);
-                userInfo.setImageUrl(getSandBoxPath(GoodDetailActivity.this)+userInfo.getImageUrl());
-                intent.putExtra("chatUser",userInfo);
-                intent.putExtra("chatCommodity", commodity);
-                startActivity(intent);
-                overridePendingTransition(0, 0);
+                new Thread(()->{
+                    Commerce temp=new Commerce();
+                    temp.setBuyerid(UserInfo.getid());
+                    temp.setState(0);
+                    temp.setPlace("");
+                    temp.setCommodityid(commodity.getId());
+                    temp.setTime(new Date(System.currentTimeMillis()));
+                    temp.setPrice(commodity.getPrice());
+                    temp.setSellerid(userInfo.getId());
+                    Message msg=Message.obtain();
+                    msg.arg1=7;
+                    try {
+                        Commerce temp1=null;
+                        /**
+                         * 查询交易是否存在
+                         */
+                        temp1= CommerceOperate.getCommerce(commodity.getId(),commodity.getUserId(), UserInfo.getid(),GoodDetailActivity.this);
+                        /**
+                         * 交易已存在，直接跳转
+                         */
+                            if(temp1!=null&&temp.getTime()!=null){msg.arg2=1;
+                                MyHandler.sendMessage(msg);}
+                            /**
+                             * 交易不存在，先插入
+                             */
+                            else{
+                        boolean res=false;
+                    res= CommerceOperate.insertCommerce(temp,GoodDetailActivity.this);
+
+                    if(res)
+                    {
+                        msg.arg2=1;
+                       MyHandler.sendMessage(msg);
+                    }
+                    else
+                    { msg.arg2=0;
+                        MyHandler.sendMessage(msg);
+                    }}
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+
                 break;
             default:
                 break;
@@ -770,6 +808,28 @@ void showComment()
                         default:
                             break;
                     }
+                    break;
+                /**
+                 * 插入交易后，进行传递
+                 */
+                case 7:
+                        switch(msg.arg2)
+                        {
+                            case 1:
+                                Intent intent=new Intent(GoodDetailActivity.this, ChatActivity.class);
+                                intent.putExtra("iWant",1);
+                                userInfo.setImageUrl(getSandBoxPath(GoodDetailActivity.this)+userInfo.getImageUrl());
+                                intent.putExtra("chatUser",userInfo);
+                                intent.putExtra("chatCommodity", commodity);
+                                startActivity(intent);
+                                overridePendingTransition(0, 0);
+                                break;
+                            case 0:
+                                MyToast.toast(GoodDetailActivity.this,"插入交易失败",0);
+                                break;
+                            default:
+                                break;
+                        }
                     break;
                 default:
                     break;

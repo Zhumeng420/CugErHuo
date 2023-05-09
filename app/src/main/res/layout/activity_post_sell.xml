@@ -26,18 +26,6 @@
             android:layout_weight="1"
             android:text="取消"
             android:textColor="#000000" />
-
-<EditText
-    android:layout_width="100dp"
-    android:layout_height="wrap_content"
-    android:hint="商品id"
-    android:id="@+id/fakeid"></EditText>
-        <EditText
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:hint="商品分类"
-            android:id="@+id/fakecate">
-</EditText>
         <Button
             android:id="@+id/saveDraft"
             android:layout_width="70dp"
@@ -47,7 +35,6 @@
             android:text="存草稿"
             android:textColor="#707070"
             tools:ignore="TouchTargetSizeCheck"></Button>
-
         <Button
             android:id="@+id/publishGoods"
             android:layout_width="70dp"

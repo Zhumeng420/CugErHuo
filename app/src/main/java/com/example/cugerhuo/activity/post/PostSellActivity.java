@@ -1548,22 +1548,22 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
                 {
 
                 }
-//                if(category!=null){
-//                StringBuilder tempC= new StringBuilder(category);
-//                if(allCategory!=null){
-//                for(String i:allCategory)
-//                {
-//                    if(!i.equals(category))
-//                    {
-//                        tempC.append("|");
-//                        tempC.append(i);
-//                    }
-//                }}
-//                    commodity.setCategory(tempC.toString());
-//                }else
-//                {
-//                    category="";
-//                }
+                if(category!=null){
+                StringBuilder tempC= new StringBuilder(category);
+                if(allCategory!=null){
+                for(String i:allCategory)
+                {
+                    if(!i.equals(category))
+                    {
+                        tempC.append("|");
+                        tempC.append(i);
+                    }
+                }}
+                    commodity.setCategory(tempC.toString());
+                }else
+                {
+                    category="";
+                }
                 StringBuilder tempU=new StringBuilder();
                 for( int i=0;i<paths.size();++i)
                 {
@@ -1595,21 +1595,7 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
                 }
                 commodity.setUserId(UserInfo.getid());
                 //接口
-                EditText editText1=findViewById(R.id.fakeid);
-                if(editText1.getText()==null||"".equals(editText1.getText().toString()))
-                {
-                    MyToast.toast(PostSellActivity.this,"商品id不可为空",1);
-                     break;
-                }
-                EditText editText2=findViewById(R.id.fakecate);
-                if(editText2.getText()==null||"".equals(editText2.getText().toString()))
-                {
-                    MyToast.toast(PostSellActivity.this,"商品category不可为空",1);
-                    break;
-                }
-                commodity.setCategory(editText2.getText().toString());
 
-                commodity.setId(Integer.valueOf(editText1.getText().toString()));
                 //接口
                 postText=  postInput.getText().toString();
                 MyToast.toast(PostSellActivity.this,"正在审核",2);
