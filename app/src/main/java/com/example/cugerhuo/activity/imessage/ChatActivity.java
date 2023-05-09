@@ -669,9 +669,10 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
             case R.id.trade_confirm:
                 Intent intent=new Intent(ChatActivity.this, CreatTradeActivity.class);
                 intent.putExtra("chatUser",chatUser);
+                intent.putExtra("chatCommodity",charCommodity);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
-                finish();
+                //finish();
                 break;
             case R.id.chat_more:
                 moreFunction.setVisibility(View.VISIBLE);
@@ -824,11 +825,11 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.arg1){
-
+                /**
+                 * 点击待确认订单跳转
+                 */
                 case 1:
-                    /**
-                     * 点击待确认订单跳转
-                     */
+
                     adapter.setOnItemClickListener(new MsgAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
@@ -840,7 +841,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                             intent.putExtra("chatCommodity", charCommodity);
                             //startActivity(intent);
                             startActivityForResult(intent,1);
-                            finish();
+                         //   finish();
                         }
                     });
 
@@ -851,9 +852,11 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                             Intent intent=new Intent(ChatActivity.this, TradeDetailActivity.class);
                             intent.putExtra("isConfirm",isConfirm);
                             intent.putExtra("chatUser",chatUser);
+                            intent.putExtra("tradeInfo",tradeInfo);
+                            intent.putExtra("chatCommodity", charCommodity);
                             //startActivity(intent);
                             startActivityForResult(intent,1);
-                            finish();
+                         //   finish();
                         }
                     });
 
@@ -867,7 +870,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                             intent.putExtra("chatUser",chatUser);
                             //startActivity(intent);
                             startActivityForResult(intent,1);
-                            finish();
+                            //finish();
                         }
                     });
                     break;

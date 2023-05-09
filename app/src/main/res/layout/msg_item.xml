@@ -132,6 +132,7 @@
                     android:layout_height="wrap_content"
                     android:text="交易金额：¥"/>
                 <TextView
+                    android:id="@+id/leftPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
@@ -150,6 +151,7 @@
                     android:layout_height="wrap_content"
                     android:text="交易时间："/>
                 <TextView
+                    android:id="@+id/leftTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
@@ -168,6 +170,7 @@
                     android:layout_height="wrap_content"
                     android:text="交易地点："/>
                 <TextView
+                    android:id="@+id/leftPlace"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"

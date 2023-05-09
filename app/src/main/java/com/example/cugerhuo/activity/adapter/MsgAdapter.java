@@ -257,9 +257,9 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder>{
                 holder.rightAudio.setVisibility(View.GONE);
                 holder.leftLocation.setVisibility(View.GONE);
                 holder.rightLocation.setVisibility(View.GONE);
-                TextView priceView1=holder.rightCard.findViewById(R.id.pushPrice);
-                TextView dateView1=holder.rightCard.findViewById(R.id.pushDate);
-                TextView placeView1=holder.rightCard.findViewById(R.id.pushPlace);
+                TextView priceView1=holder.leftCard.findViewById(R.id.leftPrice);
+                TextView dateView1=holder.leftCard.findViewById(R.id.leftTime);
+                TextView placeView1=holder.leftCard.findViewById(R.id.leftPlace);
 
                 String tradeString=list.get(position).getContent();
                 TradeInfo tradeInfo= JSON.parseObject(tradeString, TradeInfo.class);

@@ -22,7 +22,6 @@ import com.example.cugerhuo.access.commerce.Commerce;
 import com.example.cugerhuo.access.commerce.CommerceOperate;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfo;
-import com.example.cugerhuo.activity.imessage.ChatActivity;
 import com.example.cugerhuo.tools.entity.TradeInfo;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -229,18 +228,18 @@ public void initData()
             {
                 case 1:
                     int confirmTrade = 1;
-                    Intent intent=new Intent(TradeDetailActivity.this, ChatActivity.class);
-                    intent.putExtra("confirmTrade",confirmTrade);
-                    /**订单id*/
-                    int tradeId = 1;
-                    intent.putExtra("tradeId",tradeId);
-                    TradeInfo a=new TradeInfo();
-                    a.setPrice(Double.parseDouble(tradeDetailPrice.getText().toString().replace("¥","")));
-                    a.setTradePlace(tradeDetailPosition.getText().toString());
-                    a.setTradeTime(tradeDetailTime.getText().toString());
-                    intent.putExtra("tradeInfo",a);
-                    intent.putExtra("chatUser",chatUser);
-                    startActivity(intent);
+//                    Intent intent=new Intent(TradeDetailActivity.this, ChatActivity.class);
+//                    intent.putExtra("confirmTrade",confirmTrade);
+//                    /**订单id*/
+//                    int tradeId = 1;
+//                    intent.putExtra("tradeId",tradeId);
+//                    TradeInfo a=new TradeInfo();
+//                    a.setPrice(Double.parseDouble(tradeDetailPrice.getText().toString().replace("¥","")));
+//                    a.setTradePlace(tradeDetailPosition.getText().toString());
+//                    a.setTradeTime(tradeDetailTime.getText().toString());
+//                    intent.putExtra("tradeInfo",a);
+//                    intent.putExtra("chatUser",chatUser);
+//                    startActivity(intent);
                     overridePendingTransition(0, 0);
                     finish();
                     break;

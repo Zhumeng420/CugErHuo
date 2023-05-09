@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.activity.imessage.ChatActivity;
 import com.example.cugerhuo.tools.entity.TradeInfo;
@@ -210,7 +211,9 @@ public class CreatTradeActivity extends AppCompatActivity implements View.OnClic
                 tradeInfo.setTradeTime(timeText.getText().toString());
                 tradeInfo.setTradePlace(positionText.getText().toString());
                 intent.putExtra("chatUser",chatUser);
-                int iWant = 0;
+                Commodity e= (Commodity) getIntent().getSerializableExtra("chatCommodity");
+                intent.putExtra("chatCommodity",e);
+                int iWant = 1;
                 intent.putExtra("iWant",iWant);
                 /**是否生成订单*/
                 int creatTrade = 1;
