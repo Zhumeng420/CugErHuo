@@ -55,7 +55,7 @@ public class LocationClockActivity extends AppCompatActivity implements Location
     private LatLng locLatLng = null;
     /**打卡坐标*/
     private LatLng comLatLng = null;
-    private float radius = 200;
+    private float radius = 500;
 
     /**定位需要的声明*/
     /**定位发起端*/

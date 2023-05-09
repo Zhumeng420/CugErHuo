@@ -450,7 +450,7 @@
                         android:layout_gravity="center"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:text="查看更多留言" />
+                        android:text="查看更多" />
                     <ImageView
                         android:layout_width="15dp"
                         android:layout_height="15dp"

@@ -2,10 +2,14 @@ package com.example.cugerhuo.activity.adapter;
 
 import static android.content.ContentValues.TAG;
 import static com.example.cugerhuo.access.SetGlobalIDandUrl.getSandBoxPath;
+import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,17 +33,27 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
+import com.example.cugerhuo.access.comment.CommentOperate;
+import com.example.cugerhuo.access.commodity.CommodityOperate;
 import com.example.cugerhuo.access.commodity.RecommendInfo;
+import com.example.cugerhuo.access.pricing.PricingOperate;
 import com.example.cugerhuo.access.user.PartUserInfo;
+import com.example.cugerhuo.activity.GoodDetailActivity;
 import com.example.cugerhuo.oss.InitOS;
 import com.example.cugerhuo.tools.GetFileNameUtil;
+import com.example.cugerhuo.tools.LettuceBaseCase;
+import com.example.cugerhuo.tools.MyToast;
 import com.example.cugerhuo.tools.TracingHelper;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.Transformer;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
+import java.util.Map;
 
+import io.lettuce.core.api.sync.RedisCommands;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
@@ -200,7 +214,7 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
             int length=urls.length;
             String result[]=new String[length];
             result[length-1]=urls[length-1];
-// 从后往前依次减去后面一个元素
+            // 从后往前依次减去后面一个元素
             if(length>1){
                 for (int i = length - 2; i >= 0; i--) {
                     String current = urls[i];
@@ -279,6 +293,7 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
                                  * 设置商品图片圆角30度
                                  */
                                 System.out.println("image1"+newUrl1);
+
                                 RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(30));
                                 Glide.with(context).load(Uri.fromFile(new File(newUrl1)))
                                         .apply(options)
@@ -403,5 +418,43 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
         /**参数（父组件，当前单击的View,单击的View的位置，数据）*/
         public void onItemClick(View view, int position);
     }
+    /**
+     * 消息发送接收，异步更新UI
+     * @Author: 李柏睿
+     * @Time: 2023/4/28
+     */
+    private class MyHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.arg1){
+                /**
+                 * 获取地址信息列表
+                 */
+                case 1:
+
+                    break;
+                case 2:
+
+
+                    break;
+                /**
+                 * 留言模块，留言后更新留言列表
+                 */
+                case 3:
+
+                    break;
+                /**
+                 *  更新轮播图
+                 */
+                case 4:
+
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
 
 }

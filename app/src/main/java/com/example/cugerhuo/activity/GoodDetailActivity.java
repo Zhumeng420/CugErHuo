@@ -18,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -32,8 +33,6 @@ import com.alibaba.sdk.android.oss.common.OSSLog;
 import com.alibaba.sdk.android.oss.model.GetObjectRequest;
 import com.alibaba.sdk.android.oss.model.GetObjectResult;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Comment;
 import com.example.cugerhuo.access.Commodity;
@@ -51,6 +50,7 @@ import com.example.cugerhuo.oss.InitOS;
 import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.example.cugerhuo.tools.MyToast;
 import com.example.cugerhuo.views.InputTextMsgDialog;
+import com.example.cugerhuo.views.KeyboardDialog;
 import com.example.cugerhuo.views.PopComments;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.youth.banner.Banner;
@@ -63,6 +63,7 @@ import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -315,7 +316,65 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
         /**轮播图*/
         banner = findViewById(R.id.banner);
     }
+/**
+ * 展示留言
+ */
+void showComment()
+{
+    if(switchFlag==0)
+    {
+        if(commentInfos==null){
+            commentNum.setText("");
+        }else{
+            commentNum.setText(String.valueOf(commentInfos.getKey().size()));
+        }
+        if(commentInfos.getKey().size()>3)
+        {
+            List tempCom=new ArrayList<>(),tempPri=new ArrayList<>();
+            for(int i=0;i<3;++i)
+            {
+                tempCom.add(commentInfos.getKey().get(i));
+                tempPri.add(commentInfos.getValue().get(i));
+            }
+            Map.Entry<List<Comment>, List<PartUserInfo>> commentInfo= new AbstractMap.SimpleEntry<List<Comment>, List<PartUserInfo>>(tempCom,tempPri);
+            adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfo,pricingInfos,switchFlag);
+            commentRecyclerView.setAdapter(adapter);
+            lookMoreComments.setVisibility(View.VISIBLE);
+        }
+        else
+        { adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,switchFlag);
+            commentRecyclerView.setAdapter(adapter);
+            lookMoreComments.setVisibility(View.GONE);
+        }
+    }
+    else
+    {
+        if(pricingInfos==null){
+            bidNum .setText("");
+        }else{
+            bidNum.setText(String.valueOf(pricingInfos.getKey().size()));
+        }
+        if(pricingInfos.getKey().size()>3)
+        {
+            List tempCom=new ArrayList<>(),tempPri=new ArrayList<>();
 
+            for(int i=0;i<3;++i)
+            {
+                tempCom.add(pricingInfos.getKey().get(i));
+                tempPri.add(pricingInfos.getValue().get(i));
+            }
+            Map.Entry<List<Pricing>, List<PartUserInfo>> pricingInfo= new AbstractMap.SimpleEntry<List<Pricing>, List<PartUserInfo>>(tempCom,tempPri);
+
+            adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfo,switchFlag);
+            commentRecyclerView.setAdapter(adapter);
+            lookMoreComments.setVisibility(View.VISIBLE);
+        }else {
+            adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,switchFlag);
+            commentRecyclerView.setAdapter(adapter);
+            lookMoreComments.setVisibility(View.GONE);
+        }
+    }
+}
     /**
      * 点击事件
      * @Author: 李柏睿
@@ -365,14 +424,66 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                     });
                     inputTextMsgDialog.show();
                 }else{
-
+                    final KeyboardDialog keyboardDialog = new KeyboardDialog(GoodDetailActivity.this, R.style.dialog_center);
+                    keyboardDialog.setmOnPriceSendListener(new KeyboardDialog.OnTextSendListener() {
+                        @Override
+                        public void onPriceSend(String msg) {
+                            Toast.makeText(GoodDetailActivity.this, msg, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    keyboardDialog.show();
                 }
                 break;
             /**底部出价*/
             case R.id.bid_layout:
+                final KeyboardDialog keyboardDialog = new KeyboardDialog(GoodDetailActivity.this, R.style.dialog_center);
+                keyboardDialog.setmOnPriceSendListener(new KeyboardDialog.OnTextSendListener() {
+                    @Override
+                    public void onPriceSend(String msg) {
+                        Toast.makeText(GoodDetailActivity.this, msg, Toast.LENGTH_LONG).show();
+                    }
+                });
+                keyboardDialog.show();
                 break;
             /**底部评论*/
             case R.id.message_layout:
+                final InputTextMsgDialog inputTextMsgDialog = new InputTextMsgDialog(GoodDetailActivity.this, R.style.dialog_center);
+                inputTextMsgDialog.setmOnTextSendListener(new InputTextMsgDialog.OnTextSendListener() {
+                    @Override
+                    public void onTextSend(String msg) {
+                        if(msg!=null&&!"".equals(msg)){
+                            Date a=new Date(System.currentTimeMillis());
+                            Comment temp=new Comment();
+                            temp.setTime(a);
+                            temp.setContent(msg);
+                            temp.setUserid(UserInfo.getid());
+                            temp.setCommodityid(commodity.getId());
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Message a=Message.obtain();
+                                    try {
+                                        boolean res=false;
+                                        res=CommentOperate.insertComment(temp,GoodDetailActivity.this);
+                                        if(res){
+                                            a.arg2=1;
+                                        }
+                                        else{a.arg2=0;}
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    a.arg1=3;
+                                    MyHandler.sendMessage(a);
+                                }
+                            }).start();
+                        }
+                        else
+                        {
+                            MyToast.toast(GoodDetailActivity.this,"留言不能为空",0);
+                        }
+                    }
+                });
+                inputTextMsgDialog.show();
                 break;
             /**底部收藏*/
             case R.id.collection_layout:
@@ -388,15 +499,22 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 commentNum.setVisibility(View.VISIBLE);
                 SpannableString s1 = new SpannableString("留言问更多细节~");
                 msgText.setHint(s1);
+                if(commentInfos!=null)
+                {
+                    commentNum.setText(String.valueOf(commentInfos.getKey().size()));
+                }
                 switchFlag = 0;
-                adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,switchFlag);
-                commentRecyclerView.setAdapter(adapter);
+               showComment();
                 break;
             /**出价模块*/
             case R.id.bid_fragment:
                 commentRecyclerView.removeAllViews();
                 bidText.setTextAppearance(this,R.style.good_fragment_selected);
                 bidNum.setVisibility(View.VISIBLE);
+                if(pricingInfos!=null)
+                {
+                    bidNum.setText(String.valueOf(pricingInfos.getKey().size()));
+                }
                 commentText.setTextAppearance(this,R.style.good_fragment_unselected);
                 commentNum.setVisibility(View.GONE);
                 SpannableString s2 = new SpannableString("感兴趣就出个价看看吧~");
@@ -404,6 +522,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 switchFlag = 1;
                 adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,switchFlag);
                 commentRecyclerView.setAdapter(adapter);
+                showComment();
                 break;
             /**查看更多留言*/
             case R.id.click_look_more:
@@ -469,14 +588,9 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                     break;
                 case 2:
 
-                    adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,0);
-                    commentRecyclerView.setAdapter(adapter);
-                    if(commentInfos==null){
-                        commentNum.setText("0");
-                    }else{
-                        commentNum.setText(String.valueOf(commentInfos.getKey().size()));
 
-                    }
+                   showComment();
+
                     break;
                 /**
                  * 留言模块，留言后更新留言列表
@@ -514,7 +628,28 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                             MyToast.toast(GoodDetailActivity.this,"留言失败",1);
                             break;
                     }
-
+                    break;
+                /**
+                 *  更新轮播图
+                 */
+                case 4:
+                    banner.setBannerStyle(BannerConfig.NUM_INDICATOR);
+                    //设置图片加载器，图片加载器在下方
+                    banner.setImageLoader(new ImgLoader());
+                    //设置图片网址或地址的集合
+                    banner.setImages(list_path);
+                    //设置轮播的动画效果，内含多种特效，可点入方法内查找后内逐一体验
+                    banner.setBannerAnimation(Transformer.Default);
+                    //设置轮播间隔时间
+                    banner.setDelayTime(3000);
+                    //设置是否为自动轮播，默认是“是”
+                    banner.isAutoPlay(true);
+                    //设置指示器的位置，小点点，左中右。
+                    banner.setIndicatorGravity(BannerConfig.CENTER)
+                            //以上内容都可写成链式布局，这是轮播图的监听。比较重要。方法在下面。
+                            .setOnBannerListener(GoodDetailActivity.this)
+                            //必须最后调用的方法，启动轮播图。
+                            .start();
                     break;
                 default:
                     break;
@@ -533,8 +668,6 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
         if(url1!=null&&!"".equals(url1))
         {
             String []urls=url1.split(";");
-            if(urls.length>0){
-                url1=urls[0];}
             int length=urls.length;
             String result[]=new String[length];
             result[length-1]=urls[length-1];
@@ -551,24 +684,25 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                         result[i]=current;
 
                     }
-                }}
-        }
+                }
+            }
 
-        if (url1 != null && !"".equals(url1)) {
-            System.out.println("url11"+url1);
+
+        for(String url11:result){
+            System.out.println("url11"+url11);
             OSSClient oss = InitOS.getOssClient();
 
             /**
              * 获取本地保存路径
              */
-            String newUrl1 = getSandBoxPath(getActivity()) + url1;
+            String newUrl1 = getSandBoxPath(getActivity()) + url11;
             System.out.println("imager2"+url1);
             File f = new File(newUrl1);
             if (!f.exists()) {
                 /**
                  * 构建oss请求
                  */
-                GetObjectRequest get = new GetObjectRequest("cugerhuo", url1);
+                GetObjectRequest get = new GetObjectRequest("cugerhuo", url11);
                 /**
                  * 异步任务
                  */
@@ -605,9 +739,10 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                                  * 设置商品图片圆角30度
                                  */
                                 System.out.println("image1"+newUrl1);
-                                RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(30));
-                               list_path.add(Uri.fromFile(new File(newUrl1)).toString());
-
+                               list_path.add(newUrl1);
+                                Message msg=Message.obtain();
+                                msg.arg1=4;
+                                MyHandler.sendMessage(msg);
                             } catch (Exception e) {
                                 OSSLog.logInfo(e.toString());
                             }
@@ -626,28 +761,29 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                 /**
                  * 设置商品图片圆角30度
                  */
-                RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(30));
-                list_path.add(Uri.fromFile(new File(newUrl1)).toString());
+                list_path.add(newUrl1);
+                //设置内置样式，共有六种可以点入方法内逐一体验使用。
+                banner.setBannerStyle(BannerConfig.NUM_INDICATOR);
+                //设置图片加载器，图片加载器在下方
+                banner.setImageLoader(new ImgLoader());
+                //设置图片网址或地址的集合
+                banner.setImages(list_path);
+                //设置轮播的动画效果，内含多种特效，可点入方法内查找后内逐一体验
+                banner.setBannerAnimation(Transformer.Default);
+                //设置轮播间隔时间
+                banner.setDelayTime(3000);
+                //设置是否为自动轮播，默认是“是”
+                banner.isAutoPlay(true);
+                //设置指示器的位置，小点点，左中右。
+                banner.setIndicatorGravity(BannerConfig.CENTER)
+                        //以上内容都可写成链式布局，这是轮播图的监听。比较重要。方法在下面。
+                        .setOnBannerListener(this)
+                        //必须最后调用的方法，启动轮播图。
+                        .start();
             }
         }
-        //设置内置样式，共有六种可以点入方法内逐一体验使用。
-        banner.setBannerStyle(BannerConfig.NUM_INDICATOR);
-        //设置图片加载器，图片加载器在下方
-        banner.setImageLoader(new ImgLoader());
-        //设置图片网址或地址的集合
-        banner.setImages(list_path);
-        //设置轮播的动画效果，内含多种特效，可点入方法内查找后内逐一体验
-        banner.setBannerAnimation(Transformer.Default);
-        //设置轮播间隔时间
-        banner.setDelayTime(3000);
-        //设置是否为自动轮播，默认是“是”
-        banner.isAutoPlay(true);
-        //设置指示器的位置，小点点，左中右。
-        banner.setIndicatorGravity(BannerConfig.CENTER)
-                //以上内容都可写成链式布局，这是轮播图的监听。比较重要。方法在下面。
-                .setOnBannerListener(this)
-                //必须最后调用的方法，启动轮播图。
-                .start();
+        }
+
     }
 
     //轮播图的监听方法
