@@ -37,6 +37,7 @@ import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Comment;
 import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.Pricing;
+import com.example.cugerhuo.access.comment.CollectOperate;
 import com.example.cugerhuo.access.comment.CommentOperate;
 import com.example.cugerhuo.access.commodity.CommodityOperate;
 import com.example.cugerhuo.access.pricing.PricingOperate;
@@ -158,6 +159,10 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
     /**轮播图*/
     private Banner banner;
     private ArrayList<String> list_path;
+    /**商品收藏数*/
+    private int collectNum=0;
+    /**是否收藏*/
+    private boolean isCollect = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -203,6 +208,26 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
             Message msg = Message.obtain();
             msg.arg1 = 2;
             MyHandler.sendMessage(msg);
+        }).start();
+        /**判断是否收藏改变相应UI*/
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message a=Message.obtain();
+                try {
+                    boolean res=false;
+                    res = CollectOperate.isCollect(UserInfo.getid(),commodity.getId(),GoodDetailActivity.this);
+                    collectNum = CollectOperate.collectNum(commodity.getId(),GoodDetailActivity.this);
+                    if(res){
+                        a.arg2=1;
+                    }
+                    else{a.arg2=0;}
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                a.arg1=5;
+                MyHandler.sendMessage(a);
+            }
         }).start();
 
     }
@@ -487,8 +512,50 @@ void showComment()
                 break;
             /**底部收藏*/
             case R.id.collection_layout:
-                collectionIcon.setImageResource(R.drawable.icon_collection_selected);
-                collectionNum.setText("1");
+
+                if(isCollect){
+                    /**点击取消收藏*/
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Message a=Message.obtain();
+                            try {
+                                boolean res=false;
+                                res = CollectOperate.deleteCollect(UserInfo.getid(),commodity.getId(),GoodDetailActivity.this);
+                                if(res){
+                                    a.arg2=0;
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            a.arg1=6;
+                            MyHandler.sendMessage(a);
+                        }
+                    }).start();
+
+                }else{
+                    /**点击收藏*/
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Message a=Message.obtain();
+                            try {
+                                boolean res=false;
+                                res = CollectOperate.insertCollect(UserInfo.getid(),commodity.getId(),GoodDetailActivity.this);
+                                if(res){
+                                    a.arg2=1;
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            a.arg1=6;
+                            MyHandler.sendMessage(a);
+                        }
+                    }).start();
+                }
+
+//                collectionIcon.setImageResource(R.drawable.icon_collection_selected);
+//                collectionNum.setText("1");
                 break;
             /**留言模块*/
             case R.id.comment_fragment:
@@ -587,10 +654,7 @@ void showComment()
                     });
                     break;
                 case 2:
-
-
                    showComment();
-
                     break;
                 /**
                  * 留言模块，留言后更新留言列表
@@ -650,6 +714,62 @@ void showComment()
                             .setOnBannerListener(GoodDetailActivity.this)
                             //必须最后调用的方法，启动轮播图。
                             .start();
+                    break;
+                /**
+                 * 是否收藏
+                 * @Author: 李柏睿
+                 * @Time: 2023/5/9 23:30
+                 */
+                case 5:
+                    switch (msg.arg2) {
+                        case 0:
+                            collectionIcon.setImageResource(R.drawable.icon_collection_unselected);
+                            collectionNum.setText(String.valueOf(collectNum));
+                            isCollect = false;
+                            if(collectNum==0){
+                                collectionNum.setText("收藏");
+                            }
+                            break;
+                        case 1:
+                            collectionIcon.setImageResource(R.drawable.icon_collection_selected);
+                            collectionNum.setText(String.valueOf(collectNum));
+                            isCollect = true;
+                            if(collectNum==0){
+                                collectionNum.setText("收藏");
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                /**
+                 * 添加/取消收藏
+                 * @Author: 李柏睿
+                 * @Time: 2023/5/9 23:30
+                 */
+                case 6:
+                    switch (msg.arg2) {
+                        case 0:
+                            collectionIcon.setImageResource(R.drawable.icon_collection_unselected);
+                            collectNum--;
+                            collectionNum.setText(String.valueOf(collectNum));
+                            isCollect = false;
+                            if(collectNum==0){
+                                collectionNum.setText("收藏");
+                            }
+                            break;
+                        case 1:
+                            collectionIcon.setImageResource(R.drawable.icon_collection_selected);
+                            collectNum++;
+                            collectionNum.setText(String.valueOf(collectNum));
+                            isCollect = true;
+                            if(collectNum==0){
+                                collectionNum.setText("收藏");
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 default:
                     break;

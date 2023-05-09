@@ -92,4 +92,10 @@
     <string name="getEvaluation">evaluation/get</string>
     <string name="userid">userid</string>
 
+    <string name="collectProduct">/collect/collectproduct</string>
+    <string name="deleteCollect">/collect</string>
+    <string name="checkCollect">/collect/checkcollect</string>
+    <string name="collectNum">/collect/collectnum</string>
+
+
 </resources>
