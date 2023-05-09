@@ -33,8 +33,6 @@ import com.alibaba.sdk.android.oss.common.OSSLog;
 import com.alibaba.sdk.android.oss.model.GetObjectRequest;
 import com.alibaba.sdk.android.oss.model.GetObjectResult;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Comment;
 import com.example.cugerhuo.access.Commodity;
@@ -620,6 +618,28 @@ void showComment()
                             break;
                     }
                     break;
+                /**
+                 *  更新轮播图
+                 */
+                case 4:
+                    banner.setBannerStyle(BannerConfig.NUM_INDICATOR);
+                    //设置图片加载器，图片加载器在下方
+                    banner.setImageLoader(new ImgLoader());
+                    //设置图片网址或地址的集合
+                    banner.setImages(list_path);
+                    //设置轮播的动画效果，内含多种特效，可点入方法内查找后内逐一体验
+                    banner.setBannerAnimation(Transformer.Default);
+                    //设置轮播间隔时间
+                    banner.setDelayTime(3000);
+                    //设置是否为自动轮播，默认是“是”
+                    banner.isAutoPlay(true);
+                    //设置指示器的位置，小点点，左中右。
+                    banner.setIndicatorGravity(BannerConfig.CENTER)
+                            //以上内容都可写成链式布局，这是轮播图的监听。比较重要。方法在下面。
+                            .setOnBannerListener(GoodDetailActivity.this)
+                            //必须最后调用的方法，启动轮播图。
+                            .start();
+                    break;
                 default:
                     break;
             }
@@ -637,8 +657,6 @@ void showComment()
         if(url1!=null&&!"".equals(url1))
         {
             String []urls=url1.split(";");
-            if(urls.length>0){
-                url1=urls[0];}
             int length=urls.length;
             String result[]=new String[length];
             result[length-1]=urls[length-1];
@@ -657,23 +675,23 @@ void showComment()
                     }
                 }
             }
-        }
 
-        if (url1 != null && !"".equals(url1)) {
-            System.out.println("url11"+url1);
+
+        for(String url11:result){
+            System.out.println("url11"+url11);
             OSSClient oss = InitOS.getOssClient();
 
             /**
              * 获取本地保存路径
              */
-            String newUrl1 = getSandBoxPath(getActivity()) + url1;
+            String newUrl1 = getSandBoxPath(getActivity()) + url11;
             System.out.println("imager2"+url1);
             File f = new File(newUrl1);
             if (!f.exists()) {
                 /**
                  * 构建oss请求
                  */
-                GetObjectRequest get = new GetObjectRequest("cugerhuo", url1);
+                GetObjectRequest get = new GetObjectRequest("cugerhuo", url11);
                 /**
                  * 异步任务
                  */
@@ -710,9 +728,10 @@ void showComment()
                                  * 设置商品图片圆角30度
                                  */
                                 System.out.println("image1"+newUrl1);
-                                RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(30));
-                               list_path.add(Uri.fromFile(new File(newUrl1)).toString());
-
+                               list_path.add(newUrl1);
+                                Message msg=Message.obtain();
+                                msg.arg1=4;
+                                MyHandler.sendMessage(msg);
                             } catch (Exception e) {
                                 OSSLog.logInfo(e.toString());
                             }
@@ -731,28 +750,29 @@ void showComment()
                 /**
                  * 设置商品图片圆角30度
                  */
-                RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(30));
-                list_path.add(Uri.fromFile(new File(newUrl1)).toString());
+                list_path.add(newUrl1);
+                //设置内置样式，共有六种可以点入方法内逐一体验使用。
+                banner.setBannerStyle(BannerConfig.NUM_INDICATOR);
+                //设置图片加载器，图片加载器在下方
+                banner.setImageLoader(new ImgLoader());
+                //设置图片网址或地址的集合
+                banner.setImages(list_path);
+                //设置轮播的动画效果，内含多种特效，可点入方法内查找后内逐一体验
+                banner.setBannerAnimation(Transformer.Default);
+                //设置轮播间隔时间
+                banner.setDelayTime(3000);
+                //设置是否为自动轮播，默认是“是”
+                banner.isAutoPlay(true);
+                //设置指示器的位置，小点点，左中右。
+                banner.setIndicatorGravity(BannerConfig.CENTER)
+                        //以上内容都可写成链式布局，这是轮播图的监听。比较重要。方法在下面。
+                        .setOnBannerListener(this)
+                        //必须最后调用的方法，启动轮播图。
+                        .start();
             }
         }
-        //设置内置样式，共有六种可以点入方法内逐一体验使用。
-        banner.setBannerStyle(BannerConfig.NUM_INDICATOR);
-        //设置图片加载器，图片加载器在下方
-        banner.setImageLoader(new ImgLoader());
-        //设置图片网址或地址的集合
-        banner.setImages(list_path);
-        //设置轮播的动画效果，内含多种特效，可点入方法内查找后内逐一体验
-        banner.setBannerAnimation(Transformer.Default);
-        //设置轮播间隔时间
-        banner.setDelayTime(3000);
-        //设置是否为自动轮播，默认是“是”
-        banner.isAutoPlay(true);
-        //设置指示器的位置，小点点，左中右。
-        banner.setIndicatorGravity(BannerConfig.CENTER)
-                //以上内容都可写成链式布局，这是轮播图的监听。比较重要。方法在下面。
-                .setOnBannerListener(this)
-                //必须最后调用的方法，启动轮播图。
-                .start();
+        }
+
     }
 
     //轮播图的监听方法

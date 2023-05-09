@@ -41,6 +41,7 @@
                     android:id="@+id/linear_search_item">
 
                     <ImageView
+                        android:id="@+id/result_image_search"
                         android:layout_width="20dp"
                         android:layout_height="22dp"
                         android:layout_gravity="center"

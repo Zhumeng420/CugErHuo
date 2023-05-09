@@ -200,7 +200,7 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
             int length=urls.length;
             String result[]=new String[length];
             result[length-1]=urls[length-1];
-// 从后往前依次减去后面一个元素
+            // 从后往前依次减去后面一个元素
             if(length>1){
                 for (int i = length - 2; i >= 0; i--) {
                     String current = urls[i];
