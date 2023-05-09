@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
+import com.example.cugerhuo.access.comment.CollectOperate;
 import com.example.cugerhuo.access.evaluate.CommodityEvaluateOperate;
 import com.example.cugerhuo.access.evaluate.EvaluationInfo;
 import com.example.cugerhuo.access.user.PartUserInfo;
@@ -28,9 +29,12 @@ import com.example.cugerhuo.access.user.UserOperate;
 import com.example.cugerhuo.activity.imessage.ChatActivity;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
 import com.example.cugerhuo.activity.mycenter.EvaluateActivity;
+import com.example.cugerhuo.activity.mycenter.MyCollectsActivity;
 import com.example.cugerhuo.activity.mycenter.MyPostActivity;
 import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.Serializable;
@@ -72,6 +76,12 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
     private List<PartUserInfo> evaluationUser=new ArrayList<>();
     private List<Commodity> commodities=new ArrayList<>();
     public static int focusNum;
+    /**我的收藏数*/
+    private int myCollects=0;
+    /**收藏部分*/
+    private LinearLayout collectLayout;
+    private TextView collectNum;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +149,21 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
             //4、发送消息
             MyHandler.sendMessage(msg);
         }).start();
+
+        /**获取收藏数*/
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message a=Message.obtain();
+                try {
+                    myCollects = CollectOperate.myCollectNum(UserInfo.getid(),MyCenterActivity.this);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                a.arg1=5;
+                MyHandler.sendMessage(a);
+            }
+        }).start();
     }
     /**
      * 初始化各个控件，找到对应的组件
@@ -163,6 +188,9 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         leUserFans=findViewById(R.id.le_user_fans);
         myPost=findViewById(R.id.my_post);
         toEvaluate=findViewById(R.id.toEvaluate);
+        collectLayout=findViewById(R.id.collect);
+        collectLayout.setOnClickListener(this);
+        collectNum=findViewById(R.id.user_collection);
     }
 
 
@@ -354,6 +382,16 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                 overridePendingTransition(0,0);
                 finish();
                 break;
+            /**
+             * 跳转我的收藏界面
+             * @Author: 李柏睿
+             * @Time: 2023/5/10 1:38
+             */
+            case R.id.collect:
+                startActivity(new Intent(getApplicationContext(), MyCollectsActivity.class));
+                overridePendingTransition(0,0);
+                finish();
+                break;
             default:
                 break;
         }
@@ -396,6 +434,10 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                     bundle1.putSerializable("ePartUserInfos", (Serializable) evaluationUser);
                     intent1.putExtras(bundle1);
                     startActivity(intent1);
+                    break;
+                /**收藏数*/
+                case 5:
+                    collectNum.setText(String.valueOf(myCollects));
                     break;
                 default:
                     break;

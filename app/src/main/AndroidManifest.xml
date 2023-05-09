@@ -77,6 +77,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.mycenter.MyCollectsActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".activity.mycenter.EvaluateDetailsActivity"
             android:exported="false">
             <meta-data
@@ -169,7 +176,8 @@
         </activity>
         <activity
             android:name=".activity.BigImgActivity"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="DuplicateActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

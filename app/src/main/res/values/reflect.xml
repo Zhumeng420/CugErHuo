@@ -98,6 +98,9 @@
     <string name="deleteCollect">/collect</string>
     <string name="checkCollect">/collect/checkcollect</string>
     <string name="collectNum">/collect/collectnum</string>
+    <string name="myCollect">/collect/mycollect</string>
+
+
 
 
 </resources>

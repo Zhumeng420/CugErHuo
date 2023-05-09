@@ -5,12 +5,17 @@ import android.content.Context;
 import com.alibaba.fastjson.JSON;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Comment;
+import com.example.cugerhuo.access.user.PartUserInfo;
+import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.tools.entity.RespBean;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.FormBody;
 import okhttp3.MediaType;
@@ -193,6 +198,110 @@ public class CollectOperate {
         } catch (IOException e) {
             e.printStackTrace();
         }return result;
+
+    }
+
+
+    /**
+     * 获取我的收藏
+     * @Author: 李柏睿
+     * @Time: 2023/5/9 23:03
+     */
+    public static List<Integer> myCollect(int userId, Context context) throws JSONException {
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.Tuip);
+        String router=context.getString(R.string.myCollect);
+        String uid=context.getString(R.string.UserId);
+        String pid=context.getString(R.string.ProductId);
+        /**
+         * 发送请求
+         */
+        String result = "hi";
+        List<Integer> myCollects=new ArrayList<>();
+        int pageId=0;
+        while (result!=null){
+            String url="http://"+ip+"/"+router+"?"+uid+"="+userId+"&"+"page"+"="+pageId;
+            Request request = new Request.Builder().url(url).get().build();
+            Response response = null;
+            try {
+                response = okHttpClient.newCall(request).execute();
+                response.body();
+                JSONObject obj=new JSONObject(response.body().string());
+                if("200".equals(obj.getString("code"))){
+                    String collects = obj.getString("object");
+                    collects=collects.substring(1,collects.length()-1);
+                    if("".equals(collects)){
+                        result=null;
+                        return myCollects;
+                    }
+                    String []coll=collects.split(",");
+                    int length=coll.length;
+                    for(int i = 0;i<length;i++){
+                        myCollects.add(Integer.valueOf(coll[i]));
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            pageId++;
+        }
+        return myCollects;
+
+    }
+
+
+    /**
+     * 获取我的收藏数量
+     * @Author: 李柏睿
+     * @Time: 2023/5/9 23:03
+     */
+    public static int myCollectNum(int userId, Context context) throws JSONException {
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.Tuip);
+        String router=context.getString(R.string.myCollect);
+        String uid=context.getString(R.string.UserId);
+        String pid=context.getString(R.string.ProductId);
+        /**
+         * 发送请求
+         */
+        String result = "hi";
+        List<Integer> myCollects=new ArrayList<>();
+        int pageId=0;
+        while (result!=null){
+            String url="http://"+ip+"/"+router+"?"+uid+"="+userId+"&"+"page"+"="+pageId;
+            Request request = new Request.Builder().url(url).get().build();
+            Response response = null;
+            try {
+                response = okHttpClient.newCall(request).execute();
+                response.body();
+                JSONObject obj=new JSONObject(response.body().string());
+                if("200".equals(obj.getString("code"))){
+                    String collects = obj.getString("object");
+                    collects=collects.substring(1,collects.length()-1);
+                    if("".equals(collects)){
+                        result=null;
+                        return myCollects.toArray().length;
+                    }
+                    String []coll=collects.split(",");
+                    int length=coll.length;
+                    for(int i = 0;i<length;i++){
+                        myCollects.add(Integer.valueOf(coll[i]));
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            pageId++;
+        }
+        return myCollects.toArray().length;
 
     }
 }
