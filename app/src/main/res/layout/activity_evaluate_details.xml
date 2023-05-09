@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:clipChildren="false"
+    tools:context=".activity.mycenter.EvaluateDetailsActivity">
+      <LinearLayout
+          android:orientation="vertical"
+          android:layout_width="match_parent"
+          android:background="@color/white"
+          android:layout_gravity="center_horizontal"
+          android:padding="5dp"
+          android:layout_height="wrap_content"
+          >
+          <LinearLayout
+              android:layout_marginTop="5dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="10dp"
+              android:orientation="horizontal">
+
+              <ImageView
+                  android:id="@+id/return_img"
+                  android:rotation="180"
+                  android:layout_marginTop="10dp"
+                  android:layout_marginLeft="5dp"
+                  android:layout_width="25dp"
+                  android:layout_height="25dp"
+                  android:src="@drawable/icon_arrow_black" />
+              <TextView
+                  android:layout_marginTop="7dp"
+                  android:layout_marginLeft="50dp"
+                  android:layout_width="0dp"
+                  android:layout_height="30dp"
+                  android:layout_weight="1"
+                  android:gravity="center"
+                  android:textSize="16dp"
+                  android:text="评价"
+                  android:textColor="#000000" />
+              <Button
+                  android:layout_width="70dp"
+                  android:layout_height="28dp"
+                  android:layout_marginLeft="40dp"
+                  android:layout_marginTop="7dp"
+                  android:layout_marginRight="10dp"
+                  android:text="发布"
+                  android:gravity="center"
+                  android:background="@drawable/shape_btn_post"
+                  android:outlineProvider="none"
+                  android:textColor="@color/white"/>
+
+
+          </LinearLayout>
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="10dp" >
+              <LinearLayout
+                  android:layout_width="match_parent"
+                  android:padding="5dp"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+
+                  <LinearLayout
+                      android:layout_width="52dp"
+                      android:layout_height="45dp">
+                      <ImageView
+                          android:padding="5dp"
+                          android:id="@+id/good_item_buy_img"
+                          android:scaleType="fitXY"
+                          android:layout_width="50dp"
+                          android:layout_height="50dp"
+                          android:src="@drawable/icon_iphone"/>
+                  </LinearLayout>
+
+                  <LinearLayout
+                      android:id="@+id/user_concern"
+                      android:orientation="vertical"
+                      android:layout_marginTop="10dp"
+                      android:layout_weight="1"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent">
+                      <LinearLayout
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          >
+                          <TextView
+                              android:id="@+id/good_item_buy_title"
+                              android:layout_width="match_parent"
+                              android:layout_height="15dp"
+                              android:layout_marginRight="8dp"
+                              android:maxLines="2"
+                              android:text="手机二手便宜平价出"
+                              android:layout_marginBottom="2dp"
+                              android:textSize="11dp"
+                              android:textColor="@color/app_color_53575e"/>
+                      </LinearLayout>
+
+                      <LinearLayout
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:gravity="left"
+
+
+                          android:layout_marginRight="20dp">
+                          <TextView
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="实付款 "
+                              android:textColor="@color/app_color_9b"
+                              android:textSize="9dp"
+                              />
+                          <TextView
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="¥"
+                              android:textColor="@color/app_color_9b"
+                              android:textSize="9dp"
+                              />
+                          <TextView
+                              android:id="@+id/goods_item_buy_price"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="1300"
+                              android:textSize="12dp"
+                              android:textColor="@color/app_color_53575e"
+                              />
+                      </LinearLayout>
+                  </LinearLayout>
+              </LinearLayout>
+          </LinearLayout>
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_marginTop="10dp"
+
+          android:orientation="vertical">
+          <LinearLayout
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:padding="10dp"
+              android:orientation="horizontal"
+              android:layout_marginBottom="10dp"
+              android:layout_gravity="center">
+              <Button
+                  android:id="@+id/good_comment"
+                  android:layout_width="90dp"
+                  android:layout_height="32dp"
+                  android:outlineProvider="none"
+                  android:text="好评"
+                  android:background="@drawable/shape_btn_concern"
+                  android:layout_marginRight="20dp"
+                  android:paddingRight="18dip"
+                  android:paddingLeft="10dip"
+                  />
+              <Button
+                  android:id="@+id/middle_comment"
+                  android:layout_width="90dp"
+                  android:layout_height="32dp"
+                  android:outlineProvider="none"
+                  android:text="中评"
+                  android:background="@drawable/shape_btn_concern"
+                  android:layout_marginRight="20dp"
+                  android:paddingRight="18dip"
+                  android:paddingLeft="10dip"
+                  />
+              <Button
+                  android:id="@+id/bad_comment"
+                  android:layout_width="90dp"
+                  android:layout_height="32dp"
+                  android:outlineProvider="none"
+                  android:text="差评"
+                  android:background="@drawable/shape_btn_concern"
+                  android:paddingRight="18dip"
+                  android:paddingLeft="10dip"
+                  />
+          </LinearLayout>
+
+          <EditText
+              android:id="@+id/editUserSign"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/background_white_decoration"
+              android:hint="评价一下这次交易，你的客观评价能帮助到他人哦~"
+              android:gravity="top"
+              android:padding="15dp"
+              android:textSize="13sp"/>
+
+      </LinearLayout>
+
+</LinearLayout>

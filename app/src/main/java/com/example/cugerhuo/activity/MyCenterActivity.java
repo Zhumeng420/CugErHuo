@@ -16,12 +16,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.access.evaluate.CommodityEvaluateOperate;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.access.user.UserOperate;
 import com.example.cugerhuo.activity.imessage.ChatActivity;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
+import com.example.cugerhuo.activity.mycenter.EvaluateActivity;
 import com.example.cugerhuo.activity.mycenter.MyPostActivity;
 import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -57,6 +59,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
     private LinearLayout llTabFive;
     private LinearLayout userConcern;
     private LinearLayout leUserFans;
+    private LinearLayout toEvaluate;
     private  PartUserInfo part;
     public static int focusNum;
     @Override
@@ -72,6 +75,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
             userImage.setImageURI(Uri.fromFile(new File(imagpath)));
         }
         myPost.setOnClickListener(this::myPostClick);
+        toEvaluate.setOnClickListener(this::evaluateClick);
         new Thread(()->{
             Message msg = Message.obtain();
             msg.arg1 = 3;
@@ -148,6 +152,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         username=findViewById(R.id.username);
         leUserFans=findViewById(R.id.le_user_fans);
         myPost=findViewById(R.id.my_post);
+        toEvaluate=findViewById(R.id.toEvaluate);
     }
 
 
@@ -184,6 +189,17 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
     public void myPostClick(View view){
         Intent intent=new Intent(getApplicationContext(), MyPostActivity.class);
         startActivityForResult(intent,0x0004);
+    }
+
+    /**
+     * 点击待评价进行跳转
+     * @param view
+     * @author 唐小莉
+     * @time 2023/5/9
+     */
+    public void evaluateClick(View  view){
+        Intent intent=new Intent(MyCenterActivity.this, EvaluateActivity.class);
+        startActivity(intent);
     }
 
     /**

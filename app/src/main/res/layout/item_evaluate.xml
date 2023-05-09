@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="0.5dp"
+    android:layout_marginBottom="1dp"
     android:background="@drawable/border_radius"
     android:clipChildren="false"
     >
@@ -14,7 +14,9 @@
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_height="35dp">
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_marginTop="3dp"
@@ -31,7 +33,7 @@
                     android:layout_marginLeft="10dp"
                     app:riv_oval="true"
                     android:layout_marginRight="15dp"
-                    android:id="@+id/user_concern_img" />
+                    android:id="@+id/user_buy_img" />
                 <LinearLayout
                     android:gravity="center_vertical"
                     android:orientation="vertical"
@@ -39,7 +41,7 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent">
                     <TextView
-                        android:id="@+id/user_concern_name"
+                        android:id="@+id/user_buy_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="RecyclerViewItem"
@@ -64,16 +66,16 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
+            android:padding="5dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-
             <LinearLayout
                 android:layout_width="80dp"
-                android:layout_height="100dp">
+                android:layout_height="120dp">
                 <ImageView
                     android:padding="5dp"
-                    android:id="@+id/good_item_post_img"
+                    android:id="@+id/good_item_buy_img"
                     android:scaleType="fitXY"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
@@ -86,13 +88,16 @@
                 android:orientation="vertical"
                 android:layout_marginTop="3dp"
                 android:layout_weight="1"
+
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    >
                     <TextView
-                        android:id="@+id/good_item__post_title"
+                        android:id="@+id/good_item_buy_title"
                         android:layout_width="match_parent"
                         android:layout_height="20dp"
                         android:layout_marginRight="8dp"
@@ -106,7 +111,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="8dp"
+
                     android:layout_marginRight="20dp">
                     <TextView
                         android:layout_width="wrap_content"
@@ -123,10 +129,11 @@
                         android:textSize="10dp"
                         />
                     <TextView
-                        android:id="@+id/goods_item_price"
+                        android:id="@+id/goods_item_buy_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1300"
+                        android:textSize="15dp"
                         android:textColor="@color/app_color_black"
                         />
                 </LinearLayout>
@@ -136,18 +143,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="right"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="2dp"
                     >
                     <LinearLayout
                         android:layout_width="70dp"
                         android:layout_height="match_parent"
                         android:layout_marginRight="5dp">
                         <Button
+                            android:id="@+id/contact_buy"
                             android:layout_marginTop="5dp"
-                            android:layout_width="65dp"
-                            android:layout_height="28dp"
+                            android:layout_width="70dp"
+                            android:layout_height="31dp"
                             android:text="联系买家"
+                            android:outlineProvider="none"
                             android:background="@drawable/shape_btn_concern"
                             android:textSize="12sp"/>
 
@@ -156,9 +165,11 @@
                         android:layout_width="70dp"
                         android:layout_height="match_parent">
                         <Button
+                            android:id="@+id/comment_goods"
                             android:layout_marginTop="5dp"
-                            android:layout_width="65dp"
-                            android:layout_height="28dp"
+                            android:layout_width="70dp"
+                            android:layout_height="30dp"
+                            android:outlineProvider="none"
                             android:text="去评价"
                             android:background="@drawable/shape_btn_concern"
                             android:textSize="12sp"/>
