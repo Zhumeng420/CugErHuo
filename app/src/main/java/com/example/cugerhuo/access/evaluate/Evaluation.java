@@ -1,5 +1,6 @@
 package com.example.cugerhuo.access.evaluate;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -7,13 +8,13 @@ import java.sql.Timestamp;
  * @author carollkarry
  * @time 2023/5/9
  */
-public class Evaluation {
-    private int userid;
+public class Evaluation implements Serializable {
     private int commerid;
     private String content;
-    private Timestamp time;
     private int score;
     private int state;
+    private Timestamp time;
+    private int userid;
 
     public void setUserid(int id){
         this.userid=id;

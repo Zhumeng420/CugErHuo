@@ -1,8 +1,9 @@
 package com.example.cugerhuo.access.commerce;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Commerce {
+public class Commerce implements Serializable {
     /**
      * 买家id
      */

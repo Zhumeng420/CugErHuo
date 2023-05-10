@@ -1,4 +1,4 @@
-package com.example.cugerhuo.Fragment;
+package com.example.cugerhuo.fragment;
 
 import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 

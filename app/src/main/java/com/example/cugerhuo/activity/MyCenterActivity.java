@@ -20,6 +20,7 @@ import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.Reward;
 import com.example.cugerhuo.access.comment.CollectOperate;
+import com.example.cugerhuo.access.commerce.Commerce;
 import com.example.cugerhuo.access.commodity.CommodityOperate;
 import com.example.cugerhuo.access.evaluate.CommodityEvaluateOperate;
 import com.example.cugerhuo.access.evaluate.EvaluationInfo;
@@ -76,6 +77,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
     private List<EvaluationInfo> evaluationInfoList=new ArrayList<>();
     private List<PartUserInfo> evaluationUser=new ArrayList<>();
     private List<Commodity> commodities=new ArrayList<>();
+    private List<Commerce> commerce;
 
 
     private List<Reward> rewards=new ArrayList<>();
@@ -287,33 +289,40 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         /**
          * 获取商品评价信息
          */
-        new Thread(()->{
-            Message msg = Message.obtain();
-            msg.arg1 = 4;
 
-            evaluationInfoList=CommodityEvaluateOperate.getEvaluate(UserInfo.getid(),MyCenterActivity.this);
 
-            /**
-             * 建立连接对象
-             */
-            LettuceBaseCase lettuce=new LettuceBaseCase();
-            /**
-             * 获取连接
-             */
-            RedisCommands<String, String> con=lettuce.getSyncConnection();
-            /**
-             * 通过连接调用查询
-             */
-            for(int i=0;i<evaluationInfoList.size();i++){
-               if(evaluationInfoList.get(i).getEvaluation().getState()==0){
-                   PartUserInfo user= UserInfoOperate.getInfoFromRedis(con,evaluationInfoList.get(i).getEvaluation().getUserid(), MyCenterActivity.this);
-                   evaluationUser.add(user);
-                   commodities.add(evaluationInfoList.get(i).getCommodity());
+        evaluationUser=new ArrayList<>();
+        evaluationInfoList=new ArrayList<>();
+
+           new Thread(()->{
+               Message msg = Message.obtain();
+               msg.arg1 = 4;
+
+               evaluationInfoList=CommodityEvaluateOperate.getEvaluate(UserInfo.getid(),MyCenterActivity.this);
+
+               /**
+                * 建立连接对象
+                */
+               LettuceBaseCase lettuce=new LettuceBaseCase();
+               /**
+                * 获取连接
+                */
+               RedisCommands<String, String> con=lettuce.getSyncConnection();
+               /**
+                * 通过连接调用查询
+                */
+               for(int i=0;i<evaluationInfoList.size();i++){
+                   if(evaluationInfoList.get(i).getEvaluation().getState()==0){
+                       PartUserInfo user= UserInfoOperate.getInfoFromRedis(con,evaluationInfoList.get(i).getEvaluation().getCommerid(), MyCenterActivity.this);
+                       evaluationUser.add(user);
+                      // commodities.add(evaluationInfoList.get(i).getCommodity());
+                      // commerce.add(evaluationInfoList.get(i).getCommerce());
+                   }
                }
-            }
-            //4、发送消息
-            MyHandler.sendMessage(msg);
-        }).start();
+               //4、发送消息
+               MyHandler.sendMessage(msg);
+           }).start();
+
 
     }
 
@@ -476,12 +485,13 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                     /**
                      * 跳转至待评价界面并传参
                      */
-                    Intent intent1=new Intent(getActivity(), EvaluateActivity.class);
+                    Intent intent=new Intent(getActivity(), EvaluateActivity.class);
                     Bundle bundle1=new Bundle();
-                    bundle1.putSerializable("eCommodityList", (Serializable) commodities);
+                    bundle1.putSerializable("evaluationList", (Serializable) evaluationInfoList);
                     bundle1.putSerializable("ePartUserInfos", (Serializable) evaluationUser);
-                    intent1.putExtras(bundle1);
-                    startActivity(intent1);
+                   // bundle1.putSerializable("commerce",  (Serializable)commerce);
+                    intent.putExtras(bundle1);
+                    startActivity(intent);
                     break;
                 /**收藏数*/
                 case 5:
