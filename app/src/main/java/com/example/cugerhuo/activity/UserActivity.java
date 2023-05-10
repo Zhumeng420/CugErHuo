@@ -100,6 +100,8 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private TextView userIntroduce;
     private TextView userSex;
     private TextView userAge;
+    private TextView userSign;
+    private TextView userInterest;
     private LinearLayout userNameLayout;
     private LinearLayout userIntroduceLayout;
     private LinearLayout userSexLayout;
@@ -164,6 +166,8 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         userSexLayout=findViewById(R.id.user_sex_layout);
         userAge=findViewById(R.id.user_age);
         userSex=findViewById(R.id.user_sex);
+        userInterest=findViewById(R.id.user_interest);
+        userSign=findViewById(R.id.user_sign);
         userAgeLayout=findViewById(R.id.user_age_layout);
     }
 
@@ -252,11 +256,19 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 case 1:
                     username.setText(part.getUserName());
                     userIntroduce.setText(part.getSignature());
-                    userAge.setText(part.getAge().toString());
+                    if(part.getAge()!=null){
+                    userAge.setText(part.getAge().toString());}
                     if(part.getGender()!=null){
                         if(part.getGender()==1){
                     userSex.setText("男");}else{
                     userSex.setText("女");}}
+                    if(part.getInterest()!=null){
+                        userInterest.setText(part.getInterest());
+                    }
+                    if(part.getSelfIntroduction()!=null)
+                    {
+                        userSign.setText(part.getSelfIntroduction());
+                    }
                    break;
                 default:
                     break;
