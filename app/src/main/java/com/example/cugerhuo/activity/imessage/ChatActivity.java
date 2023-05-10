@@ -894,6 +894,27 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
                     }
                     break;
+                case 3:
+                    if(msg.arg2==0)
+                    {
+                        MyToast.toast(ChatActivity.this,"交易已完成",3);
+
+                    }
+                    else
+                    {
+                        MyToast.toast(ChatActivity.this,"等待对方确认交易",2);
+
+                    }
+                    break;
+                case 4:
+                    if(msg.arg2==0)
+                    {
+                        MyToast.toast(ChatActivity.this,"期待您对本次交易的评价！",3);
+                    }
+                    else
+                    {
+                        MyToast.toast(ChatActivity.this,"评价异常",0);
+                    }
                 default:
                     break;
             }
@@ -945,30 +966,37 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                     @Override
                     public void run() {
                         int result=CommerceOperate.setState(commerce.getCommerceid(),1,ChatActivity.this);
+                        Message msg=Message.obtain();
+                        msg.arg1=3;
                         if(result==3)
                         {
-                            MyToast.toast(ChatActivity.this,"交易已完成",3);
+
+                            msg.arg2=0;
+                            MyHandler.sendMessage(msg);
+
                                 boolean res=false;
                                 Evaluation empty=new Evaluation();
                                 empty.setCommerid(commerce.getCommerceid());
                                 empty.setUserid(UserInfo.getid());
                                 empty.setState(0);
                                 empty.setScore(0);
-                                empty.setTime((Timestamp) new Date(System.currentTimeMillis()));
+                                empty.setTime(new Timestamp(System.currentTimeMillis()));
                                 empty.setContent("");
                                 res= CommodityEvaluateOperate.insertEmptyEvlution(empty,ChatActivity.this);
+                            Message msg1=Message.obtain();
+                            msg1.arg1=4;
                                 if(res)
-                                {
-                                    MyToast.toast(ChatActivity.this,"期待您对本次交易的评价！",3);
+                                {msg1.arg2=0;
                                 }
                                 else
-                                {
-                                    MyToast.toast(ChatActivity.this,"评价异常",0);
+                                {msg1.arg2=1;
                                 }
+                                MyHandler.sendMessage(msg1);
                         }
                         if(result==2)
                         {
-                            MyToast.toast(ChatActivity.this,"等待对方确认交易",2);
+                            msg.arg2=1;
+                            MyHandler.sendMessage(msg);
                         }
                     }
                 }).start();

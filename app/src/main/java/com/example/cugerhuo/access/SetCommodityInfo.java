@@ -152,9 +152,88 @@ return true;
                  * 获取连接
                  */
                 RedisCommands<String, String> con=lettuce.getSyncConnection();
-//                /**
-//                 * 获取XML文本
-//                 */
+                /**
+                 * 获取XML文本
+                 */
+                String ip=context.getString(R.string.Tuip);
+                String router=context.getString(R.string.recommendCom);
+                String page=context.getString(R.string.page);
+                String uid=context.getString(R.string.UserId);
+                /**
+                 * 发送请求
+                 */
+                String url="http://"+ip+"/"+router+"?"+page+"="+page2+"&"+uid+"="+id;
+                Request request = new Request.Builder().url(url).get().build();
+                Response response = null;
+                int result
+                        =-1;
+                try {
+                    response = okHttpClient.newCall(request).execute();
+                    JSONObject pa= JSONObject.parseObject(response.body().string());
+                    System.out.println(result);
+                    System.out.println("asdsa");
+                    JSONArray a=JSONArray.parseArray(pa.getString("object"));
+                    for(Object i:a)
+                    {
+                        System.out.println("doashda"+i);
+                        recommedCom.add((Integer) i);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                List<Commodity>  tt=new ArrayList<>();
+                List<PartUserInfo> mm=new ArrayList<>();
+                for(Integer i:recommedCom)
+                {
+                    Commodity temp= CommodityOperate.getCommodityFromRedis(con,i,context);
+                    int id=temp.getUserId();
+                    System.out.println("userid"+id);
+                    tt.add(temp);
+                    mm.add(UserInfoOperate.getInfoFromRedis(con,id,context));
+                }
+                if(tt.size()==0)
+                {
+                    EventBus.getDefault().post(new MsgEvent1("子线程发的消息1"));
+                    return;
+                }
+                RecommendInfo.setCommodityList(tt);
+                RecommendInfo.setPartUserInfoList(mm);
+                /**
+                 * 实时推荐
+                 */
+//                Map.Entry<List<Commodity>, List<PartUserInfo>> result=CommodityOperate.getOnlineRecommendComs(con,id,0,context);
+//                RecommendInfo.setPartUserInfoList(result.getValue());
+//                RecommendInfo.setCommodityList(result.getKey());
+
+                // 发送广播
+
+                EventBus.getDefault().post(new MsgEvent1("子线程发的消息1"));
+            }
+        }).start();
+
+        return true;
+    }
+
+    public static boolean setInfoRecommendRefresh(int id, int page2,Context context)
+    {
+        OkHttpClient okHttpClient = new OkHttpClient();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<Integer> recommedCom=new ArrayList<>();
+                /**
+                 * 建立连接对象
+                 */
+                LettuceBaseCase lettuce=new LettuceBaseCase();
+                /**
+                 * 获取连接
+                 */
+                RedisCommands<String, String> con=lettuce.getSyncConnection();
+                /**
+                 * 获取XML文本
+                 */
 //                String ip=context.getString(R.string.Tuip);
 //                String router=context.getString(R.string.recommendCom);
 //                String page=context.getString(R.string.page);

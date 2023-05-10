@@ -70,7 +70,7 @@ public class CommerceOperate {
          * 获取XML文本
          */
         String ip=context.getString(R.string.ip);
-        String router=context.getString(R.string.SetUserImage);
+        String router=context.getString(R.string.updateCommerce);
         String state=context.getString(R.string.State);
         String commerceId=context.getString(R.string.CommerceId);
         /**
@@ -84,8 +84,11 @@ public class CommerceOperate {
         int isSeted=-1;
         try {
             response = okHttpClient.newCall(request).execute();
-            RespBean a= JSON.parseObject(response.body().toString(),RespBean.class);
+            RespBean a= JSON.parseObject(response.body().string(),RespBean.class);
+            if(a.getObject()!=null)
+            {
             isSeted= (int) a.getObject();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

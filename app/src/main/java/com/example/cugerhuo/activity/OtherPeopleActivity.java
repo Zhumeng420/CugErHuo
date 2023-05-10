@@ -20,26 +20,18 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.cugerhuo.fragment.AppraiseFragment;
-import com.example.cugerhuo.Fragment.ProductFragment;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.commodity.CommodityOperate;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.user.UserOperate;
-import com.example.cugerhuo.activity.adapter.RecycleViewMyCollectsAdapter;
-import com.example.cugerhuo.activity.adapter.ViewAdapter;
 import com.example.cugerhuo.activity.adapter.ViewAdapterOther;
-import com.example.cugerhuo.activity.adapter.ViewPagerAdapter;
 import com.example.cugerhuo.activity.imessage.ChatActivity;
-import com.example.cugerhuo.activity.mycenter.MyCollectsActivity;
-import com.example.cugerhuo.fragment.MyFragment;
-import com.example.cugerhuo.fragment.SuggestFragment;
+import com.example.cugerhuo.fragment.AppraiseFragment;
+import com.example.cugerhuo.fragment.ProductFragment;
 import com.example.cugerhuo.views.MyScrollView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -346,7 +338,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
      * @Time: 2023/3/28 11:28
      */
     public void initFragment(){
-        fragments.add(new ProductFragment("商品",commodities,partUserInfo));
+        fragments.add(new ProductFragment("商品",commodities));
         fragments.add(new AppraiseFragment("评价"));
         /**设置ViewPager适配器*/
         adapter = new ViewAdapterOther(getSupportFragmentManager(),fragments);

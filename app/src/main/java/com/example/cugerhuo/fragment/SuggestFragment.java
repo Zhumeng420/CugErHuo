@@ -27,6 +27,7 @@ import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.util.MsgEvent1;
 import com.example.cugerhuo.activity.GoodDetailActivity;
 import com.example.cugerhuo.activity.adapter.RecyclerViewGoodsDisplayAdapter;
+import com.example.cugerhuo.tools.MyToast;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
@@ -77,7 +78,8 @@ public class SuggestFragment extends Fragment {
     /**
      * 商品id
      */
-    private int clickedProductId;
+    private int clickedProductId=0;
+    private int pageNum=1;
     /**
      * 构造函数
      * @param title
@@ -131,7 +133,6 @@ public class SuggestFragment extends Fragment {
                     int flag = 1;
                     clickedProductId=commodities.get(position).getId();
                     Intent intent=new Intent(getActivity(), GoodDetailActivity.class);
-
                     intent.putExtra("commodity",commodities.get(position));
                     intent.putExtra("user",userInfos.get(position));
                     //startActivity(intent);
@@ -155,7 +156,19 @@ public class SuggestFragment extends Fragment {
                 /**
                  * 获取刷新后的商品信息
                  */
-                SetCommodityInfo.setInfoRefresh(UserInfo.getid(),page,getActivity());
+                if(clickedProductId==0){
+                    if(pageNum<10){
+                SetCommodityInfo.setInfoRefresh(UserInfo.getid(),pageNum++,getActivity());
+                    }
+                else
+                {
+                    MyToast.toast(getActivity(),"已经到底啦",0);
+                }
+                }
+                else
+                {
+                    SetCommodityInfo.setInfoRecommendRefresh(UserInfo.getid(),page,getActivity());
+                }
                     userInfos= RecommendInfo.getPartUserInfoList();
                     commodities=RecommendInfo.getCommodityList();
                     //adapter.notifyDataSetChanged();
@@ -268,10 +281,10 @@ public class SuggestFragment extends Fragment {
             double score=0;
             stayTime/=1000;
             if(stayTime<1){score=0;}
-            else if(stayTime<3){score=1;}
-            else if(stayTime<5){score=2;}
-            else if(stayTime<8){score=3;}
-            else if(stayTime<10){score=4;}
+            else if(stayTime<2){score=1;}
+            else if(stayTime<3){score=2;}
+            else if(stayTime<5){score=3;}
+            else if(stayTime<8){score=4;}
             else{score=5;}
             double finalScore = score;
             new Thread(()->{

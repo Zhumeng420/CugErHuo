@@ -422,27 +422,10 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                 if(result>0)
                 {
                     Log.i(TAG,"插入商品至mysql成功");
-                    //插入图数据库
-                    boolean result1=false;
-                    String temp;
-                    if(name==null||name.length==0)
                     {
-                        temp=category;
-                    }
-                    else
-                    {temp=name[0];}
-                    result1=CommodityOperate.insertUserToTu(id,result,temp,PostSellActivity.this);
-                    if(result1)
-                    {
-                        Log.i(TAG,"插入商品至图数据库成功");
-                        /**
-                         * 上传商品信息
-                         */
                         List<String> imageSearch=new ArrayList<>();
-
                         for(int i=0;i< paths.size();++i)
                         {             imageSearch.add((String) paths.get(i));
-
                             {
                                 String fileName = "specific_"+GetFileNameUtil.getFileName((String) paths.get(i));
                                 boolean isUped=false;
@@ -468,7 +451,7 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                         Span span1 = tracer.buildSpan("上传到oss流程").withTag("onChangeImage函数：", "子追踪").start();
                         try (Scope ignored1 = tracer.scopeManager().activate(span,true)) {
                             // 业务逻辑写这里
-                           Boolean a= GraphOperate.productAdd(imageSearch,result);
+                            Boolean a= GraphOperate.productAdd(imageSearch,result);
                             if(a) {
                                 Log.i(TAG, "上传成功");
                             }
@@ -481,6 +464,24 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                         } finally {
                             span.finish();
                         }
+                    }
+                    //插入图数据库
+                    boolean result1=false;
+                    String temp;
+                    if(name==null||name.length==0)
+                    {
+                        temp=category;
+                    }
+                    else
+                    {temp=name[0];}
+                    result1=CommodityOperate.insertUserToTu(id,result,temp,PostSellActivity.this);
+                    if(result1)
+                    {
+                        Log.i(TAG,"插入商品至图数据库成功");
+                        /**
+                         * 上传商品信息
+                         */
+
                         /**
                          * 通知UI发生提醒
                          */
@@ -1309,7 +1310,6 @@ public class PostSellActivity extends AppCompatActivity implements IBridgePictur
                     if(bran[0]!=null)
                     {
                         adapt(bran[0],(LinearLayout) findViewById(R.id.brand_id),categoryInflater,R.layout.brand_item,R.id.brand,R.id.brand_layout);
-
                     }
                     break;
                 case 4:
