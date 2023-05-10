@@ -112,67 +112,67 @@
                     <include layout="@drawable/bottom_border" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:orientation="vertical">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="15dp"-->
+<!--                    android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:id="@+id/setting_pay_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/setting_pay_layout"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginBottom="15dp"-->
+<!--                        android:gravity="center_vertical"-->
+<!--                        android:orientation="horizontal">-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="支付设置"
-                            android:textColor="@color/black" />
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_weight="1"-->
+<!--                            android:text="支付设置"-->
+<!--                            android:textColor="@color/black" />-->
 
-                        <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginLeft="15dp"
-                            android:src="@drawable/icon_arrow" />
-                    </LinearLayout>
+<!--                        <ImageView-->
+<!--                            android:layout_width="15dp"-->
+<!--                            android:layout_height="15dp"-->
+<!--                            android:layout_marginLeft="15dp"-->
+<!--                            android:src="@drawable/icon_arrow" />-->
+<!--                    </LinearLayout>-->
 
-                    <include layout="@drawable/bottom_border" />
-                </LinearLayout>
+<!--                    <include layout="@drawable/bottom_border" />-->
+<!--                </LinearLayout>-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:orientation="vertical">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="15dp"-->
+<!--                    android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:id="@+id/setting_size_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+<!--&lt;!&ndash;                    <LinearLayout&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:id="@+id/setting_size_layout"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:layout_marginBottom="15dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:gravity="center_vertical"&ndash;&gt;-->
+<!--&lt;!&ndash;                        android:orientation="horizontal">&ndash;&gt;-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="尺码小助手"
-                            android:textColor="@color/black" />
+<!--&lt;!&ndash;                        <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:layout_weight="1"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:text="尺码小助手"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:textColor="@color/black" />&ndash;&gt;-->
 
-                        <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginLeft="15dp"
-                            android:src="@drawable/icon_arrow" />
-                    </LinearLayout>
+<!--&lt;!&ndash;                        <ImageView&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:layout_width="15dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:layout_height="15dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:layout_marginLeft="15dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:src="@drawable/icon_arrow" />&ndash;&gt;-->
+<!--&lt;!&ndash;                    </LinearLayout>&ndash;&gt;-->
 
-                    <include layout="@drawable/bottom_border" />
-                </LinearLayout>
+<!--                    <include layout="@drawable/bottom_border" />-->
+<!--                </LinearLayout>-->
 
                 <LinearLayout
                     android:layout_width="match_parent"

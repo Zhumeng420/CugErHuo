@@ -67,7 +67,7 @@
             android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
             android:gravity="center"
-            android:text="添加收货地址"
+            android:text="添加交易地址"
             android:background="@drawable/btn_radius_red_decoration"
             android:id="@+id/add_address"
             android:textColor="#FFFFFF"

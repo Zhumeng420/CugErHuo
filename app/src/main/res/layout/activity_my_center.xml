@@ -72,7 +72,7 @@
                             android:id="@+id/username"/>
                         <TextView
                             android:id="@+id/sign"
-                            android:text="+获取关注"
+                            android:text="信誉分：100"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
