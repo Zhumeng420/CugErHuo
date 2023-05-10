@@ -19,8 +19,11 @@ import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Reward;
 import com.example.cugerhuo.access.reward.RewardOperate;
 import com.example.cugerhuo.access.user.PartUserInfo;
+import com.example.cugerhuo.activity.adapter.RecyclerViewAddressAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewXuanShangAdapter;
+import com.example.cugerhuo.activity.imessage.ChatActivity;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
+import com.example.cugerhuo.activity.post.PostBuyActivity;
 import com.example.cugerhuo.tools.LettuceBaseCase;
 
 import java.util.ArrayList;
@@ -36,12 +39,14 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
      * @time 2023/3/20 16:36
      */
     private ImageView iv_tab_three;
+    private LinearLayout ll;
     private LinearLayout ll_tab_one;
     private LinearLayout ll_tab_two;
     private LinearLayout ll_tab_three;
     private LinearLayout ll_tab_four;
     private LinearLayout ll_tab_five;
     private RecyclerView recyclerView;
+    private LinearLayout addXuanShuang;
     private List<Reward> rewardInfos =new ArrayList<>();
     private List<PartUserInfo> userInfos=new ArrayList<>();
     private final MyHandler MyHandler =new MyHandler(Looper.getMainLooper());
@@ -54,6 +59,14 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_xuan_shang);
         initView();
         loadData();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this){
+            /**禁止RecyclerView的纵向滑动
+             * 解决RecyclerView滑动无惯性问题，解决滑动显示头尾阻尼问题。*/
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
     }
     /**
      * 加载数据
@@ -88,6 +101,8 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
      * @time 2023/3/20 16:28
      */
     public void initView(){
+        ll = findViewById(R.id.lin);
+        ll.bringToFront();
         ll_tab_one=findViewById(R.id.ll_tab_one);
         ll_tab_one.setOnClickListener(this);
         ll_tab_two=findViewById(R.id.ll_tab_two);
@@ -100,7 +115,8 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
         iv_tab_three.setOnClickListener(this);
         recyclerView = findViewById(R.id.recyclerView_xuanhsang);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        addXuanShuang = findViewById(R.id.xuanshang_edit);
+        addXuanShuang.setOnClickListener(this);
 
 
     }
@@ -168,6 +184,11 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
                 overridePendingTransition(0,0);
                 finish();
                 break;
+            case R.id.xuanshang_edit:
+                startActivity(new Intent(getApplicationContext(), PostBuyActivity.class));
+                overridePendingTransition(0,0);
+                finish();
+                break;
             default:
                 break;
         }
@@ -194,6 +215,15 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
 
                     RecyclerViewXuanShangAdapter adapter = new RecyclerViewXuanShangAdapter(XuanShangActivity.this, rewardInfos,userInfos);
                     recyclerView.setAdapter(adapter);
+                    adapter.setOnItemClickListener(new RecyclerViewXuanShangAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            Intent intent=new Intent(XuanShangActivity.this, ChatActivity.class);
+                            intent.putExtra("chatUser",userInfos.get(position));
+                            //startActivity(intent);
+                            startActivityForResult(intent,1);
+                        }
+                    });
                     break;
 
                 case 6:

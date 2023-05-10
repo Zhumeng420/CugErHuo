@@ -1,25 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
+    android:orientation="vertical"
     tools:context=".activity.XuanShangActivity">
 
-    <LinearLayout
+    <ScrollView
+        android:clipChildren="true"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginBottom="50dp">
+        android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView_xuanhsang"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/xuanshang_top"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:text="推荐"
+                    android:textSize="20sp"
+                    android:layout_marginLeft="15dp"
+                    android:textColor="@color/black"
+                    android:background="@drawable/old_new_background"
+                    android:fontFamily="sans-serif-black"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/xuanshang_edit"
+
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@drawable/xuanshang_layout_background"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/background_white_decoration">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="1"
+                        android:text="我也想发布悬赏~"/>
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:src="@drawable/xuanshang_back"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView_xuanhsang"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/lin"
@@ -78,6 +148,7 @@
 
 
         <LinearLayout
+
             android:id="@+id/ll_tab_three"
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -145,4 +216,4 @@
                 android:text="个人"/>
         </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:scrollbars="vertical"
     >
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewOnSell"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-</com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout>
+        android:layout_height="wrap_content"
+        android:descendantFocusability="beforeDescendants">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewOnSell"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+    </RelativeLayout>
+
+
+</LinearLayout>

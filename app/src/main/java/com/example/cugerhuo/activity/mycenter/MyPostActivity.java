@@ -14,7 +14,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.activity.adapter.ViewAdapterPost;
-import com.example.cugerhuo.fragment.OnSellFragment;
+import com.example.cugerhuo.Fragment.OnSellFragment;
 import com.example.cugerhuo.fragment.RemoveSellFragment;
 import com.google.android.material.tabs.TabLayout;
 

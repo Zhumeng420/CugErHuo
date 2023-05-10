@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -42,6 +43,7 @@ import java.util.List;
 public class RecyclerViewXuanShangAdapter extends RecyclerView.Adapter<RecyclerViewXuanShangAdapter.ViewHolder>{
     private Context context;
     private int count;
+    private OnItemClickListener mClickListener;
 
 private List<Reward> rewardList;
 private List<PartUserInfo>userInfoList;
@@ -253,6 +255,15 @@ private List<PartUserInfo>userInfoList;
             int index = (int)i.getTag() + 1;
             //单个图片的点击事件
         });
+        holder.chat.setOnClickListener(new View.OnClickListener() {
+            /**
+             * 点击每个RecyclerView子组件进行相应的响应事件,点击跳转至发消息
+             */
+            @Override
+            public void onClick(View v) {
+                mClickListener.onItemClick(v,position);
+            }
+        });
     }
 
 
@@ -266,12 +277,16 @@ private List<PartUserInfo>userInfoList;
         RoundedImageView userImage;
         TextView userName;
         TextView rewardDes;
+        Button chat;
+        private RecyclerViewAdapter.OnItemClickListener mListener;// 声明自定义的接口
+
         public ViewHolder(View itemView) {
             super(itemView);
             mPhotoGridView = itemView.findViewById(R.id.image_layout);
             userImage=itemView.findViewById(R.id.user_concern_img);
             userName=itemView.findViewById(R.id.user_concern_name);
             rewardDes=itemView.findViewById(R.id.rewardDescrip);
+            chat=itemView.findViewById(R.id.chat);
             //setImage(6);
         }
 
@@ -292,5 +307,25 @@ private List<PartUserInfo>userInfoList;
         }
     }
 
+
+    /**
+     * item点击响应函数
+     * @param listener
+     * @Author: 李柏睿
+     * @Time: 2023/5/10
+     */
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mClickListener = listener;
+    }
+
+    /**
+     * 定义RecyclerView选项单击事件的回调接口
+     * @Author: 李柏睿
+     * @Time: 2023/5/10
+     */
+    public interface OnItemClickListener {
+        /**参数（父组件，当前单击的View,单击的View的位置，数据）*/
+        public void onItemClick(View view, int position);
+    }
 
 }

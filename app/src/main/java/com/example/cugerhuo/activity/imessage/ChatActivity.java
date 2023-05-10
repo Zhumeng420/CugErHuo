@@ -295,7 +295,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                 int length=urls.length;
                 String result[]=new String[length];
                 result[length-1]=urls[length-1];
-// 从后往前依次减去后面一个元素
+                // 从后往前依次减去后面一个元素
                 if(length>1){
                     for (int i = length - 2; i >= 0; i--) {
                         String current = urls[i];
@@ -308,7 +308,7 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
                             result[i]=current;
                         }
                     }}
-// 将第一个元素赋值给结果数组
+                // 将第一个元素赋值给结果数组
                 url1=result[0];
                 String newUrl1 = getSandBoxPath(ChatActivity.this) + url1;
                 System.out.println("imager2"+url1);

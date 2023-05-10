@@ -1,4 +1,4 @@
-package com.example.cugerhuo.fragment;
+package com.example.cugerhuo.Fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -45,9 +45,11 @@ public class OnSellFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_on_sell, container, false);
         recyclerViewOnSell=view.findViewById(R.id.recyclerViewOnSell);
-        recyclerViewOnSell.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        recyclerViewOnSell.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter=new RecyclerViewOnSellAdapter(getActivity(),a);
         recyclerViewOnSell.setAdapter(adapter);
-       return view;
+        recyclerViewOnSell.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+
+        return view;
     }
 }
