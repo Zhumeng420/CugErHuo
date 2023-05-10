@@ -31,6 +31,8 @@
     <string name="InsertCommodity">commodity/insert</string>
     <string name="InsertEVALUATION">evaluation/insert</string>
     <string name="UpdateEVALUATION">evaluation/update</string>
+    <string name="GetMyp">commodity/getmy</string>
+    <string name="GetMyr">reward/getmy</string>
 
     <string name="GetOss">secret/oos</string>
 

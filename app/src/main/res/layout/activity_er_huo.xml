@@ -50,8 +50,9 @@
                     android:id="@+id/linear_search_item">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="22dp"
+                        android:id="@+id/image_search1"
+                        android:layout_width="16dp"
+                        android:layout_height="18dp"
                         android:layout_gravity="center"
                         android:layout_marginLeft="10dp"
                         android:src="@drawable/icon_scan" />

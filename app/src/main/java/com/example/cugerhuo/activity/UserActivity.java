@@ -98,6 +98,8 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private SharedPreferences imagePath;
     private TextView username;
     private TextView userIntroduce;
+    private TextView userSex;
+    private TextView userAge;
     private LinearLayout userNameLayout;
     private LinearLayout userIntroduceLayout;
     private LinearLayout userSexLayout;
@@ -160,6 +162,8 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         userIntroduceLayout=findViewById(R.id.user_introduce_layout);
         userIntroduceLayout.setOnClickListener(this);
         userSexLayout=findViewById(R.id.user_sex_layout);
+        userAge=findViewById(R.id.user_age);
+        userSex=findViewById(R.id.user_sex);
         userAgeLayout=findViewById(R.id.user_age_layout);
     }
 
@@ -248,6 +252,11 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 case 1:
                     username.setText(part.getUserName());
                     userIntroduce.setText(part.getSignature());
+                    userAge.setText(part.getAge().toString());
+                    if(part.getGender()!=null){
+                        if(part.getGender()==1){
+                    userSex.setText("男");}else{
+                    userSex.setText("女");}}
                    break;
                 default:
                     break;

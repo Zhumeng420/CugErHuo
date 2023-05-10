@@ -71,7 +71,7 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
                 //关闭连接
 
 
-                Map.Entry<List<Reward>, List<PartUserInfo>> result= RewardOperate.getRewards(con,1,10,XuanShangActivity.this);
+                Map.Entry<List<Reward>, List<PartUserInfo>> result= RewardOperate.getRewards(con,1,100,XuanShangActivity.this);
                 rewardInfos=result.getKey();
                 userInfos=result.getValue();
                 lettuce.close();

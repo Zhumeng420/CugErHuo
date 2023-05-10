@@ -12,21 +12,22 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
+import com.example.cugerhuo.access.Reward;
 import com.example.cugerhuo.access.comment.CollectOperate;
+import com.example.cugerhuo.access.commodity.CommodityOperate;
 import com.example.cugerhuo.access.evaluate.CommodityEvaluateOperate;
 import com.example.cugerhuo.access.evaluate.EvaluationInfo;
+import com.example.cugerhuo.access.reward.RewardOperate;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.access.user.UserOperate;
-import com.example.cugerhuo.activity.imessage.ChatActivity;
 import com.example.cugerhuo.activity.imessage.MessageActivity;
 import com.example.cugerhuo.activity.mycenter.EvaluateActivity;
 import com.example.cugerhuo.activity.mycenter.MyCollectsActivity;
@@ -75,12 +76,18 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
     private List<EvaluationInfo> evaluationInfoList=new ArrayList<>();
     private List<PartUserInfo> evaluationUser=new ArrayList<>();
     private List<Commodity> commodities=new ArrayList<>();
+
+
+    private List<Reward> rewards=new ArrayList<>();
+    List<Commodity> myPosts=new ArrayList<>();
     public static int focusNum;
     /**我的收藏数*/
     private int myCollects=0;
     /**收藏部分*/
     private LinearLayout collectLayout;
     private TextView collectNum;
+    private TextView publishNum;
+    private TextView rewardNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +171,41 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                 MyHandler.sendMessage(a);
             }
         }).start();
+        /**
+         * 获取发布
+         */
+        new Thread(new Runnable() {
+            @Override
+            public void run()
+            {
+                try {
+                    myPosts= CommodityOperate.getUsersCommodity(UserInfo.getid(),MyCenterActivity.this);
+                    Message a=Message.obtain();
+                    a.arg1=6;
+                    MyHandler.sendMessage(a);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        /**
+         * 获取悬赏
+         */
+        new Thread(new Runnable() {
+            @Override
+            public void run()
+            {
+                try {
+                    rewards= RewardOperate.getUsersCommodity(UserInfo.getid(),MyCenterActivity.this);
+                    Message a=Message.obtain();
+                    a.arg1=7;
+                    MyHandler.sendMessage(a);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
     /**
      * 初始化各个控件，找到对应的组件
@@ -172,6 +214,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
      */
     public void initView(){
         llTabOne =findViewById(R.id.ll_tab_one);
+
         llTabOne.setOnClickListener(this);
         llTabTwo =findViewById(R.id.ll_tab_two);
         llTabTwo.setOnClickListener(this);
@@ -191,6 +234,8 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
         collectLayout=findViewById(R.id.collect);
         collectLayout.setOnClickListener(this);
         collectNum=findViewById(R.id.user_collection);
+        publishNum=findViewById(R.id.published_num);
+        rewardNum=findViewById(R.id.selled_num);
     }
 
 
@@ -226,6 +271,9 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
      */
     public void myPostClick(View view){
         Intent intent=new Intent(getApplicationContext(), MyPostActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("postList", (Serializable) myPosts);
+        intent.putExtra("post",bundle);
         startActivityForResult(intent,0x0004);
     }
 
@@ -390,7 +438,7 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.collect:
                 startActivity(new Intent(getApplicationContext(), MyCollectsActivity.class));
                 overridePendingTransition(0,0);
-                finish();
+
                 break;
             default:
                 break;
@@ -439,6 +487,10 @@ public class MyCenterActivity extends AppCompatActivity implements View.OnClickL
                 case 5:
                     collectNum.setText(String.valueOf(myCollects));
                     break;
+                case 6:
+                    publishNum.setText(String.valueOf(myPosts.size()));
+                case 7:
+                    rewardNum.setText(String.valueOf(rewards.size()));
                 default:
                     break;
             }

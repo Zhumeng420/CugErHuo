@@ -106,6 +106,37 @@ public class RewardOperate {
             return new AbstractMap.SimpleEntry<>(rewards, mm);
 
     }
+    /**
+     * 获取某用户的发布悬赏
+     * @param users 用户id
+     * @param context
+     * @return
+     * @throws JSONException
+     */
+    public static List<Reward> getUsersCommodity(int users, Context context) throws JSONException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.ip);
+        String router=context.getString(R.string.GetMyr);
+        String userid=context.getString(R.string.userid);
+        List<Reward> result=new ArrayList<>();
+        /**
+         * 发送请求
+         */
+        String url="http://"+ip+"/"+router+"?"+userid+"="+users;
+        Request request = new Request.Builder().url(url).get().build();
+        Response response = null;
+
+        try {
+            response = okHttpClient.newCall(request).execute();
+            result = (List<Reward>) JSON.parseArray(response.body().string(),Reward.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 
 
 }

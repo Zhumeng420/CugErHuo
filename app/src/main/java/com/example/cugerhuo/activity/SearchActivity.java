@@ -163,6 +163,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.arg1){
+                /**
+                 * 模糊搜索
+                 */
                 case 1:
 
                     /**
@@ -177,6 +180,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     intent.putExtra("searchKey",searchText.getText().toString());
                     startActivity(intent);
                     break;
+                /**
+                 * 图像搜索
+                 */
                 case 2:
                     MyToast.toast(SearchActivity.this,"搜索完成",2);
                     /**
@@ -312,7 +318,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 })
                 .setImageEngine(GlideEngine.createGlideEngine())
-                .setCropEngine(new ImageFileCropEngine())
+                .setCropEngine((CropEngine) null)
                 .isDisplayTimeAxis(false)
                 .isOnlyObtainSandboxDir(false)
                 .isPageStrategy(true)

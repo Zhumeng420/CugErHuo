@@ -72,6 +72,15 @@ public class CommodityOperate {
         return user;
     }
 
+    /**
+     * 获取关注用户发布的商品
+     * @param connection  redis连接
+     * @param users 用户id列表
+     * @param page  页数
+     * @param context
+     * @return
+     * @throws JSONException
+     */
     public static List<Commodity> getUsersCommodity(RedisCommands<String, String> connection,int []users,int page,Context context) throws JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         /**
@@ -103,6 +112,39 @@ public class CommodityOperate {
         }return result;
 
     }
+
+    /**
+     * 获取某用户的发布商品
+     * @param users 用户id
+     * @param context
+     * @return
+     * @throws JSONException
+     */
+    public static List<Commodity> getUsersCommodity(int users,Context context) throws JSONException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        /**
+         * 获取XML文本
+         */
+        String ip=context.getString(R.string.ip);
+        String router=context.getString(R.string.GetMyp);
+        String userid=context.getString(R.string.userid);
+        List<Commodity> result=new ArrayList<>();
+        /**
+         * 发送请求
+         */
+        String url="http://"+ip+"/"+router+"?"+userid+"="+users;
+        Request request = new Request.Builder().url(url).get().build();
+        Response response = null;
+
+        try {
+            response = okHttpClient.newCall(request).execute();
+            result = (List<Commodity>) JSON.parseArray(response.body().string(),Commodity.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
 
 
     /**

@@ -19,6 +19,54 @@ public class PartUserInfo implements Serializable {
     private String imageUrl;
     private String signature;
     private String userName;
+    /**
+     * 自我介绍
+     */
+    private String selfIntroduction;
+
+    /**
+     * 年龄
+     */
+    private Integer age;
+
+    /**
+     * 性别
+     */
+    private Integer gender;
+
+    public String getSelfIntroduction() {
+        return selfIntroduction;
+    }
+
+    public void setSelfIntroduction(String selfIntroduction) {
+        this.selfIntroduction = selfIntroduction;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public String getInterest() {
+        return interest;
+    }
+
+    public void setInterest(String interest) {
+        this.interest = interest;
+    }
+
+    private String interest;
     private int isConcern;
 
     public int getId() {

@@ -49,30 +49,40 @@ public class PopComments extends AppCompatDialog {
     private ImageView closeDialog;
     /**留言数量**/
     private TextView numView;
+    private TextView topText;
     /**全局*/
     private LinearLayout popCommentsView;
     private int mLastDiff = 0;
-
-    public PopComments(@NonNull Context context, int theme, Map.Entry<List<Comment>, List<PartUserInfo>> a,Map.Entry<List<Pricing>, List<PartUserInfo>> b) {
+private int flag;
+    public PopComments(@NonNull Context context, int theme, Map.Entry<List<Comment>, List<PartUserInfo>> a,Map.Entry<List<Pricing>, List<PartUserInfo>> b,int switchFlag) {
         super(context, theme);
         this.mContext = context;
         commentInfos=a;
         pricingInfos=b;
         this.getWindow().setWindowAnimations(R.style.main_menu_animstyle);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);flag=switchFlag;
         init();
+
         setLayout();
     }
 
     private void init() {
         setContentView(R.layout.pop_comments);
         numView=findViewById(R.id.comments_num);
+        topText=findViewById(R.id.top_text);
         mAddComment = findViewById(R.id.add_comment);
         pleaseComment = findViewById(R.id.please_comment);
         commentsRecyclerView = findViewById(R.id.comments_display);
         commentsRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        if(flag==0){
         numView.setText(String.valueOf(commentInfos.getValue().size()));
-        adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,0);
+        topText.setText("全部留言");}
+        else
+        {
+            topText.setText("全部出价");
+            numView.setText(String.valueOf(pricingInfos.getValue().size()));
+        }
+        adapter = new RecyclerViewCommentAdapter(getActivity(), commentInfos,pricingInfos,flag);
         commentsRecyclerView.setAdapter(adapter);
         closeDialog = findViewById(R.id.close_comments);
         popCommentsView = findViewById(R.id.rl_pop_comments_view);

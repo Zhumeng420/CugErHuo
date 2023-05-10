@@ -127,7 +127,7 @@ public class GraphOperate {
             {
                 System.out.println(i.toString());
                 JSONObject temp= JSONObject.parseObject(i.toString());
-                if(Double.parseDouble(temp.getString("score"))>0.9)
+                if(Double.parseDouble(temp.getString("score"))>0.5)
                 {
                     System.out.println("double"+Double.parseDouble(temp.getString("score")));
                     if(temp.getString("brief").matches("[0-9]+"))

@@ -1,5 +1,6 @@
 package com.example.cugerhuo.activity.mycenter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,20 +13,13 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
-import com.example.cugerhuo.access.commodity.CommodityOperate;
-import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.activity.adapter.ViewAdapterPost;
 import com.example.cugerhuo.fragment.OnSellFragment;
 import com.example.cugerhuo.fragment.RemoveSellFragment;
-import com.example.cugerhuo.tools.LettuceBaseCase;
 import com.google.android.material.tabs.TabLayout;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.lettuce.core.api.sync.RedisCommands;
 
 /**
  * 我发布的界面
@@ -46,29 +40,22 @@ public class MyPostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_post);
         viewPager=findViewById(R.id.viewPager_post);
-        tabLayout=findViewById(R.id.tab_post_navigation);
-        new Thread(new Runnable() {
-            @Override
-            public void run()
+        tabLayout=findViewById(R.id.tab_post_navigation);initFragment();
+        Intent intent = getIntent();
+        //从intent取出bundle
+        Bundle bundle = intent.getBundleExtra("post");
+        if(bundle.getSerializable("postList")!=null)
+        {
+            myPosts= (List<Commodity>) bundle.getSerializable("postList");
+            if(myPosts!=null)
             {
-                LettuceBaseCase lettuce=new LettuceBaseCase();
-                /**
-                 * 获取连接
-                 */
-                RedisCommands<String, String> con=lettuce.getSyncConnection();
-                int []users=new int[1];
-                users[0]= UserInfo.getid();
-                try {
-                    myPosts= CommodityOperate.getUsersCommodity(con,users,1,MyPostActivity.this);
-                    Message a=Message.obtain();
-                    a.arg1=1;
-                    MyHandler.sendMessage(a);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                fragments.add(new OnSellFragment(myPosts));
+                fragments.add(new RemoveSellFragment());
+                adapter = new ViewAdapterPost(getSupportFragmentManager(),fragments);
+                viewPager.setAdapter(adapter);
             }
-        }).start();
-        initFragment();
+        }
+
     }
 
     /**
@@ -135,10 +122,7 @@ public class MyPostActivity extends AppCompatActivity {
                  * 更新我上架的商品
                  */
                 case 1:
-                    fragments.add(new OnSellFragment(myPosts));
-                    fragments.add(new RemoveSellFragment());
-                    adapter = new ViewAdapterPost(getSupportFragmentManager(),fragments);
-                    viewPager.setAdapter(adapter);
+
                     break;
                 /**
                  * 更新粉丝数

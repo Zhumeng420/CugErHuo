@@ -489,7 +489,7 @@ public class SearchResultActivity extends AppCompatActivity {
                     }
                 })
                 .setImageEngine(GlideEngine.createGlideEngine())
-                .setCropEngine(new ImageFileCropEngine())
+                .setCropEngine((CropEngine) null)
                 .isDisplayTimeAxis(false)
                 .isOnlyObtainSandboxDir(false)
                 .isPageStrategy(true)

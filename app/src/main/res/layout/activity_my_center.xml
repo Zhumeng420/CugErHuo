@@ -225,7 +225,7 @@
                             android:layout_height="25dp"
                             android:src="@drawable/icon_sell"></ImageView>
                         <TextView
-                            android:text="我卖的"
+                            android:text="我悬赏的"
                             android:layout_marginLeft="10dp"
                             android:textStyle="bold"
                             android:textSize="16sp"

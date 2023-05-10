@@ -46,7 +46,7 @@ public class RecyclerViewOnSellAdapter extends RecyclerView.Adapter<RecyclerView
      * count item数
      */
     private Context context;
-    private int count=20;
+    private int count;
     private List<Commodity>a;
 
     private TextView descrip;

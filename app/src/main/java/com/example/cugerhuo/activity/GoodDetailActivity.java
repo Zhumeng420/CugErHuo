@@ -455,6 +455,36 @@ void showComment()
                     keyboardDialog.setmOnPriceSendListener(new KeyboardDialog.OnTextSendListener() {
                         @Override
                         public void onPriceSend(String msg) {
+                            if(msg!=null&&!"".equals(msg)){
+                                Date a=new Date(System.currentTimeMillis());
+                                Pricing temp=new  Pricing();
+                                temp.setTime(a);
+                                temp.setPrice(Double.parseDouble(msg));
+                                temp.setUserid(UserInfo.getid());
+                                temp.setCommodityid(commodity.getId());
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Message a=Message.obtain();
+                                        try {
+                                            boolean res=false;
+                                            res=PricingOperate.insertPricing(temp,GoodDetailActivity.this);
+                                            if(res){
+                                                a.arg2=1;
+                                            }
+                                            else{a.arg2=0;}
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                        a.arg1=8;
+                                        MyHandler.sendMessage(a);
+                                    }
+                                }).start();
+                            }
+                            else
+                            {
+                                MyToast.toast(GoodDetailActivity.this,"出价不能为空",0);
+                            }
                             Toast.makeText(GoodDetailActivity.this, msg, Toast.LENGTH_LONG).show();
                         }
                     });
@@ -595,7 +625,7 @@ void showComment()
                 break;
             /**查看更多留言*/
             case R.id.click_look_more:
-                final PopComments popComments = new PopComments(GoodDetailActivity.this, R.style.dialog_center_comment,commentInfos,pricingInfos);
+                final PopComments popComments = new PopComments(GoodDetailActivity.this, R.style.dialog_center_comment,commentInfos,pricingInfos,switchFlag);
                 popComments.show();
                 InputMethodManager imm = (InputMethodManager) GoodDetailActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -652,6 +682,8 @@ void showComment()
                 }).start();
 
                 break;
+
+
             default:
                 break;
         }
@@ -714,9 +746,7 @@ void showComment()
                                      * 获取连接
                                      */
                                     RedisCommands<String, String> con = lettuce.getSyncConnection();
-                                    Map.Entry<List<Commodity>, List<PartUserInfo>> result = CommodityOperate.getRecommendComs(con, commodity.getId(), GoodDetailActivity.this);
-                                    recommendCommodities = result.getKey();
-                                    recommendUsersOfComs = result.getValue();
+
                                     commentInfos= CommentOperate.getRewards(con,commodity.getId(),GoodDetailActivity.this);
                                     pricingInfos= PricingOperate.getRewards(con,commodity.getId(),GoodDetailActivity.this);
 
@@ -725,12 +755,12 @@ void showComment()
                                 ms.arg1 = 2;
                                 MyHandler.sendMessage(ms);
                             }).start();
+                        default:MyToast.toast(GoodDetailActivity.this,"留言失败",1);
+
+                    break;}
                             break;
-                        default:
-                            MyToast.toast(GoodDetailActivity.this,"留言失败",1);
-                            break;
-                    }
-                    break;
+
+
                 /**
                  *  更新轮播图
                  */
@@ -830,6 +860,42 @@ void showComment()
                             default:
                                 break;
                         }
+                    break;
+                        /**
+                         * 出价模块，出价后更新出价列表
+                         */
+                case 8:
+
+                    switch (msg.arg2)
+                    {
+                        case 1:MyToast.toast(GoodDetailActivity.this,"出价成功",3);
+                            /**
+                             * 刷新留言列表
+                             */
+                            new Thread(() -> {
+                                if(commodity!=null) {
+                                    /**
+                                     * 建立连接对象
+                                     */
+                                    LettuceBaseCase lettuce = new LettuceBaseCase();
+                                    /**
+                                     * 获取连接
+                                     */
+                                    RedisCommands<String, String> con = lettuce.getSyncConnection();
+
+                                    commentInfos= CommentOperate.getRewards(con,commodity.getId(),GoodDetailActivity.this);
+                                    pricingInfos= PricingOperate.getRewards(con,commodity.getId(),GoodDetailActivity.this);
+
+                                }
+                                Message ms = Message.obtain();
+                                ms.arg1 = 2;
+                                MyHandler.sendMessage(ms);
+                            }).start();
+                            break;
+                        default:
+                            MyToast.toast(GoodDetailActivity.this,"出价失败",1);
+                            break;
+                    }
                     break;
                 default:
                     break;
