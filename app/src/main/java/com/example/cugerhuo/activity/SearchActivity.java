@@ -184,7 +184,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                  * 图像搜索
                  */
                 case 2:
-                    MyToast.toast(SearchActivity.this,"搜索完成",2);
+                    MyToast.toast(SearchActivity.this,"搜索完成",3);
                     /**
                      * 点击进行跳转并传值
                      */
@@ -378,7 +378,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                          * @author 施立豪
                          * @time 2023/4/9
                          */
-                        MyToast.toast(SearchActivity.this,"正在搜索匹配的商品",2);
+                        MyToast.toast(SearchActivity.this,"正在搜索匹配商品",2);
                         new Thread(()->{
                                 /**
                                  * 接收插入mysql结果变量
@@ -395,10 +395,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                             commodityUserGraph.clear();commodityListGraph.clear();
                                 for(Integer i:commodityIdList)
                                 {
-                                    Commodity comm=CommodityOperate.getCommodityFromRedis(con,i,SearchActivity.this);
-                                    PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,comm.getUserId(),SearchActivity.this);
-                                    commodityUserGraph.add(part);
-                                    commodityListGraph.add(comm);
+                                    Commodity comm= CommodityOperate.getCommodityFromRedis(con,i,SearchActivity.this);
+                                    if(comm!=null){
+                                        PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,comm.getUserId(),SearchActivity.this);
+                                        if(part!=null){
+                                            commodityUserGraph.add(part);
+                                            commodityListGraph.add(comm);}}
                                 }
                                 Message msg=Message.obtain();
                                 msg.arg1=2;

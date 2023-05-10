@@ -105,7 +105,7 @@ public void initData()
         tradeDetailTime.setText(tradeInfo.getTradeTime());
         tradeDetailPrice.setText(String.valueOf(tradeInfo.getPrice()));
         tradeDetailPosition.setText(tradeInfo.getTradePlace());
-}   if(commodity!=null){
+}   if(commodity!=null&&commodity.getUrl1()!=null){
     if(!"".equals(commodity.getUrl1()))
         {String url1=commodity.getUrl1();
             String []urls=url1.split(";");

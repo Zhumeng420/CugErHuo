@@ -362,7 +362,12 @@ public class CommodityOperate {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return commodities;
+       List<Commodity> res=new ArrayList<>();
+        for(Commodity commodity:commodities)
+        {
+            if(commodity!=null){res.add(commodity);}
+        }
+        return res;
     }
 
     /**
@@ -409,4 +414,70 @@ public class CommodityOperate {
         connection.hdel("Commodity",String.valueOf(id));
     }
 
+
+    /**
+     * 获取实时推荐
+     */
+    public static  AbstractMap.SimpleEntry<List<Commodity>,List<PartUserInfo>> getOnlineRecommendComs(RedisCommands<String, String> con, int goodId,int page2, Context context)
+    {
+        Tracer tracer = GlobalTracer.get();
+        OkHttpClient okHttpClient = new OkHttpClient();
+        String ip=context.getString(R.string.Tuip);
+        String router=context.getString(R.string.OnlineRecommend);
+        String page=context.getString(R.string.page);
+        String goodid=context.getString(R.string.UserId);
+        /**
+         * 发送请求
+         */
+        String url="http://"+ip+"/"+router+"?"+page+"="+page2+"&"+goodid+"="+goodId;
+        Request request = new Request.Builder().url(url).get().build();
+        Response response = null;
+        List<Integer> recommedCom=new ArrayList<>();
+        int result
+                =-1;
+        // 创建spann
+        Span span = tracer.buildSpan("获取首页推荐流程").withTag("SetCommodityInfo ：", "setInfo").start();
+        try (Scope ignored = tracer.scopeManager().activate(span,true)) {
+            try {
+                response = okHttpClient.newCall(request).execute();
+                JSONObject pa= JSONObject.parseObject(response.body().string());
+                System.out.println(result);
+                System.out.println("asdsa");
+                JSONArray a=JSONArray.parseArray(pa.getString("object"));
+                for(Object i:a)
+                {
+                    System.out.println("doashda"+i);
+                    recommedCom.add((Integer) i);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            TracingHelper.onError(e, span);
+            throw e;
+        } finally {
+            span.finish();
+        } // 创建spann
+        Span span1 = tracer.buildSpan("获取推荐商品和用户流程").withTag("SetCommodityInfo ：", "setInfo").start();
+        try (Scope ignored = tracer.scopeManager().activate(span1,true)) {
+            List<Commodity> tt = new ArrayList<>();
+            List<PartUserInfo> mm = new ArrayList<>();
+            long stime = System.currentTimeMillis();
+            for (Integer i : recommedCom) {
+                Commodity temp = CommodityOperate.getCommodityFromRedis(con, i, context);
+                int id = temp.getUserId();
+                System.out.println("userid" + id);
+                tt.add(temp);
+                mm.add(UserInfoOperate.getInfoFromRedis(con, id, context));
+            }
+            return new AbstractMap.SimpleEntry<>(tt, mm);
+        }  catch (Exception e) {
+            TracingHelper.onError(e, span1);
+            throw e;
+        } finally {
+            span1.finish();
+        }
+
+    }
 }

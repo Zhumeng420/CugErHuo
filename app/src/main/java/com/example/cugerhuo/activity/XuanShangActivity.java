@@ -1,5 +1,7 @@
 package com.example.cugerhuo.activity;
 
+import static com.example.cugerhuo.access.SetGlobalIDandUrl.getSandBoxPath;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -219,8 +221,9 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
                         @Override
                         public void onItemClick(View view, int position) {
                             Intent intent=new Intent(XuanShangActivity.this, ChatActivity.class);
-                            intent.putExtra("chatUser",userInfos.get(position));
-                            intent.putExtra("hasPath",0);
+                            PartUserInfo a=userInfos.get(position);
+                            a.setImageUrl(getSandBoxPath(XuanShangActivity.this)+a.getImageUrl());
+                            intent.putExtra("chatUser",a);                            intent.putExtra("hasPath",0);
                             //startActivity(intent);
                             startActivityForResult(intent,1);
                         }
@@ -231,6 +234,10 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
                             Intent intent=new Intent(XuanShangActivity.this, OtherPeopleActivity.class);
                             intent.putExtra("concernUser",userInfos.get(position));
                             intent.putExtra("hasPath",0);
+                            PartUserInfo a=userInfos.get(position);
+                           a.setImageUrl(getSandBoxPath(XuanShangActivity.this)+a.getImageUrl());
+                            intent.putExtra("chatUser",a);
+
                             //startActivity(intent);
                             startActivityForResult(intent,1);
                         }

@@ -20,6 +20,8 @@ import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.SetCommodityInfo;
 import com.example.cugerhuo.access.commodity.RecommendInfo;
+import com.example.cugerhuo.access.rating.RatingOperate;
+import com.example.cugerhuo.access.rating.RatingParam;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.util.MsgEvent1;
@@ -61,6 +63,10 @@ public class SuggestFragment extends Fragment {
      */
     private static boolean isFirst=false;
     /**
+     * 打开界面时间
+     */
+    private long mStartTime;
+    /**
      * 首页展示商品
      */
     private List<Commodity> commodities;
@@ -68,6 +74,10 @@ public class SuggestFragment extends Fragment {
      * 商品的用户
      */
     private List<PartUserInfo>userInfos;
+    /**
+     * 商品id
+     */
+    private int clickedProductId;
     /**
      * 构造函数
      * @param title
@@ -119,10 +129,13 @@ public class SuggestFragment extends Fragment {
                 @Override
                 public void onItemClick(View view, int position) {
                     int flag = 1;
+                    clickedProductId=commodities.get(position).getId();
                     Intent intent=new Intent(getActivity(), GoodDetailActivity.class);
+
                     intent.putExtra("commodity",commodities.get(position));
                     intent.putExtra("user",userInfos.get(position));
                     //startActivity(intent);
+                    mStartTime = System.currentTimeMillis();
                     startActivityForResult(intent,1);
                 }
             });
@@ -217,7 +230,6 @@ public class SuggestFragment extends Fragment {
                 userInfos= RecommendInfo.getPartUserInfoList();
                 commodities=RecommendInfo.getCommodityList();
                 adapter=new RecyclerViewGoodsDisplayAdapter(getContext(),commodities,userInfos);
-
                 goodsRecyclerView.setAdapter(adapter);
                 /**
                  * 点击item进行跳转并传值过去
@@ -226,11 +238,13 @@ public class SuggestFragment extends Fragment {
                     @Override
                     public void onItemClick(View view, int position) {
                         int flag = 1;
+                        clickedProductId=commodities.get(position).getId();
                         Intent intent=new Intent(getActivity(), GoodDetailActivity.class);
                         intent.putExtra("commodity",commodities.get(position));
                         intent.putExtra("user",userInfos.get(position));
                         intent.putExtra("position",position);
                         //startActivity(intent);
+                        mStartTime=System.currentTimeMillis();
                         startActivityForResult(intent,1);
                     }
                 });
@@ -240,6 +254,36 @@ public class SuggestFragment extends Fragment {
             }
         });
 
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == 2) {
+            // 获取当前时间戳
+            long endTime = System.currentTimeMillis();
+
+            // 计算停留时间
+            long stayTime = endTime - mStartTime;
+            double score=0;
+            stayTime/=1000;
+            if(stayTime<1){score=0;}
+            else if(stayTime<3){score=1;}
+            else if(stayTime<5){score=2;}
+            else if(stayTime<8){score=3;}
+            else if(stayTime<10){score=4;}
+            else{score=5;}
+            double finalScore = score;
+            new Thread(()->{
+                RatingParam a=new RatingParam();
+                a.setUserId(UserInfo.getid());
+                a.setScore(finalScore);
+                a.setProductId(clickedProductId);
+                RatingOperate.insertRatingToRecommend(a,getActivity());
+            }).start();
+            // 在第一个 Activity 中显示停留时间
+            //MyToast.toast(getActivity(),"time:"+stayTime,3);
+        }
     }
 
 }

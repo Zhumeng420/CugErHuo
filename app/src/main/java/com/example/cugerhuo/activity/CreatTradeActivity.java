@@ -1,8 +1,10 @@
 package com.example.cugerhuo.activity;
 
+import static com.example.cugerhuo.access.SetGlobalIDandUrl.getSandBoxPath;
 import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.activity.imessage.ChatActivity;
+import com.example.cugerhuo.tools.MyToast;
 import com.example.cugerhuo.tools.entity.TradeInfo;
 import com.example.cugerhuo.views.EditDialog;
 import com.example.cugerhuo.views.KeyboardUtil;
@@ -29,6 +32,9 @@ import com.github.gzuliyujiang.wheelpicker.annotation.TimeMode;
 import com.github.gzuliyujiang.wheelpicker.contract.OnDatimePickedListener;
 import com.github.gzuliyujiang.wheelpicker.entity.DatimeEntity;
 import com.github.gzuliyujiang.wheelpicker.widget.DatimeWheelLayout;
+import com.makeramen.roundedimageview.RoundedImageView;
+
+import java.io.File;
 
 /***
  * 生成订单界面
@@ -42,15 +48,14 @@ public class CreatTradeActivity extends AppCompatActivity implements View.OnClic
     /**交易金额时间地点三个线性布局*/
     private LinearLayout priceLayout,timeLayout,positionLayout;
     /**交易金额时间地点三个结果显示*/
-    private TextView priceText,timeText,positionText;
-
+    private TextView priceText,timeText,positionText,goodTitle,goodPrice;
+    private RoundedImageView goodImage;
     /**数字键盘*/
     LinearLayout ll_price;
     EditText et_price;
     MyKeyBoardView keyboard_view;
     LinearLayout ll_price_select;
     View blankClick;
-
     /**生成订单*/
     private Button createTrade;
 
@@ -58,18 +63,21 @@ public class CreatTradeActivity extends AppCompatActivity implements View.OnClic
      * 聊天对象
      */
     private PartUserInfo chatUser=new PartUserInfo();
+    private Commodity charCommodity=new Commodity();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creat_trade);
-        initView();
-
         /**
          * 从上个界面获取聊天对象信息
          */
         Intent intent =getIntent();
         chatUser= (PartUserInfo) intent.getSerializableExtra("chatUser");
+        charCommodity=(Commodity) intent.getSerializableExtra("chatCommodity");
+        initView();
+
+
     }
 
     /**
@@ -98,6 +106,51 @@ public class CreatTradeActivity extends AppCompatActivity implements View.OnClic
         blankClick.setOnClickListener(this);
         createTrade = findViewById(R.id.create_trade);
         createTrade.setOnClickListener(this);
+
+        goodTitle=findViewById(R.id.trade_good_tittle);
+        goodPrice=findViewById(R.id.trade_good_price);
+        goodImage=findViewById(R.id.trade_image);
+        /**
+         * 初始化商品UI
+         */
+        if(charCommodity!=null)
+        {   priceText.setText("¥"+charCommodity.getPrice().toString());
+            positionText.setText("");
+            goodTitle.setText(charCommodity.getDescription());
+            goodPrice.setText("¥"+charCommodity.getPrice().toString());
+            if(!"".equals(charCommodity.getUrl1()))
+            {String url1=charCommodity.getUrl1();
+                String []urls=url1.split(";");
+                if(urls.length>0){
+                    url1=urls[0];}
+                int length=urls.length;
+                String result[]=new String[length];
+                result[length-1]=urls[length-1];
+                // 从后往前依次减去后面一个元素
+                if(length>1){
+                    for (int i = length - 2; i >= 0; i--) {
+                        String current = urls[i];
+                        String next = result[i + 1];
+                        int index = current.lastIndexOf(next);
+                        if(index>0){
+                            result[i ] = current.substring(0, index);}
+                        else
+                        {
+                            result[i]=current;
+                        }
+                    }}
+                // 将第一个元素赋值给结果数组
+                url1=result[0];
+                String newUrl1 = getSandBoxPath(CreatTradeActivity.this) + url1;
+                System.out.println("imager2"+url1);
+                File f = new File(newUrl1);
+                if (f.exists())
+                {
+                    goodImage.setImageURI(Uri.fromFile(f));
+                }
+            }
+        }
+
     }
 
     /**
@@ -205,6 +258,7 @@ public class CreatTradeActivity extends AppCompatActivity implements View.OnClic
                 editDialog.show();
                 break;
             case R.id.create_trade:
+                if(positionText.getText()!=null&&!"".equals(positionText.getText())){
                 Intent intent=new Intent(CreatTradeActivity.this, ChatActivity.class);
                 TradeInfo tradeInfo=new TradeInfo();
                 tradeInfo.setPrice(Double.valueOf(priceText.getText().toString().replace("¥","")));
@@ -224,7 +278,10 @@ public class CreatTradeActivity extends AppCompatActivity implements View.OnClic
                 intent.putExtra("tradeInfo",tradeInfo);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
-                finish();
+                finish();}else
+                {
+                    MyToast.toast(CreatTradeActivity.this,"请填写交易地点",0);
+                }
                 break;
             default:
                 break;

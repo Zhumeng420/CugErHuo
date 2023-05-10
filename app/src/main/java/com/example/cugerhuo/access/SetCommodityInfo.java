@@ -18,6 +18,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import io.lettuce.core.api.sync.RedisCommands;
 import io.opentracing.Scope;
@@ -151,48 +152,54 @@ return true;
                  * 获取连接
                  */
                 RedisCommands<String, String> con=lettuce.getSyncConnection();
+//                /**
+//                 * 获取XML文本
+//                 */
+//                String ip=context.getString(R.string.Tuip);
+//                String router=context.getString(R.string.recommendCom);
+//                String page=context.getString(R.string.page);
+//                String uid=context.getString(R.string.UserId);
+//                /**
+//                 * 发送请求
+//                 */
+//                String url="http://"+ip+"/"+router+"?"+page+"="+page2+"&"+uid+"="+id;
+//                Request request = new Request.Builder().url(url).get().build();
+//                Response response = null;
+//                int result
+//                        =-1;
+//                try {
+//                    response = okHttpClient.newCall(request).execute();
+//                    JSONObject pa= JSONObject.parseObject(response.body().string());
+//                    System.out.println(result);
+//                    System.out.println("asdsa");
+//                    JSONArray a=JSONArray.parseArray(pa.getString("object"));
+//                    for(Object i:a)
+//                    {
+//                        System.out.println("doashda"+i);
+//                        recommedCom.add((Integer) i);
+//                    }
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                List<Commodity>  tt=new ArrayList<>();
+//                List<PartUserInfo> mm=new ArrayList<>();
+//                for(Integer i:recommedCom)
+//                {
+//                    Commodity temp= CommodityOperate.getCommodityFromRedis(con,i,context);
+//                    int id=temp.getUserId();
+//                    System.out.println("userid"+id);
+//                    tt.add(temp);
+//                    mm.add(UserInfoOperate.getInfoFromRedis(con,id,context));
+//                }
+//                RecommendInfo.setCommodityList(tt);
+//                RecommendInfo.setPartUserInfoList(mm);
                 /**
-                 * 获取XML文本
+                 * 实时推荐
                  */
-                String ip=context.getString(R.string.Tuip);
-                String router=context.getString(R.string.recommendCom);
-                String page=context.getString(R.string.page);
-                String uid=context.getString(R.string.UserId);
-                /**
-                 * 发送请求
-                 */
-                String url="http://"+ip+"/"+router+"?"+page+"="+page2+"&"+uid+"="+id;
-                Request request = new Request.Builder().url(url).get().build();
-                Response response = null;
-                int result
-                        =-1;
-                try {
-                    response = okHttpClient.newCall(request).execute();
-                    JSONObject pa= JSONObject.parseObject(response.body().string());
-                    System.out.println(result);
-                    System.out.println("asdsa");
-                    JSONArray a=JSONArray.parseArray(pa.getString("object"));
-                    for(Object i:a)
-                    {
-                        System.out.println("doashda"+i);
-                        recommedCom.add((Integer) i);
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                List<Commodity>  tt=new ArrayList<>();
-                List<PartUserInfo> mm=new ArrayList<>();
-                for(Integer i:recommedCom)
-                {
-                    Commodity temp= CommodityOperate.getCommodityFromRedis(con,i,context);
-                    int id=temp.getUserId();
-                    System.out.println("userid"+id);
-                    tt.add(temp);
-                    mm.add(UserInfoOperate.getInfoFromRedis(con,id,context));
-                }
-                RecommendInfo.setCommodityList(tt);
-                RecommendInfo.setPartUserInfoList(mm);
+                Map.Entry<List<Commodity>, List<PartUserInfo>> result=CommodityOperate.getOnlineRecommendComs(con,id,page2,context);
+                RecommendInfo.setPartUserInfoList(result.getValue());
+                RecommendInfo.setCommodityList(result.getKey());
 
                 // 发送广播
 

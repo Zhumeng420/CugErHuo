@@ -111,7 +111,10 @@ public class RecyclerViewGoodsDisplayAdapter extends RecyclerView.Adapter<Recycl
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String firstCate= GetFileNameUtil.getCate(commodities.get(position).getCategory());
+        String firstCate="";
+        if(commodities.get(position).getCategory()!=null){
+        firstCate= GetFileNameUtil.getCate(commodities.get(position).getCategory());}
+
         holder.goodItemTitle.setText(commodities.get(position).getDescription());
         commodities.get(position).setCategory(firstCate);
         holder.goodsItemPrice.setText(String.valueOf(commodities.get(position).getPrice()));

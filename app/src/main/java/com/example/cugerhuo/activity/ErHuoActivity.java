@@ -338,7 +338,7 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
                  * 图像搜索
                  */
                 case 2:
-                    MyToast.toast(ErHuoActivity.this,"搜索完成",2);
+                    MyToast.toast(ErHuoActivity.this,"搜索完成",3);
                     /**
                      * 点击进行跳转并传值
                      */
@@ -440,9 +440,9 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
         }}
 
     /**
-     * 修改头像函数
+     * 图片搜索函数
      * @author  施立豪
-     * @time 2023/4/9
+     * @time 2023/5/9
      * @param view
      */
     public void onChangeImage(View view){
@@ -535,7 +535,7 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
                          * @author 施立豪
                          * @time 2023/4/9
                          */
-                        MyToast.toast(ErHuoActivity.this,"正在搜索匹配的商品",2);
+                        MyToast.toast(ErHuoActivity.this,"正在搜索匹配商品",2);
                         new Thread(()->{
                             /**
                              * 接收插入mysql结果变量
@@ -553,9 +553,11 @@ public class ErHuoActivity extends AppCompatActivity implements View.OnClickList
                             for(Integer i:commodityIdList)
                             {
                                 Commodity comm= CommodityOperate.getCommodityFromRedis(con,i,ErHuoActivity.this);
+                                if(comm!=null){
                                 PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,comm.getUserId(),ErHuoActivity.this);
+                                if(part!=null){
                                 commodityUserGraph.add(part);
-                                commodityListGraph.add(comm);
+                                commodityListGraph.add(comm);}}
                             }
                             Message msg=Message.obtain();
                             msg.arg1=2;

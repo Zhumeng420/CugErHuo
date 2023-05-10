@@ -65,6 +65,9 @@
     <string name="Name">name</string>
     <string name="ImageUrl">imageUrl</string>
     <string name="UserId">userId</string>
+    <string name="RateRecommend">/rating/productscore</string>
+    <string name="RateMysql">rating/insert</string>
+    <string name="OnlineRecommend">recommend/onlinepage</string>
     <string name="RedisPWD">CUGerhuo333</string>
     <string name="startId">startId</string>
     <string name="endId">endId</string>

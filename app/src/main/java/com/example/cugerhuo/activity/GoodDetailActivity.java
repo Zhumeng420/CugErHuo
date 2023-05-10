@@ -166,6 +166,12 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
     /**是否收藏*/
     private boolean isCollect = false;
     @Override
+    public void onBackPressed() {
+        // 设置返回结果，并关闭当前 Activity
+        setResult(2);
+        finish();
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_good_detail);

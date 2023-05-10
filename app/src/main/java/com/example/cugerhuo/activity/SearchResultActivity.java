@@ -43,6 +43,7 @@ import com.example.cugerhuo.activity.adapter.RecyclerViewGoodsDisplayAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewRecommenduser;
 import com.example.cugerhuo.graph.GraphOperate;
 import com.example.cugerhuo.tools.LettuceBaseCase;
+import com.example.cugerhuo.tools.MyToast;
 import com.example.cugerhuo.tools.photoselect.GlideEngine;
 import com.example.cugerhuo.tools.photoselect.ImageLoaderUtils;
 import com.luck.picture.lib.animators.AnimationType;
@@ -165,8 +166,8 @@ public class SearchResultActivity extends AppCompatActivity {
         /**设置每个item之间的间距**/
         searchGoodsRecyclerView.addItemDecoration(new RecyclerViewGoodsDisplayAdapter.spaceItem(10));
 
-        adapterUser=new RecyclerViewRecommenduser(SearchResultActivity.this,partUserInfos);
-        adapterGoods=new RecyclerViewGoodsDisplayAdapter(SearchResultActivity.this,commodityList,commodityUser);
+        adapterUser=new RecyclerViewRecommenduser(getActivity(),partUserInfos);
+        adapterGoods=new RecyclerViewGoodsDisplayAdapter(getActivity(),commodityList,commodityUser);
         searchRecyclerView.setAdapter(adapterUser);
         searchGoodsRecyclerView.setAdapter(adapterGoods);
 
@@ -319,6 +320,7 @@ public class SearchResultActivity extends AppCompatActivity {
                     });
                     break;
                 case 2:
+                    MyToast.toast(SearchResultActivity.this,"搜索完成",3);
                     noSearchGoods.setVisibility(View.GONE);
                     noSearchUser.setVisibility(View.GONE);
                     if(commodityListGraph.size()==0&&partUserInfosGraph.size()!=0){
@@ -331,8 +333,8 @@ public class SearchResultActivity extends AppCompatActivity {
                         noSearchGoods.setVisibility(View.VISIBLE);
                         noSearchUser.setVisibility(View.VISIBLE);
                     }
-                    adapterUser=new RecyclerViewRecommenduser(SearchResultActivity.this,partUserInfosGraph);
-                    adapterGoods=new RecyclerViewGoodsDisplayAdapter(SearchResultActivity.this,commodityListGraph,commodityUserGraph);
+                    adapterUser=new RecyclerViewRecommenduser(getActivity(),partUserInfosGraph);
+                    adapterGoods=new RecyclerViewGoodsDisplayAdapter(getActivity(),commodityListGraph,commodityUserGraph);
                     searchRecyclerView.setAdapter(adapterUser);
                     searchGoodsRecyclerView.setAdapter(adapterGoods);
                     /**
@@ -365,6 +367,9 @@ public class SearchResultActivity extends AppCompatActivity {
                             startActivityForResult(intent,1);
                         }
                     });
+                case 3:
+
+                    break;
                 default:
                     break;
             }
@@ -542,7 +547,7 @@ public class SearchResultActivity extends AppCompatActivity {
                          * @time 2023/4/9
                          */
                         String filePath = media.getSandboxPath();
-
+                        MyToast.toast(SearchResultActivity.this,"正在搜索匹配商品",2);
                         /**
                          * 子线程，将待进行oss的图片url插入用户信息数据库
                          * 先插入数据库，再进行oss
@@ -565,10 +570,12 @@ public class SearchResultActivity extends AppCompatActivity {
                             commodityUserGraph.clear();commodityListGraph.clear();
                             for(Integer i:commodityIdList)
                             {
-                                Commodity comm=CommodityOperate.getCommodityFromRedis(con,i,SearchResultActivity.this);
-                                PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,comm.getUserId(),SearchResultActivity.this);
-                                commodityUserGraph.add(part);
-                                commodityListGraph.add(comm);
+                                Commodity comm= CommodityOperate.getCommodityFromRedis(con,i,SearchResultActivity.this);
+                                if(comm!=null){
+                                    PartUserInfo part= UserInfoOperate.getInfoFromRedis(con,comm.getUserId(),SearchResultActivity.this);
+                                    if(part!=null){
+                                        commodityUserGraph.add(part);
+                                        commodityListGraph.add(comm);}}
                             }
                             Message msg=Message.obtain();
                             msg.arg1=2;
