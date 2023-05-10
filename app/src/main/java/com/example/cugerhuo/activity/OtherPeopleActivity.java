@@ -19,20 +19,35 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.cugerhuo.Fragment.AppraiseFragment;
+import com.example.cugerhuo.Fragment.ProductFragment;
 import com.example.cugerhuo.R;
+import com.example.cugerhuo.access.Commodity;
+import com.example.cugerhuo.access.commodity.CommodityOperate;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.access.user.UserOperate;
+import com.example.cugerhuo.activity.adapter.RecycleViewMyCollectsAdapter;
+import com.example.cugerhuo.activity.adapter.ViewAdapter;
+import com.example.cugerhuo.activity.adapter.ViewAdapterOther;
 import com.example.cugerhuo.activity.adapter.ViewPagerAdapter;
 import com.example.cugerhuo.activity.imessage.ChatActivity;
+import com.example.cugerhuo.activity.mycenter.MyCollectsActivity;
 import com.example.cugerhuo.fragment.MyFragment;
+import com.example.cugerhuo.fragment.SuggestFragment;
 import com.example.cugerhuo.views.MyScrollView;
 import com.google.android.material.tabs.TabLayout;
 
+import org.json.JSONException;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 查看他人的个人中心
@@ -83,8 +98,8 @@ public class OtherPeopleActivity extends AppCompatActivity {
      */
     private ImageView isF;
     ViewPager viewPager;
-    ArrayList<MyFragment> fragments;
-    ViewPagerAdapter adapter;
+    ArrayList<Fragment> fragments = new ArrayList<>();
+    ViewAdapterOther adapter;
     TabLayout tabLayout;
     /**
      * 下拉弹出的小头像，用户头像
@@ -119,13 +134,17 @@ public class OtherPeopleActivity extends AppCompatActivity {
     private PartUserInfo fansUserInfo=new PartUserInfo();
     private final MyHandler MyHandler =new MyHandler();
 
+    /**
+     * 发布商品
+     */
+    private List<Commodity> commodities = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_people);
         init();
-        initFragment();
         initIntendInfo();
 
         Intent intent = new Intent();
@@ -250,6 +269,24 @@ public class OtherPeopleActivity extends AppCompatActivity {
             //4、发送消息
             MyHandler.sendMessage(msg);
         }).start();
+        /**
+         * 获取该用户发布的商品
+         */
+        new Thread(() -> {
+            Message msg = Message.obtain();
+            msg.arg1 = 5;
+            /**
+             * 获取用户发布的商品
+             */
+            try {
+                commodities= CommodityOperate.getUsersCommodity(partUserInfo.getId(),OtherPeopleActivity.this);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            //4、发送消息
+            MyHandler.sendMessage(msg);
+        }).start();
 
     }
 
@@ -309,16 +346,23 @@ public class OtherPeopleActivity extends AppCompatActivity {
      * @Time: 2023/3/28 11:28
      */
     public void initFragment(){
-        /**初始化数据*/
-        fragments = new ArrayList<>();
-        fragments.add(new MyFragment("商品",null,R.layout.other_fragment_product));
-        fragments.add(new MyFragment("评价",null,R.layout.other_fragment_appraise));
-
+        fragments.add(new ProductFragment("商品",commodities));
+        fragments.add(new AppraiseFragment("评价"));
         /**设置ViewPager适配器*/
-        adapter = new ViewPagerAdapter(getSupportFragmentManager(),fragments);
+        adapter = new ViewAdapterOther(getSupportFragmentManager(),fragments);
         viewPager.setAdapter(adapter);
         /**设置初始fragment*/
         viewPager.setCurrentItem(0,false);
+//        /**初始化数据*/
+//        fragments = new ArrayList<>();
+//        fragments.add(new MyFragment("商品",null,R.layout.other_fragment_product));
+//        fragments.add(new MyFragment("评价",null,R.layout.other_fragment_appraise));
+//
+//        /**设置ViewPager适配器*/
+//        adapter = new ViewPagerAdapter(getSupportFragmentManager(),fragments);
+//        viewPager.setAdapter(adapter);
+//        /**设置初始fragment*/
+//        viewPager.setCurrentItem(0,false);
 
 
         /**关联ViewPager*/
@@ -327,6 +371,9 @@ public class OtherPeopleActivity extends AppCompatActivity {
         /**设置固定的tab*/
         move.setTabMode(TabLayout.MODE_FIXED);
         stop.setTabMode(TabLayout.MODE_FIXED);
+//        recyclerViewProducts = fragments.get(0).getView().findViewById(R.id.recyclerViewOtherSells);
+//        recyclerViewProducts = getFragmentManager().findFragmentById(fragments.get(0).getId()).getView().findViewById(R.id.recyclerViewOtherSells);
+
     }
 
     /**
@@ -526,6 +573,9 @@ public class OtherPeopleActivity extends AppCompatActivity {
                     setResult(2,intent1);
                     setResult(3,intent1);
                     focusNum--;
+                    break;
+                case 5:
+                    initFragment();
                     break;
                 default:
                     break;
