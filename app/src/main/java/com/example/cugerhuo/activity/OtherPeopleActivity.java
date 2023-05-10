@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.cugerhuo.fragment.AppraiseFragment;
-import com.example.cugerhuo.fragment.ProductFragment;
+import com.example.cugerhuo.Fragment.ProductFragment;
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
 import com.example.cugerhuo.access.commodity.CommodityOperate;
@@ -346,7 +346,7 @@ public class OtherPeopleActivity extends AppCompatActivity {
      * @Time: 2023/3/28 11:28
      */
     public void initFragment(){
-        fragments.add(new ProductFragment("商品",commodities));
+        fragments.add(new ProductFragment("商品",commodities,partUserInfo));
         fragments.add(new AppraiseFragment("评价"));
         /**设置ViewPager适配器*/
         adapter = new ViewAdapterOther(getSupportFragmentManager(),fragments);

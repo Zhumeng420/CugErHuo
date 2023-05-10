@@ -45,6 +45,7 @@ import com.example.cugerhuo.access.commodity.CommodityOperate;
 import com.example.cugerhuo.access.pricing.PricingOperate;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfo;
+import com.example.cugerhuo.access.user.UserOperate;
 import com.example.cugerhuo.activity.adapter.RecyclerViewCommentAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewGoodsDisplayAdapter;
 import com.example.cugerhuo.activity.imessage.ChatActivity;
@@ -165,6 +166,12 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
     private int collectNum=0;
     /**是否收藏*/
     private boolean isCollect = false;
+    /**两个关注*/
+    private TextView isFollowed1;
+    private TextView isFollowed2;
+    /**是否关注*/
+    private boolean isConcern = false;
+    private List<Integer> concernList = new ArrayList<>();
     @Override
     public void onBackPressed() {
         // 设置返回结果，并关闭当前 Activity
@@ -234,6 +241,22 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
                     e.printStackTrace();
                 }
                 a.arg1=5;
+                MyHandler.sendMessage(a);
+            }
+        }).start();
+
+        /**判断是否关注改变相应UI*/
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message a=Message.obtain();
+                boolean res=false;
+                concernList = UserOperate.getConcernId(UserInfo.getid(),GoodDetailActivity.this);
+                if(concernList.contains(commodity.getUserId())){
+                    a.arg2=1;
+                }
+                else{a.arg2=0;}
+                a.arg1=9;
                 MyHandler.sendMessage(a);
             }
         }).start();
@@ -349,6 +372,12 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
         iWant.setOnClickListener(this);
         /**轮播图*/
         banner = findViewById(R.id.banner);
+        /**两个关注*/
+        isFollowed1 = findViewById(R.id.is_followed_first);
+        isFollowed2 = findViewById(R.id.is_followed_second);
+        isFollowed1.setOnClickListener(this);
+        isFollowed2.setOnClickListener(this);
+
     }
 /**
  * 展示留言
@@ -701,6 +730,15 @@ void showComment()
                 //startActivity(intent);
                 startActivityForResult(intent,1);
                 break;
+            case R.id.is_followed_first:
+            case R.id.is_followed_second:
+                if(isConcern){
+                    isConcern=false;
+                }else{
+                    isConcern=true;
+                }
+                changeConcern();
+                break;
             default:
                 break;
         }
@@ -914,6 +952,23 @@ void showComment()
                             break;
                     }
                     break;
+                case 9:
+                    switch(msg.arg2)
+                    {
+                        case 1:
+                           isConcern=true;
+                            isFollowed1.setText("√已关注");
+                            isFollowed2.setText("√已关注");
+                            break;
+                        case 0:
+                            isConcern=false;
+                            isFollowed1.setText("+ 关注");
+                            isFollowed2.setText("+ 关注");
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
                 default:
                     break;
             }
@@ -1063,6 +1118,50 @@ void showComment()
         @Override
         public void displayImage(Context context, Object path, ImageView imageView) {
             Glide.with(context).load((String) path).into(imageView);
+        }
+    }
+
+    /**
+     * 关注状态改变
+     * @Author: 李柏睿
+     * @Time: 2023/5/10 23:53
+     */
+    public void changeConcern(){
+        /**如果当前为关注状态*/
+        if(isConcern){
+            isFollowed1.setText("+ 关注");
+            isFollowed2.setText("+ 关注");
+            new Thread(new GoodDetailActivity.MyRunnableDeleteConcernOperate()).start();
+        }else{
+            /**如果当前为未关注状态*/
+            isFollowed1.setText("√已关注");
+            isFollowed2.setText("√已关注");
+            new Thread(new GoodDetailActivity.MyRunnableConcernOperate()).start();
+        }
+    }
+
+    /**
+     * 开启线程,取消关注
+     * @author 唐小莉
+     * @time 2023/4/27
+     */
+    class MyRunnableDeleteConcernOperate implements  Runnable{
+        @Override
+        public void run() {
+            UserOperate.getIfDeleteConcern(UserInfo.getid(),userInfo.getId(),getActivity());
+        }
+    }
+
+    /**
+     * 开启线程,关注
+     * @author 唐小莉
+     * @time 2023/4/27
+     */
+    class MyRunnableConcernOperate implements Runnable{
+        @Override
+        public void run() {
+            boolean su=UserOperate.setConcern(UserInfo.getid(),userInfo.getId(),getActivity());
+            System.out.println("concernhhhhh success"+su);
         }
     }
 }

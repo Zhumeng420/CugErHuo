@@ -636,7 +636,7 @@ public class UserOperate {
      * @author 唐小莉
      * @time 2023/4/25
      */
-    public List<Integer> getRecommend(int id,Context context){
+    public static List<Integer> getRecommend(int id, Context context){
         OkHttpClient okHttpClient = new OkHttpClient();
         /**
          * 获取XML文本

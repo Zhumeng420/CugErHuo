@@ -21,6 +21,7 @@ import com.example.cugerhuo.access.commodity.CommodityOperate;
 import com.example.cugerhuo.access.pricing.PricingOperate;
 import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.access.user.UserInfo;
+import com.example.cugerhuo.access.user.UserInfoOperate;
 import com.example.cugerhuo.activity.AddressManageActivity;
 import com.example.cugerhuo.activity.EditAddressActivity;
 import com.example.cugerhuo.activity.GoodDetailActivity;
@@ -57,6 +58,7 @@ public class MyCollectsActivity extends AppCompatActivity {
     private RecycleViewMyCollectsAdapter adapter;
 
     private final MyCollectsActivity.MyHandler MyHandler =new MyCollectsActivity.MyHandler();
+    private List<PartUserInfo> partUserInfos = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,6 @@ public class MyCollectsActivity extends AppCompatActivity {
                 try {
                     boolean res=false;
                     myCollects = CollectOperate.myCollect(UserInfo.getid(), MyCollectsActivity.this);
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -103,7 +104,10 @@ public class MyCollectsActivity extends AppCompatActivity {
                             for(int i=0;i<myCollects.toArray().length;i++){
                                 Commodity product = CommodityOperate.getCommodity(myCollects.get(i),MyCollectsActivity.this);
                                 commodities.add(product);
+                                PartUserInfo user= UserInfoOperate.getInfoFromMysql(product.getUserId(),MyCollectsActivity.this);
+                                partUserInfos.add(user);
                             }
+
                             Message a=Message.obtain();
                             a.arg1=2;
                             MyHandler.sendMessage(a);
@@ -119,6 +123,7 @@ public class MyCollectsActivity extends AppCompatActivity {
                         public void onItemClick(View view, int position) {
                             Intent intent=new Intent(MyCollectsActivity.this, GoodDetailActivity.class);
                             intent.putExtra("commodity",commodities.get(position));
+                            intent.putExtra("user",partUserInfos.get(position));
                             //startActivity(intent);
                             startActivityForResult(intent,1);
                         }
