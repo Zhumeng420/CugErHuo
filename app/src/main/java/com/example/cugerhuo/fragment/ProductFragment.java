@@ -1,6 +1,4 @@
-package com.example.cugerhuo.fragment;
-
-import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
+package com.example.cugerhuo.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cugerhuo.R;
 import com.example.cugerhuo.access.Commodity;
+import com.example.cugerhuo.access.user.PartUserInfo;
 import com.example.cugerhuo.activity.GoodDetailActivity;
-import com.example.cugerhuo.activity.OtherPeopleActivity;
 import com.example.cugerhuo.activity.adapter.RecycleViewMyCollectsAdapter;
 import com.example.cugerhuo.activity.adapter.RecyclerViewOnSellAdapter;
 
@@ -36,6 +34,7 @@ public class ProductFragment extends Fragment {
     private RecyclerView recyclerViewOnSell;
     private RecyclerViewOnSellAdapter adapter;
     private List<Commodity> a;
+    private PartUserInfo b;
     /**商品recycleview*/
     private RecyclerView recyclerViewProducts;
     /**商品recycleview适配器*/
@@ -45,10 +44,11 @@ public class ProductFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
     }
-    public ProductFragment(String t,List<Commodity>a){
+    public ProductFragment(String t,List<Commodity>a,PartUserInfo b){
         super();
         this.title=t;
         this.a=a;
+        this.b=b;
     }
     @Override
     public void onDestroy() {
@@ -69,6 +69,7 @@ public class ProductFragment extends Fragment {
             public void onItemClick(View view, int position) {
                 Intent intent=new Intent(getActivity(), GoodDetailActivity.class);
                 intent.putExtra("commodity",a.get(position));
+                intent.putExtra("user",b);
                 startActivity(intent);
                 startActivityForResult(intent,1);
             }
