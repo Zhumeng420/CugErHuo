@@ -44,7 +44,7 @@
 
 
     <string name="recommendCom">recommend/homepage</string>
-    <string name="page1">page=1</string>
+    <string name="page1">page=0</string>
     <string name="page">page</string>
     <string name="num">num</string>
     <string name="InsertComment">comment/insert</string>

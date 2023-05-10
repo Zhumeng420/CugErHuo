@@ -197,7 +197,7 @@ return true;
                 /**
                  * 实时推荐
                  */
-                Map.Entry<List<Commodity>, List<PartUserInfo>> result=CommodityOperate.getOnlineRecommendComs(con,id,page2,context);
+                Map.Entry<List<Commodity>, List<PartUserInfo>> result=CommodityOperate.getOnlineRecommendComs(con,id,0,context);
                 RecommendInfo.setPartUserInfoList(result.getValue());
                 RecommendInfo.setCommodityList(result.getKey());
 
