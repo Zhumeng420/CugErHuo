@@ -1,5 +1,6 @@
 package com.example.cugerhuo.activity;
 
+import static com.example.cugerhuo.access.SetGlobalIDandUrl.getSandBoxPath;
 import static com.example.cugerhuo.activity.MyCenterActivity.focusNum;
 import static com.mobile.auth.gatewayauth.utils.ReflectionUtils.getActivity;
 
@@ -348,8 +349,14 @@ public class OtherPeopleActivity extends AppCompatActivity {
         introduction.setText(partUserInfo.getSignature());
         if (!"".equals(partUserInfo.getImageUrl())&&partUserInfo.getImageUrl()!=null)
         {
-            userImg.setImageURI(Uri.fromFile(new File(partUserInfo.getImageUrl())));
-            popImg.setImageURI(Uri.fromFile(new File(partUserInfo.getImageUrl())));
+            if(intent.getSerializableExtra("hasPath")!=null){
+                userImg.setImageURI(Uri.fromFile(new File(getSandBoxPath(OtherPeopleActivity.this)+partUserInfo.getImageUrl())));
+                popImg.setImageURI(Uri.fromFile(new File(getSandBoxPath(OtherPeopleActivity.this)+partUserInfo.getImageUrl())));
+            }else{
+                userImg.setImageURI(Uri.fromFile(new File(partUserInfo.getImageUrl())));
+                popImg.setImageURI(Uri.fromFile(new File(partUserInfo.getImageUrl())));
+            }
+
         }
         isFollowed(partUserInfo.getConcern() == 1 || partUserInfo.getConcern() == 2||partUserInfo.getConcern()==5);
 

@@ -5,27 +5,25 @@
     android:orientation="vertical">
 
 
-    <ScrollView
+    <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/line_zhan"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="评价评价评价评价aaaaaaaaaaa"
-                android:textSize="100sp" />
-            <Button
-                android:id="@+id/zhan"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:src="@color/orange"
-                android:visibility="invisible"></Button>
-        </LinearLayout>
+        android:layout_height="match_parent"
+        android:background="@color/white"></View>
 
-    </ScrollView>
+
+<!--    <ScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:id="@+id/line_zhan"-->
+<!--            android:orientation="vertical">-->
+<!--            -->
+<!--            -->
+<!--            -->
+<!--        </LinearLayout>-->
+
+<!--    </ScrollView>-->
 
 </LinearLayout>

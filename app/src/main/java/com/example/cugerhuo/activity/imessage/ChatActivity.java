@@ -47,6 +47,7 @@ import com.example.cugerhuo.access.user.UserInfo;
 import com.example.cugerhuo.activity.CreatTradeActivity;
 import com.example.cugerhuo.activity.LocationClockActivity;
 import com.example.cugerhuo.activity.LocationDetailActivity;
+import com.example.cugerhuo.activity.OtherPeopleActivity;
 import com.example.cugerhuo.activity.TradeDetailActivity;
 import com.example.cugerhuo.activity.adapter.MsgAdapter;
 import com.example.cugerhuo.activity.session.CustomAttachParser;
@@ -386,7 +387,12 @@ public class ChatActivity extends AppCompatActivity  implements  View.OnClickLis
 
         if (!"".equals(chatUser.getImageUrl())&&chatUser.getImageUrl()!=null)
         {
-            chatUserImg.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
+            if(intent.getSerializableExtra("hasPath")!=null){
+                chatUserImg.setImageURI(Uri.fromFile(new File(getSandBoxPath(ChatActivity.this)+chatUser.getImageUrl())));
+            }else{
+                chatUserImg.setImageURI(Uri.fromFile(new File(chatUser.getImageUrl())));
+            }
+
         }
 
         /**

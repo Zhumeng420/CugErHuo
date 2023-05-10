@@ -270,6 +270,7 @@ public class GoodDetailActivity extends AppCompatActivity implements View.OnClic
         sellerDescripe=findViewById(R.id.userDescription_top);
         sellerName=findViewById(R.id.userName_top);
         sellerImage=findViewById(R.id.userImg_top);
+        sellerImage.setOnClickListener(this);
         sellerDescripe1=findViewById(R.id.userDescription_top);
         sellerImage1=findViewById(R.id.userImg_2);
         sellerName1=findViewById(R.id.username_2);
@@ -682,8 +683,18 @@ void showComment()
                 }).start();
 
                 break;
-
-
+            /**
+             * 点击头像跳转个人主页
+             * @Author: 李柏睿
+             * @Time: 2023/5/10 18:18
+             */
+            case R.id.userImg_top:
+                Intent intent=new Intent(GoodDetailActivity.this, OtherPeopleActivity.class);
+                intent.putExtra("concernUser",userInfo);
+                intent.putExtra("hasPath",0);
+                //startActivity(intent);
+                startActivityForResult(intent,1);
+                break;
             default:
                 break;
         }

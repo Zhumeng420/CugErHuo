@@ -220,6 +220,17 @@ public class XuanShangActivity extends AppCompatActivity implements View.OnClick
                         public void onItemClick(View view, int position) {
                             Intent intent=new Intent(XuanShangActivity.this, ChatActivity.class);
                             intent.putExtra("chatUser",userInfos.get(position));
+                            intent.putExtra("hasPath",0);
+                            //startActivity(intent);
+                            startActivityForResult(intent,1);
+                        }
+                    });
+                    adapter.setOnItemImgClickListener(new RecyclerViewXuanShangAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            Intent intent=new Intent(XuanShangActivity.this, OtherPeopleActivity.class);
+                            intent.putExtra("concernUser",userInfos.get(position));
+                            intent.putExtra("hasPath",0);
                             //startActivity(intent);
                             startActivityForResult(intent,1);
                         }

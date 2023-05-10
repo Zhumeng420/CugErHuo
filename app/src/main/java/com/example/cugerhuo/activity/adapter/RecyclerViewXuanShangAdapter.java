@@ -44,6 +44,7 @@ public class RecyclerViewXuanShangAdapter extends RecyclerView.Adapter<RecyclerV
     private Context context;
     private int count;
     private OnItemClickListener mClickListener;
+    private OnItemClickListener mImgClickListener;
 
 private List<Reward> rewardList;
 private List<PartUserInfo>userInfoList;
@@ -264,6 +265,15 @@ private List<PartUserInfo>userInfoList;
                 mClickListener.onItemClick(v,position);
             }
         });
+        holder.userImage.setOnClickListener(new View.OnClickListener() {
+            /**
+             * 点击每个RecyclerView子组件进行相应的响应事件,点击跳转至个人中心
+             */
+            @Override
+            public void onClick(View v) {
+                mImgClickListener.onItemClick(v,position);
+            }
+        });
     }
 
 
@@ -279,6 +289,7 @@ private List<PartUserInfo>userInfoList;
         TextView rewardDes;
         Button chat;
         private RecyclerViewAdapter.OnItemClickListener mListener;// 声明自定义的接口
+        private RecyclerViewAdapter.OnItemClickListener mImgListener;// 声明自定义的接口
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -316,6 +327,16 @@ private List<PartUserInfo>userInfoList;
      */
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mClickListener = listener;
+    }
+
+    /**
+     * 点击头像跳转
+     * @param listener
+     * @Author: 李柏睿
+     * @Time: 2023/5/10
+     */
+    public void setOnItemImgClickListener(OnItemClickListener listener) {
+        this.mImgClickListener = listener;
     }
 
     /**

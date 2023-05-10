@@ -50,7 +50,7 @@
                            <ImageView
                                android:layout_width="40dp"
                                android:layout_height="40dp"
-                               android:src="@drawable/icon_iphone"/>
+                               android:src="@drawable/icon_phone"/>
                            <TextView
                                android:layout_width="match_parent"
                                android:layout_height="match_parent"
